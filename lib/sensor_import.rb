@@ -1,36 +1,25 @@
+#!/usr/bin/env ruby
 # Import sensor data into GINA sensor repository.
 #
 
 module SensorImport
+  autoload :CsvImport,		'csv/csv_import'
+  autoload :NetcdfImport,	'csv/netcdf_import'
+
   class Import			# Base import class
     attr_accessor :database
     def initialize( config_file )
       if File.exists?( config_file )
-        config = YAML.load_file(config_file)
+        @config = YAML.load_file(config_file)
       else
-        error "I can't find the configuration file \e[31m#{config_file}\e[0m!"
+        error "I can't find the configuration file \e[31m#{@config_file}\e[0m!"
       end
-      if config["database"].nil?
+      
+      if @config["database"].nil?
         error "There is no database section in the configuration file!"
       else
-        self.database = Database.new( config["database"] )
+        self.database = Database.new( @config["database"] )
       end
-    end
-  end
-
-  class TypeCsv < Import	# Import a CSV file, extends Import class
-    attr_accessor :csvopt, :csv_file
-    def initialize( config_file, csvfile )
-      super( config_file )
-      self.csvopt ||= CsvOptions.new( config_file["csv"] )
-      self.csv_file ||= csvfile
-    end
-  end
-
-  class TypeNetcdf < Import	# Import a NetCDF file, extends Import class
-    attr_accessor :netcdfopt
-    def initialize( config_file )
-      super( config_file )
     end
   end
 
@@ -53,18 +42,6 @@ module SensorImport
         self.dbconnect = @connection.db( self.name )
       end
     end
-  end
-
-  class CsvOptions
-    attr_accessor :header, :delimiter
-    def initialize( options )
-      self.header ||= options["header"]
-      self.delimiter ||= options["delimiter"]
-    end
-  end
-
-  class NetcdfOptions
-    attr_accessor :header, :delimiter
   end
 
   class Platform

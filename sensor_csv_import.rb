@@ -11,21 +11,17 @@ require 'methadone'
 require 'yaml'
 require 'sensor_import.rb'
 
-include Methadone::Main         # Options parsing
-include Methadone::CLILogging   # Debug/logging
-include SensorImport
+include Methadone::Main           # Options parsing
+include Methadone::CLILogging     # Debug/logging
+include SensorImport              # GINA sensor data import
+include SensorImport::CsvImport   # GINA sensor data import csv module
 
-main do |csv_file, data_config|
+main do |data_config, csv_file|
   # Initialize sensor import
   import = TypeCsv.new( data_config, csv_file )
 
-  # Check for csv file and read it in
-  if !File.exists?(csv_file)
-    error "I can't find the CSV file \e[31m#{csv_file}\e[0m!"
-  else
-    csvdata = CSV.read(csv_file, {:col_sep => delimiter})
-  end
-
+puts import.csvopt.header
+exit
   # Connect to database and read in csv file
   connection = Mongo::Connection.new(dbhost)
   @database = connection.db(dbname)
@@ -47,9 +43,9 @@ exit
 
 end
 
-description "Import mass balance csv file into a MongoDB database."
+description "Import sensor data csv file into a MongoDB database."
 
-arg "CSV_filename"
 arg "Database_configuration_file"
+arg "CSV_filename"
 
 go!

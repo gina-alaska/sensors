@@ -1,0 +1,49 @@
+# Ingest data to database for Barrow mass balance data.
+# 
+# Database config
+database:
+  host: "localhost"
+  name: "barrow_mass_balance"
+  platform_coll: "mass_balance_platform"
+  raw_data_coll: "mass_balance_raw"
+  final_data_coll: "mass_balance_data"
+  user: ""
+  password: ""
+
+# Import options
+csv:
+  header: "yes"
+  delimiter: ","
+
+# Platform Information
+platform:
+  name: "Barrow Mass Balance"
+  agency: ""
+  metadata:
+    host: ""
+    dbname: ""
+    colname: ""
+    id: 
+  geo_loc: ""
+  license: ""
+  permissions: ""
+
+# Sensor Information
+sensor:
+  -
+    label: ""
+    datum: ""
+    metadata:
+      host: ""
+      dbname: ""
+      colname: ""
+      id:
+
+# Process the data
+process:
+  -
+
+# Alerts
+alerts:
+  -
+

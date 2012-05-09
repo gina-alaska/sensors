@@ -1,2 +1,2 @@
-sesnsors
+sensors
 ========

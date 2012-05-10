@@ -19,11 +19,7 @@ csv:
 platform:
   name: "Barrow Mass Balance"
   agency: ""
-  metadata:
-    host: ""
-    dbname: ""
-    colname: ""
-    id: 
+  metadata: ""
   geo_loc: ""
   license: ""
   permissions: ""
@@ -33,11 +29,7 @@ sensor:
   -
     label: ""
     datum: ""
-    metadata:
-      host: ""
-      dbname: ""
-      colname: ""
-      id:
+    metadata: ""
 
 # Process the data
 process:

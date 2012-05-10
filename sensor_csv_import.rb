@@ -13,18 +13,17 @@ require 'sensor_import.rb'
 
 include Methadone::Main           # Options parsing
 include Methadone::CLILogging     # Debug/logging
-include SensorImport              # GINA sensor data import
-include SensorImport::CsvImport   # GINA sensor data import csv module
+include Sensor                    # GINA sensor data import
+include Sensor::CsvImport         # GINA sensor data import csv module
 
 main do |data_config, csv_file|
   # Initialize sensor import
   import = TypeCsv.new( data_config, csv_file )
 
-puts import.csvopt.header
-exit
-  # Connect to database and read in csv file
-  connection = Mongo::Connection.new(dbhost)
-  @database = connection.db(dbname)
+  # get collections
+  platform = import.database.platform_coll
+  raw_data = import.database.raw_coll
+  final_data = import.database.final_coll
 
 exit
   # Ingest CSV data into database

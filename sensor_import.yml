@@ -4,7 +4,7 @@
 database:
   host: "localhost"
   name: "barrow_mass_balance"
-  platform_coll: "mass_balance_platform"
+  port: "27017"
   raw_data_coll: "mass_balance_raw"
   final_data_coll: "mass_balance_data"
   user: ""
@@ -12,24 +12,25 @@ database:
 
 # Import options
 csv:
-  header: "yes"
+  header: true
   delimiter: ","
 
 # Platform Information
 platform:
   name: "Barrow Mass Balance"
-  agency: ""
-  metadata: ""
-  geo_loc: ""
-  license: ""
-  permissions: ""
+  agency: "Sea Ice Group UAF GI"
+  platform_metadata: "http://gina.metadata.alaska.edu"
+  geo_location: "156.5427° W, 71.36427° N"
+  license: "6"
+  permissions: "0"
+  authority: "Andy Mahoney"
 
 # Sensor Information
 sensor:
   -
     label: ""
     datum: ""
-    metadata: ""
+    metadata:
 
 # Process the data
 process:

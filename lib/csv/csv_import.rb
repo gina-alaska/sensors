@@ -1,41 +1,37 @@
 #!/usr/bin/env ruby
 # Import sensor csv data file into mongodb
 #
+require 'csv'
 
-module Sensor
-  module CsvImport
+module Sensors
+  module Import
+    module CsvImport
 
-    class TypeCsv < Import            # Import a CSV file, extends Import class
-      attr_accessor :csvopt, :csv_file
+      class CsvFormat < Import            # Import a CSV file, extends Import class
+        attr_accessor :csvopt, :csv_file
 
-      def initialize( config_file, csvfile )
-        super( config_file )          # Do base class setup (database, read config file, etc)
-        self.csvopt = do_section CsvOptions, "csv"  # Read in CSV options from config file
+        def initialize( csvfile )
+          super()
 
-        self.database.connect         # Connect to database
+          self.csvopt = @config["csv"]  # Read CSV options from config file
 
-        if File.exists?( csvfile )    # Read in the CSV file
-          self.csv_file = CSV.read( csvfile )
-        else
-          error "I can't find the CSV file \e[31m#{csvfile}\e[0m!"
+          if File.exists?( csvfile )    # Read in the CSV file
+            options = {:col_sep => self.csvopt["delimiter"]}
+            self.csv_file = CSV.open( File.open( csvfile ), options )
+          else
+            puts "I can't find the CSV file \e[31m#{csvfile}\e[0m!"
+            exit( -1 )
+          end
+
+          if self.csvopt["header"] === true
+            headers = self.csv_file.readline 
+          else
+            headers = self.csvopt["header"]
+          end
         end
 
-        platform_ingest
       end
-
-      def platform_ingest
-        colls = self.database.dbconnect.collection_names
-        puts colls.include?( self.database.platform )
-      end
-    end
-
-    class CsvOptions                  # CSV import options
-      attr_accessor :header, :delimiter
-
-      def initialize( options )
-        self.header ||= options["header"]
-        self.delimiter ||= options["delimiter"]
-      end
+      
     end
   end
 end

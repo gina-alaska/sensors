@@ -13,16 +13,23 @@ module Sensors
 
     	def initialize
     	  @config = Sensors::Config.instance
-        platform = Platform.first || Platform.new
-        platform.update_attributes( @config["platform"] )
+        @platform = Platform.first || Platform.new
+        @platform.update_attributes( @config["platform"] )
         begin
-          platform.save!
+          @platform.save!
         rescue
         	puts "Platform insertion/update error!"
-        	puts platform.errors.messages
+        	puts @platform.errors.messages
         	exit( -1 )
         end
       end
+      
+      def find_sensor( sensors, source )
+        sensors.each do |sensor|
+          return sensor if sensor["field"] == source
+        end
+        return nil
+      end 
     end
 
   end

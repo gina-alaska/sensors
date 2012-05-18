@@ -2,7 +2,6 @@
 # Talk to sensor data in the GINA sensor repository.
 #
 require 'singleton'
-#require 'json'
 require 'yaml'
 require 'mongoid'
 
@@ -40,27 +39,26 @@ module Sensors
   end
 
   class Database  		# Set up connection to mongodb database via mongoid
-    attr_accessor :host, :name, :port, :raw_data, :final_data, :dbconnect
 
     def initialize( database )
-      self.host ||= database["host"]
-      self.name ||= database["name"]
-      self.port ||= database["port"]
-      self.raw_data ||= database["raw_data_coll"]
-      self.final_data ||= database["final_data_coll"]
+      @name = database["name"]
+      @port = database["port"]
+      @host = database["host"]
     end
 
     def connect	  		# Connect to database
-      if self.host.nil? || self.name.nil? || self.port.nil?
+      if @host.nil? || @name.nil? || @port.nil?
         puts "The host name, database name, and port number \e[31mmust\e[0m be defined in
            the database section of the configuration file!"
         exit( -1 )
       else
         Mongoid.configure do |config|
-          name = self.name
-          host = self.host
-          port = self.port
-          config.master = Mongo::Connection.new.db( self.name )
+          name = @name
+          host = @host
+          port = @port
+          allow_dynamic_fields = true
+
+          config.master = Mongo::Connection.new.db( @name )
         end
       end
     end
@@ -76,6 +74,10 @@ module Sensors
     field :permissions,         type: String
     field :agency,              type: String
     field :authority,           type: String
+    field :year,                type: String
+    field :month,               type: String
+    field :day,                 type: String
+    field :time,                type: String
 
     validates_presence_of :name
     validates_presence_of :platform_metadata
@@ -84,13 +86,17 @@ module Sensors
     validates_presence_of :permissions
     validates_presence_of :agency
     validates_presence_of :authority
+    validates_presence_of :year
+    validates_presence_of :month
+    validates_presence_of :day
+    validates_presence_of :time
 
     validates_uniqueness_of :name
 
-    embeds_many :header
+    embeds_many :sensors
   end
 
-  class Header
+  class Sensor
     include Mongoid::Document
 
     field :label,               type: String
@@ -106,6 +112,14 @@ module Sensors
     validates_uniqueness_of :source_field
 
     embedded_in :platform
+  end
+
+  class RawData
+    include Mongoid::Document
+  end
+
+  class ProcessedData
+    include Mongoid::Document
   end
 
   class Process

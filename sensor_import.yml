@@ -8,6 +8,11 @@ database:
   user: ""
   password: ""
 
+date:
+  year: "year"     # Map date information
+  day:  "doy"
+  time: "HHMM"
+
 # Import options
 csv:
   header: true
@@ -22,10 +27,6 @@ platform:
   license: "6"
   permissions: "0"
   authority: "Andy Mahoney"
-  year: "year"     # Map date information
-  month: "0"
-  day:  "doy"
-  time: "HHMM"
 
 # Sensor Information
 sensors:

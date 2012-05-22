@@ -22,8 +22,8 @@ Sensors::Config.instance.load( opts[:data_config] )
 
 # Import sensor data
 case opts[:file_type]
-  when "csv"
-    import = CsvImport::CsvFormat.new( opts[:ingest_file] )
+  when "barrow"
+    import = CsvImport::BarrowFormat.new( opts[:ingest_file] )
   else
     Trollop::die "Unknown ingest file format \e[31m#{opts[:file_type]}\e[0m"
 end

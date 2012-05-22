@@ -44,6 +44,11 @@ module Sensors
       @name = database["name"]
       @port = database["port"]
       @host = database["host"]
+      @year = database["year"]
+    end
+
+    def self.year
+      @year
     end
 
     def connect	  		# Connect to database
@@ -74,10 +79,6 @@ module Sensors
     field :permissions,         type: String
     field :agency,              type: String
     field :authority,           type: String
-    field :year,                type: String
-    field :month,               type: String
-    field :day,                 type: String
-    field :time,                type: String
 
     validates_presence_of :name
     validates_presence_of :platform_metadata
@@ -86,10 +87,6 @@ module Sensors
     validates_presence_of :permissions
     validates_presence_of :agency
     validates_presence_of :authority
-    validates_presence_of :year
-    validates_presence_of :month
-    validates_presence_of :day
-    validates_presence_of :time
 
     validates_uniqueness_of :name
 
@@ -116,10 +113,22 @@ module Sensors
 
   class RawData
     include Mongoid::Document
+
+    field :capture_date,         type: DateTime
+
+    validates_uniqueness_of :capture_date
+
+    index :capture_date
   end
 
   class ProcessedData
     include Mongoid::Document
+
+    field :capture_date,         type: DateTime
+
+    validates_uniqueness_of :capture_date
+
+    index :capture_date
   end
 
   class Process

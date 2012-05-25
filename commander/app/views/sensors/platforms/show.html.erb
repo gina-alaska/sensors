@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Slug:</b>
+  <%= @sensors_platform.slug %><br />
+  <b>name:</b>
+  <%= @sensors_platform.name %><br />
+  <b>Platform Metadata:</b>
+  <%= @sensors_platform.platform_metadata %><br />
+  <b>Geographic Location:</b>
+  <%= @sensors_platform.geo_location %><br />
+  <b>License:</b>
+  <%= @sensors_platform.license %><br />
+  <b>Permissions:</b>
+  <%= @sensors_platform.permissions %><br />
+  <b>Agency:</b>
+  <%= @sensors_platform.agency %><br />
+  <b>Authority:</b>
+  <%= @sensors_platform.authority %><br />
+</p>
+
+<%= link_to 'Edit', edit_sensors_platform_path(@sensors_platform) %> |
+<%= link_to 'Back', sensors_platforms_path %>
+
+<h3>List of Sensors for this Platform</h3>
+<table>
+  <tr>
+  	<th>Label</th>
+  	<th>Source Header</th>
+  	<th>Sensor Metadata</th>
+  	<th></th>
+  </tr>
+  <% @sensors_platform.sensors.all.each do |sensor| %>
+    <tr>
+      <td><%= sensor.label %></td>
+      <td><%= sensor.source_field %></td>
+      <td><%= sensor.sensor_metadata %></td>
+      <td><%= link_to "edit", edit_sensors_platform_sensor_path( @sensors_platform, sensor ) %></td>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Edit', edit_sensors_platform_path(@sensors_platform) %> |
+<%= link_to 'Back', sensors_platforms_path %>

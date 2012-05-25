@@ -1,0 +1,20 @@
+development:
+  host: localhost
+  database: gina_sensor_data
+
+test:
+  host: localhost
+  database: commander_test
+
+# set these environment variables on your prod server
+production:
+  host: localhost
+  port: 27017
+  username: <%= ENV['MONGOID_USERNAME'] %>
+  password: <%= ENV['MONGOID_PASSWORD'] %>
+  database: gina_sensor_data
+  # slaves:
+  #   - host: slave1.local
+  #     port: 27018
+  #   - host: slave2.local
+  #     port: 27019

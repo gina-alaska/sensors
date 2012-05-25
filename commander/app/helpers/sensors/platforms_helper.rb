@@ -1,0 +1,2 @@
+module Sensors::PlatformsHelper
+end

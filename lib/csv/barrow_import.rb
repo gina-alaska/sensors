@@ -36,12 +36,10 @@ module Sensors
             if match.nil?                     # Build sensor data
               sensor_data = {"label" => source,
                              "source_field" => source,
-                             "datum" => "data#{index}", 
                              "sensor_metadata" => "no metadata"}
             else
               sensor_data = {"label" => match["label"],
                              "source_field" => source,
-                             "datum" => "data#{index}", 
                              "sensor_metadata" => match["metadata"]}
             end
 
@@ -73,16 +71,17 @@ module Sensors
               datahash[header.to_sym] = data
             end
 
-            newdata = RawData.new
-            newdata.write_attributes( datahash )
-            begin
-              newdata.save!
-            rescue
+            newdata = RawDatum.create(datahash)
+
+            if newdata.valid?
+              @platform.raw_data << newdata
+            else
               puts "Data insert failed date validation at row #{rowindex}"
               puts datahash
             end
             rowindex += 1
           end
+          @platform.save!
 
         end
 

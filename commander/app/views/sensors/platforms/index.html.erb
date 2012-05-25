@@ -1,0 +1,29 @@
+<h1>Listing sensors_platforms</h1>
+
+<table>
+  <tr>
+    <th width="240">Name</th>
+    <th width="200">Location</th>
+    <th width="240">Agency</th>
+    <th width="200">Authority</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sensors_platforms.each do |sensors_platform| %>
+  <tr>
+    <td><%= sensors_platform.name %></td>
+    <td><%= sensors_platform.geo_location %></td>
+    <td><%= sensors_platform.agency %></td>
+    <td><%= sensors_platform.authority %></td>
+    <td><%= link_to 'Show', sensors_platform %></td>
+    <td><%= link_to 'Edit', edit_sensors_platform_path(sensors_platform) %></td>
+    <td><%= link_to 'Destroy', sensors_platform, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Platform', new_sensors_platform_path %>

@@ -3,7 +3,7 @@
 # Database config
 database:
   host: "localhost"
-  name: "barrow_mass_balance"
+  name: "gina_sensor_data"
   port: "27017"
   user: ""
   password: ""
@@ -20,6 +20,7 @@ csv:
 
 # Platform Information
 platform:
+  slug: "barrow_mass_balance"
   name: "Barrow Mass Balance"
   agency: "Sea Ice Group UAF GI"
   platform_metadata: "http://metadata.gina.alaska.edu/retext/barrow_mass_balance.txt"
@@ -43,9 +44,9 @@ sensors:
     label: "Day Of the Year"
     metadata: "http://metadata.gina.alaska.edu/html/day.html"
 
-# Process the data
+# Data processing
 process:
-  -
+  no_data: -9999
 
 # Alerts
 alerts:

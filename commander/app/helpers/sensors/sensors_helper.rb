@@ -1,0 +1,2 @@
+module Sensors::SensorsHelper
+end

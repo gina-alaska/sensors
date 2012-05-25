@@ -4,7 +4,7 @@
 
 $: << File.expand_path( "lib/", File.dirname( __FILE__ ) )
 
-require 'sensor.rb'
+require 'gina_sensor.rb'
 require 'trollop'
 
 include Sensors

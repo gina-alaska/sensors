@@ -7,6 +7,13 @@ require 'mongoid'
 
 module Sensors
   autoload :Import, 'sensor_import'
+  autoload :Process, 'process.rb'
+  autoload :Platform, "sensors/platform.rb"
+  autoload :Sensor, "sensors/sensor.rb"
+  autoload :RawDatum, "sensors/raw_datum.rb"
+  autoload :ProcessedDatum, "sensors/processed_datum.rb"
+  autoload :ProcessSensor, "sensors/process_sensor.rb"
+  autoload :Event, "sensors/event.rb"
 
   class Config	          # Read in configuration file
     include Singleton
@@ -67,72 +74,6 @@ module Sensors
         end
       end
     end
-  end
-
-  class Platform
-    include Mongoid::Document
-
-    field :name,                type: String
-    field :platform_metadata,   type: String
-    field :geo_location,        type: String
-    field :license,             type: String
-    field :permissions,         type: String
-    field :agency,              type: String
-    field :authority,           type: String
-
-    validates_presence_of :name
-    validates_presence_of :platform_metadata
-    validates_presence_of :geo_location
-    validates_presence_of :license
-    validates_presence_of :permissions
-    validates_presence_of :agency
-    validates_presence_of :authority
-
-    validates_uniqueness_of :name
-
-    embeds_many :sensors
-  end
-
-  class Sensor
-    include Mongoid::Document
-
-    field :label,               type: String
-    field :source_field,        type: String
-    field :datum,               type: String
-    field :sensor_metadata,     type: String
-
-    validates_presence_of :label
-    validates_presence_of :source_field
-    validates_presence_of :datum
-    validates_presence_of :sensor_metadata
-
-    validates_uniqueness_of :source_field
-
-    embedded_in :platform
-  end
-
-  class RawData
-    include Mongoid::Document
-
-    field :capture_date,         type: DateTime
-
-    validates_uniqueness_of :capture_date
-
-    index :capture_date
-  end
-
-  class ProcessedData
-    include Mongoid::Document
-
-    field :capture_date,         type: DateTime
-
-    validates_uniqueness_of :capture_date
-
-    index :capture_date
-  end
-
-  class Process
-    attr_accessor :processes
   end
 
   class Alert

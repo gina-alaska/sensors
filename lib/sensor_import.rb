@@ -2,22 +2,19 @@
 # 
 # GINA Sensor Import Module
 #
-
+require 'active_support/all'
 module Sensors
   module Import
     autoload :CsvImport,		'csv/barrow_import'
 #    autoload :NetcdfImport,	'netcdf/netcdf_import'
 
     class Import
-    	attr_accessor :platform
 
     	def initialize
     	  @config = Sensors::Config.instance
-        @platform = Platform.first || Platform.new
-        @platform.update_attributes( @config["platform"] )
-        begin
-          @platform.save!
-        rescue
+        @platform = Platform.where(slug: "#{@config["platform"]["slug"]}").first || Platform.new
+
+        unless @platform.update_attributes( @config["platform"] )
         	puts "Platform insertion/update error!"
         	puts @platform.errors.messages
         	exit( -1 )
@@ -38,7 +35,7 @@ module Sensors
       	when "julian"
       		return DateTime.jd( day.to_i, hour.to_i, min.to_i ).iso8601
       	else
-      		puts "Unknown date type #{type}! Please correct configuration file."
+      		puts "date_convert: Unknown date type #{type}!"
       		exit( -1 )
       	end
       end

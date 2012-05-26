@@ -18,8 +18,11 @@ group :assets do
   gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'compass-rails'
 end
 
+gem 'bootstrap-sass', '~> 2.0.3'
+gem 'haml'
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password

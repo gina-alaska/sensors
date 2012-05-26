@@ -25,15 +25,15 @@
 <h3>List of Sensors for this Platform</h3>
 <table>
   <tr>
-  	<th>Label</th>
   	<th>Source Header</th>
+  	<th>Label</th>
   	<th>Sensor Metadata</th>
   	<th></th>
   </tr>
   <% @sensors_platform.sensors.all.each do |sensor| %>
     <tr>
-      <td><%= sensor.label %></td>
       <td><%= sensor.source_field %></td>
+      <td><%= sensor.label %></td>
       <td><%= sensor.sensor_metadata %></td>
       <td><%= link_to "edit", edit_sensors_platform_sensor_path( @sensors_platform, sensor ) %></td>
     </tr>

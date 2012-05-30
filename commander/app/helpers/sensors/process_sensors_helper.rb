@@ -1,0 +1,2 @@
+module Sensors::ProcessSensorsHelper
+end

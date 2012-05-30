@@ -1,0 +1,26 @@
+<h2>Process Sensors for <%= @sensors_platform.name %></h2>
+<hr>
+platform - <%= @sensors_platform.slug %>
+<table>
+  <tr>
+    <th width="400">Name</th>
+    <th width="100">No data</th>
+    <th width="60"></th>
+    <th width="60"></th>
+    <th width="60"></th>
+  </tr>
+
+<% @sensors_process_sensors.each do |sensors_process_sensor| %>
+  <tr>
+    <td><%= sensors_process_sensor.name %></td>
+    <td><%= sensors_process_sensor.no_data %></td>
+    <td><%= link_to 'Show', sensors_process_sensor %></td>
+    <td><%= link_to 'Edit', edit_sensors_process_sensor_path(sensors_process_sensor) %></td>
+    <td><%= link_to 'Destroy', sensors_process_sensor, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Process sensor', new_sensors_process_sensor_path %>

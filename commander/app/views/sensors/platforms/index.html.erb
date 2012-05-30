@@ -1,4 +1,4 @@
-<h1>Listing sensors_platforms</h1>
+<h2>Platform List</h2>
 
 <table>
   <tr>
@@ -6,9 +6,9 @@
     <th width="200">Location</th>
     <th width="240">Agency</th>
     <th width="200">Authority</th>
-    <th></th>
-    <th></th>
-    <th></th>
+    <th width="60"></th>
+    <th width="60"></th>
+    <th width="60"></th>
   </tr>
 
 <% @sensors_platforms.each do |sensors_platform| %>
@@ -25,5 +25,3 @@
 </table>
 
 <br />
-
-<%= link_to 'New Platform', new_sensors_platform_path %>

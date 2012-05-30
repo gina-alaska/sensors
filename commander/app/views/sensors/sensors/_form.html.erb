@@ -12,6 +12,7 @@
   <% end %>
 
   <div class="field">
+    <%= hidden_field_tag :platform_id, @sensors_platform.to_param %>
     <%= f.label :label %><br />
     <%= f.text_field :label, :size => 60 %><br />
     <%= f.label :sensor_metadata %><br />

@@ -1,8 +1,13 @@
 Commander::Application.routes.draw do
   
+  namespace :sensors do resources :process_sensors end
+
   get "dashboard/index"
 
   namespace :sensors do
+    resources :sensors
+    resources :process_sensors
+
     resources :platforms do 
       resources :sensors
     end

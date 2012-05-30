@@ -24,7 +24,7 @@
     embeds_many :sensors,        :class_name => "Sensors::Sensor"
     has_many :raw_data,          :class_name => "Sensors::RawDatum"
     has_many :processed_data,    :class_name => "Sensors::ProcessedDatum"
-    has_one :process_sensor,     :class_name => "Sensor::ProcessSensor"
+    has_one :process_sensor,     :class_name => "Sensors::ProcessSensor"
 
     def to_param
       self.slug

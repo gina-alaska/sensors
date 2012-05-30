@@ -7,5 +7,5 @@
 
     index :starts_at
     index :ends_at
-    embedded_in :process_sensor, :class_name => "Sensors::ProcessSensor"
+    belongs_to :process_sensor, :class_name => "Sensors::ProcessSensor"
   end

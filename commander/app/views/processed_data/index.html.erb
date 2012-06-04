@@ -1,0 +1,23 @@
+<h1>Listing processed_data</h1>
+
+<table>
+  <tr>
+    <th>Capture date</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @processed_data.each do |processed_datum| %>
+  <tr>
+    <td><%= processed_datum.capture_date %></td>
+    <td><%= link_to 'Show', processed_datum %></td>
+    <td><%= link_to 'Edit', edit_processed_datum_path(processed_datum) %></td>
+    <td><%= link_to 'Destroy', processed_datum, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Processed datum', new_processed_datum_path %>

@@ -9,8 +9,13 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
 */
-@import "bootstrap";
+
 @import "compass";
+
+$linkColor: #4c7d8b;
+
+@import "bootstrap";
+@import "events";
 
 .header-sensor{
 	color: white;
@@ -28,4 +33,8 @@
 .icon-sensor{
 	float: right;
   padding-right: 60px;
+}
+
+form.button_to{
+	margin-bottom: 0;
 }

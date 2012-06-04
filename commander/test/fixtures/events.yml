@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  starts_at: 
+  ends_at: 
+  command: 
+
+two:
+  starts_at: 
+  ends_at: 
+  command: 

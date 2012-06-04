@@ -1,0 +1,29 @@
+<%= form_for(@alert) do |f| %>
+  <% if @alert.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@alert.errors.count, "error") %> prohibited this alert from being saved:</h2>
+
+      <ul>
+      <% @alert.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :starts_at %><br />
+    <%= f.text_field :starts_at %>
+  </div>
+  <div class="field">
+    <%= f.label :ends_at %><br />
+    <%= f.text_field :ends_at %>
+  </div>
+  <div class="field">
+    <%= f.label :command %><br />
+    <%= f.text_field :command %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

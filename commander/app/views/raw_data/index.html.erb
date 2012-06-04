@@ -1,0 +1,23 @@
+<h1>Listing raw_data</h1>
+
+<table>
+  <tr>
+    <th>Capture date</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @raw_data.each do |raw_datum| %>
+  <tr>
+    <td><%= raw_datum.capture_date %></td>
+    <td><%= link_to 'Show', raw_datum %></td>
+    <td><%= link_to 'Edit', edit_raw_datum_path(raw_datum) %></td>
+    <td><%= link_to 'Destroy', raw_datum, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Raw datum', new_raw_datum_path %>

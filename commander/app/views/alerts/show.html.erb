@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Starts at:</b>
+  <%= @alert.starts_at %>
+</p>
+
+<p>
+  <b>Ends at:</b>
+  <%= @alert.ends_at %>
+</p>
+
+<p>
+  <b>Command:</b>
+  <%= @alert.command %>
+</p>
+
+
+<%= link_to 'Edit', edit_alert_path(@alert) %> |
+<%= link_to 'Back', alerts_path %>

@@ -1,18 +1,14 @@
 Commander::Application.routes.draw do
-  
-  namespace :sensors do resources :process_sensors end
 
-  get "dashboard/index"
+  match "dashboard" => "dashboard#index"
 
-  namespace :sensors do
+  resources :platforms do
     resources :sensors
-    resources :process_sensors
-
-    resources :platforms do 
-      resources :sensors
-    end
+    resources :raw_data
+    resources :processed_data
+    resources :events
+    resources :alerts
   end
-
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

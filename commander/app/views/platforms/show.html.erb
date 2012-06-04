@@ -1,0 +1,96 @@
+<h2>Platform Information for <%= @platform.name %></h2>
+
+<p>
+  <b>Slug:</b>
+  <%= @platform.slug %>
+</p>
+
+<p>
+  <b>Name:</b>
+  <%= @platform.name %>
+</p>
+
+<p>
+  <b>Agency:</b>
+  <%= @platform.agency %>
+</p>
+
+<p>
+  <b>Authority:</b>
+  <%= @platform.authority %>
+</p>
+
+<p>
+  <b>Platform Metadata:</b>
+  <%= @platform.platform_metadata %>
+</p>
+
+<p>
+  <b>Geographic Location:</b>
+  <%= @platform.geo_location %>
+</p>
+
+<p>
+  <b>License:</b>
+  <%= @platform.license %>
+</p>
+
+<p>
+  <b>Permissions:</b>
+  <%= @platform.permissions %>
+</p>
+
+<p>
+  <b>No Data Value:</b>
+  <%= @platform.no_data_value %>
+</p>
+
+<%= link_to 'Edit', edit_platform_path(@platform) %> |
+<%= link_to 'Back', platforms_path %>
+<hr>
+<ul class="nav nav-pills" id="platformTab">
+	<li class="active"><a href="#sensors" data-toggle="pill">Sensor List</a></li>
+	<li><a href="#processing" data-toggle="pill">Process Sensors</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="sensors">
+		<h3>Associated Sensors List</h3>
+
+		<table>
+			<tr>
+			  <th width="200">Source Field</th>
+			  <th width="200">Label</th>
+			  <th width="400">Sensor Metadata</th>
+			</tr>
+     	<%= render @sensors %>
+		</table>
+  </div>
+
+  <div class="tab-pane" id="processing">
+  	<h3>Process Sensor List</h3>
+
+  	<%= link_to 'New Sensor Process', new_platform_event_path(@platform) %>
+
+  	<table>
+  		<tr>
+  			<th width="200">Start Date/Time</th>
+  			<th width="200">End Date/Time</th>
+  			<th width="400">Command</th>
+  		</tr>
+  		<%= render @events %>
+  	</table>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $('#platformTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  // $('#processing a').click(function (e) {
+  //   e.preventDefault();
+  //   $(this).tab('show');
+  // })
+  <%= raw show_tab_for("platformTab") %>
+</script>

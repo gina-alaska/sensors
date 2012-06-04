@@ -1,12 +1,6 @@
 # Ingest data to database for Barrow mass balance data.
 # 
 # Database config
-database:
-  host: "localhost"
-  name: "gina_sensor_data"
-  port: "27017"
-  user: ""
-  password: ""
 
 date:
   year: "year"     # Map date information
@@ -28,6 +22,7 @@ platform:
   license: "6"
   permissions: "0"
   authority: "Andy Mahoney"
+  no_data_value: -9999
 
 # Sensor Information
 sensors:
@@ -43,12 +38,3 @@ sensors:
     field: "doy"
     label: "Day Of the Year"
     metadata: "http://metadata.gina.alaska.edu/html/day.html"
-
-# Data processing
-process:
-  no_data: -9999
-
-# Alerts
-alerts:
-  -
-

@@ -21,10 +21,11 @@
 
     validates_uniqueness_of :slug
 
-    embeds_many :sensors,        :class_name => "Sensors::Sensor"
-    has_many :raw_data,          :class_name => "Sensors::RawDatum"
-    has_many :processed_data,    :class_name => "Sensors::ProcessedDatum"
-    has_one :process_sensor,     :class_name => "Sensors::ProcessSensor"
+    embeds_many :sensors,     :class_name => "Sensors::Sensor"
+    has_many :raw_data,       :class_name => "Sensors::RawDatum"
+    has_many :processed_data, :class_name => "Sensors::ProcessedDatum"
+    has_one :process_sensor,  :class_name => "Sensors::ProcessSensor"
+    has_many :alerts,         :class_name => "Sensors::Alerts"
 
     def to_param
       self.slug

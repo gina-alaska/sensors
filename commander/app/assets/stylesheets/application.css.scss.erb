@@ -12,21 +12,19 @@
 
 @import "compass";
 
-$linkColor: #4c7d8b;
+$linkColor: #2e4a52;
 
 @import "bootstrap";
 @import "events";
 
 .header-sensor{
 	color: white;
-	background-image: url("<%= asset_path 'header_background.jpg'%>");
-	background-repeat: repeat-x;
+	@include gradient-vertical(#66a5b6, #3c616b);
 }
 
 .footer-sensor{
 	color: white;
-	background-image: url("<%= asset_path 'footer_background.jpg'%>");
-	background-repeat: repeat-x;
+	@include gradient-vertical(#3c616b, #66a5b6);
 	margin-top: 10px;
 }
 
@@ -37,4 +35,18 @@ $linkColor: #4c7d8b;
 
 form.button_to{
 	margin-bottom: 0;
+}
+
+.nav-background{
+	background-color: #72b9cb;
+	padding-left: 10px;
+}
+
+.command-background{
+	background-color: #bee5ef;
+}
+
+.controls{
+	float: right;
+	padding-right: 10px;
 }

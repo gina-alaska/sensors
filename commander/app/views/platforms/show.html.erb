@@ -1,54 +1,37 @@
-<h2>Platform Information for <%= @platform.name %></h2>
-
-<p>
-  <b>Slug:</b>
-  <%= @platform.slug %>
-</p>
-
-<p>
-  <b>Name:</b>
-  <%= @platform.name %>
-</p>
-
-<p>
-  <b>Agency:</b>
-  <%= @platform.agency %>
-</p>
-
-<p>
-  <b>Authority:</b>
-  <%= @platform.authority %>
-</p>
-
-<p>
-  <b>Platform Metadata:</b>
-  <%= @platform.platform_metadata %>
-</p>
-
-<p>
-  <b>Geographic Location:</b>
-  <%= @platform.geo_location %>
-</p>
-
-<p>
-  <b>License:</b>
-  <%= @platform.license %>
-</p>
-
-<p>
-  <b>Permissions:</b>
-  <%= @platform.permissions %>
-</p>
-
-<p>
-  <b>No Data Value:</b>
-  <%= @platform.no_data_value %>
-</p>
-
-<%= link_to 'Edit', edit_platform_path(@platform) %> |
-<%= link_to 'Back', platforms_path %>
+<div class="controls">
+  <%= link_to 'Edit', edit_platform_path(@platform), class: "btn btn-primary" %> 
+  <%= link_to 'Back', platforms_path, class: "btn btn-primary" %>
+</div>
+<h2>Operations for the <%= @platform.name %> Platform</h2>
 <hr>
-<ul class="nav nav-pills" id="platformTab">
+<table>
+  <tr>
+    <td width="160"><b>Name:</b></td><td width="200"><%= @platform.name %></td>
+    <td width="160"><b>Slug:</b></td><td width="200"><%= @platform.slug %></td>
+  </tr>
+  <tr>
+    <td><b>Agency:</td><td><%= @platform.agency %></td>
+    <td><b>Authority:</b></td><td><%= @platform.authority %></td>
+  </tr>
+  <tr>
+    <td><b>License:</b></td><td><%= @platform.license %></td>
+    <td><b>Permissions:</b></td><td><%= @platform.permissions %></td>
+  </tr>
+  <tr>
+    <td><b>Platform Metadata:</b></td>
+    <td colspan="3"><%= @platform.platform_metadata %></td>
+  </tr>
+  <tr>
+    <td><b>Geographic Location:</b></td>
+    <td colspan="3"><%= @platform.geo_location %></td>
+  </tr>
+  <tr>
+    <td><b>No Data Value:</b></td>
+    <td colspan="3"><%= @platform.no_data_value %></td>
+  </tr>
+</table>
+<br />
+<ul class="nav nav-pills nav-background" id="platformTab">
 	<li class="active"><a href="#sensors" data-toggle="pill">Sensor List</a></li>
 	<li><a href="#processing" data-toggle="pill">Process Sensors</a></li>
 </ul>
@@ -62,23 +45,29 @@
 			  <th width="200">Source Field</th>
 			  <th width="200">Label</th>
 			  <th width="400">Sensor Metadata</th>
+        <th width="80"></th>
 			</tr>
      	<%= render @sensors %>
 		</table>
   </div>
 
   <div class="tab-pane" id="processing">
-  	<h3>Process Sensor List</h3>
-
-  	<%= link_to 'New Sensor Process', new_platform_event_path(@platform) %>
+    <div class="controls">
+     	<%= link_to 'New Process', new_platform_event_path(@platform), class: "btn btn-primary" %>
+    </div>
+    <h3>Process Sensor List</h3>
+    <br />
 
   	<table>
   		<tr>
-  			<th width="200">Start Date/Time</th>
-  			<th width="200">End Date/Time</th>
+        <th width="200">Field Name</th>
+  			<th width="140">Start Date/Time</th>
+  			<th width="140">End Date/Time</th>
   			<th width="400">Command</th>
+        <th widht="160"></th>
+        <th widht="160"></th>
   		</tr>
-  		<%= render @events %>
+  		<%= render @events, :locals => { :platform => @platform } %>
   	</table>
   </div>
 </div>

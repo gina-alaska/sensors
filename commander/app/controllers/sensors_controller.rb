@@ -35,7 +35,8 @@ class SensorsController < ApplicationController
 
   # GET /sensors/1/edit
   def edit
-    @sensor = Sensor.find(params[:id])
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @sensor = @platform.sensors.find(params[:id])
   end
 
   # POST /sensors
@@ -57,11 +58,13 @@ class SensorsController < ApplicationController
   # PUT /sensors/1
   # PUT /sensors/1.json
   def update
-    @sensor = Sensor.find(params[:id])
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @sensor = @platform.sensors.find(params[:id])
+    session["platformTabShow"] = '#sensors'
 
     respond_to do |format|
       if @sensor.update_attributes(params[:sensor])
-        format.html { redirect_to @sensor, notice: 'Sensor was successfully updated.' }
+        format.html { redirect_to @platform, notice: 'Sensor was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

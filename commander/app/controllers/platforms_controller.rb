@@ -58,7 +58,7 @@ class PlatformsController < ApplicationController
   # PUT /platforms/1
   # PUT /platforms/1.json
   def update
-    @platform = Platform.find(params[:id])
+    @platform = Platform.where( slug: params[:id] ).first
 
     respond_to do |format|
       if @platform.update_attributes(params[:platform])

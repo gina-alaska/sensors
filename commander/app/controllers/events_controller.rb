@@ -36,7 +36,9 @@ class EventsController < ApplicationController
 
   # GET /events/1/edit
   def edit
+    @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])
+    session["platformTabShow"] = '#processing'
   end
 
   # POST /events
@@ -48,7 +50,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to url_for(@platform)+"#processing", notice: 'Event was successfully created.' }
+        format.html { redirect_to @platform, notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
         format.html { render action: "new" }
@@ -60,11 +62,13 @@ class EventsController < ApplicationController
   # PUT /events/1
   # PUT /events/1.json
   def update
+    @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])
+    session["platformTabShow"] = '#processing'
 
     respond_to do |format|
       if @event.update_attributes(params[:event])
-        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
+        format.html { redirect_to @platform, notice: 'Event was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -76,11 +80,13 @@ class EventsController < ApplicationController
   # DELETE /events/1
   # DELETE /events/1.json
   def destroy
+    @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])
     @event.destroy
+    session["platformTabShow"] = '#processing'
 
     respond_to do |format|
-      format.html { redirect_to events_url }
+      format.html { redirect_to @platform }
       format.json { head :no_content }
     end
   end

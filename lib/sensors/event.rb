@@ -1,5 +1,6 @@
   class Sensors::Event
     include Mongoid::Document
+    include Mongoid::MultiParameterAttributes
 
     field :starts_at,           type: DateTime
     field :ends_at,             type: DateTime

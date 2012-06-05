@@ -1,5 +1,8 @@
 <tr>
-	<td><%= event.starts_at %></td>
-	<td><%= event.ends_at %></td>
-	<td><%= event.command %></td>
+	<td><%= event.name %></td>
+	<td><%= event.starts_at.strftime("%m/%d/%Y - %I:%M%p") %></td>
+	<td><%= event.ends_at.strftime("%m/%d/%Y - %I:%M%p") %></td>
+	<td class="command-background"><%= event.command %></td>
+	<td><%= link_to 'Edit', edit_platform_event_path(@platform, event), class: "btn btn-primary" %></td>
+  <td><%= button_to 'Delete', [@platform, event], confirm: 'Are you sure?', method: :delete, class: "btn btn-danger" %></td>
 </tr>

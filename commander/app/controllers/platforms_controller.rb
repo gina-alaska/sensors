@@ -14,8 +14,8 @@ class PlatformsController < ApplicationController
   # GET /platforms/1.json
   def show
     @platform = Platform.where( slug: params[:id] ).first
-    @sensors = @platform.sensors
-    @events = @platform.events
+    @sensors = @platform.sensors.page params[:page]
+    @events = @platform.events.page params[:event_page]
 
     respond_to do |format|
       format.html # show.html.erb

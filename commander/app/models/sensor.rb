@@ -10,6 +10,7 @@
     validates_presence_of :sensor_metadata
 
     validates_uniqueness_of :source_field
+    paginates_per 12
 
     embedded_in :platform
   end

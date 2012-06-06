@@ -40,6 +40,7 @@
   <div class="tab-pane active" id="sensors">
 		<h3>Associated Sensors List</h3>
 
+    <%= paginate @sensors %>
 		<table>
 			<tr>
 			  <th width="200">Source Field</th>
@@ -47,7 +48,7 @@
 			  <th width="400">Sensor Metadata</th>
         <th width="80"></th>
 			</tr>
-     	<%= render @sensors %>
+      <%= render @sensors %>
 		</table>
   </div>
 
@@ -58,11 +59,12 @@
     <h3>Process Sensor List</h3>
     <br />
 
+    <%= paginate @events, :param_name => "event_page" %>
   	<table>
   		<tr>
         <th width="200">Field Name</th>
-  			<th width="140">Start Date/Time</th>
-  			<th width="140">End Date/Time</th>
+  			<th width="150">Start Date/Time</th>
+  			<th width="150">End Date/Time</th>
   			<th width="400">Command</th>
         <th widht="160"></th>
         <th widht="160"></th>

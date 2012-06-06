@@ -27,6 +27,7 @@ class EventsController < ApplicationController
   def new
     @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.new
+    session["platformTabShow"] = '#processing'
 
     respond_to do |format|
       format.html # new.html.erb
@@ -48,6 +49,10 @@ class EventsController < ApplicationController
     @event = @platform.events.build(params[:event])
     session["platformTabShow"] = '#processing'
 
+    if params[:start_check] == 1
+      @event[:start_at] = nil
+    end
+
     respond_to do |format|
       if @event.save
         format.html { redirect_to @platform, notice: 'Event was successfully created.' }
@@ -65,9 +70,10 @@ class EventsController < ApplicationController
     @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])
     session["platformTabShow"] = '#processing'
+    @event.attributes = event_params
 
     respond_to do |format|
-      if @event.update_attributes(params[:event])
+      if @event.save
         format.html { redirect_to @platform, notice: 'Event was successfully updated.' }
         format.json { head :no_content }
       else
@@ -89,5 +95,14 @@ class EventsController < ApplicationController
       format.html { redirect_to @platform }
       format.json { head :no_content }
     end
+  end
+
+  protected
+
+  def event_params
+    e = params[:event] #.slice(:start_at, :end_at, :name, :command)
+#    e[:start_at] = nil if params[:start_check]
+#    e[:end_at] = nil if params[:end_check]
+    return e
   end
 end

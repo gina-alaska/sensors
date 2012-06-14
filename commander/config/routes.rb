@@ -6,8 +6,19 @@ Commander::Application.routes.draw do
     resources :sensors
     resources :raw_data
     resources :processed_data
-    resources :events
+    resources :events do
+      get 'add', :on => :member
+    end
     resources :alerts
+  end
+
+  resources :resques do
+    member do
+      post :retry
+    end
+    collection do
+      delete :destroy
+    end
   end
 
   # The priority is based upon order of creation:

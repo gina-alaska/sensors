@@ -1,0 +1,19 @@
+  <div class="row-fluid">
+    <%= hidden_field_tag "commands[#{command.index}][id]", command.id %>
+    <div class="field span2">
+      <%= label_tag :starts_at %>
+      <%= text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker" %>
+    </div>
+    <div class="field span2">
+      <%= label_tag :ends_at %>
+      <%= text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker" %>
+    </div>
+    <div class="field span2">
+      <%= label_tag :command %>
+      <%= text_field_tag "commands[#{command.index}][command]", command.command %>
+    </div>
+    <div class="field span2">
+      <%= label_tag :from %>
+      <%= text_field_tag "commands[#{command.index}][from]", [command.from] %>
+    </div>
+  </div>

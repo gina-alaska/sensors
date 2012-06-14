@@ -1,0 +1,36 @@
+<script type="text/javascript">
+  var chart1;
+  $(document).ready(function() {
+  	chart1 = new Highcharts.Chart({
+  		chart: {
+  			renderTo: 'rawchart',
+  			type: 'bar'
+  		},
+  		title: {
+  			text: 'Raw Data'
+  		},
+  		xAxis: {
+  			title: {
+  				text: 'Day'
+  			},
+  		yAxis: {
+  			title: {
+  				text: 'Value'
+  			},
+  		series: [
+  			{
+  				name: 'h_water (m)',
+  				data: [
+            <% @raw_data.each do |row| %>
+            	<%= row["h_water (m)"] %>,
+  	      	<% end %>
+  				]
+  			}
+  		  ]
+  		}
+  		}
+  		})
+  	});
+</script>
+
+<div id="rawchart" style="width: 600px; height: 300px"></div>

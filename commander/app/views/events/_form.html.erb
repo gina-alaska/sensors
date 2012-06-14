@@ -13,30 +13,43 @@
   <% end %>
   <div class="row-fluid">
     <div class="field span5">
+      Processing Field
       <%= f.label :name %>
       <%= f.text_field :name %>
     </div>
-  </div>
-  <div class="row-fluid">
-    <div class="field date span5">
-      <%= f.label :starts_at %>
-      <%= f.datetime_select :starts_at, :include_blank => true %>
-    </div>
-  </div>
-  <div class="row-fluid">
-    <div class="field date span5">
-      <%= f.label :ends_at %>
-      <%= f.datetime_select :ends_at, :include_blank => true %>
-    </div>
+    
   </div>
   <div class="row-fluid">
     <div class="field span8">
-      <%= f.label :command %>
-      <%= f.text_field :command %>
+      <%= f.label :description %>
+      <%= f.text_area :description, :cols => 80, :rows => 6 %>
     </div>
   </div><br />
+  <% unless @event.new_record? %>
+    <div class="row-fluid"
+      <div class="span2">
+        <%= link_to 'Add Command', add_platform_event_path(@platform, @event), class: "btn btn-primary" %>
+      </div>
+    </div>
+    <% @event.commands.each do |command| %>
+      <%= render :partial => command.command, :locals => {:command => command} %>
+    <% end %>
+  <% end %>
+  <br />
   <div class="actions row-fluid">
     <%= f.submit (@event.new_record? ? "Create Process" : "Update Process"), :class => "btn btn-primary" %>
   </div>
 <% end %>
 </div>
+
+<script>
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ssz",
+        separator: " "});
+  });
+</script>

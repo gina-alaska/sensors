@@ -43,3 +43,5 @@ gem 'mongoid'
 gem 'bson_ext'
 gem 'resque'
 gem 'kaminari'
+gem 'rinruby'
+gem "highcharts-rails", "~> 2.2.1"

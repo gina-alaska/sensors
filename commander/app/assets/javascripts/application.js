@@ -12,5 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
+//= require js/jquery-ui-timepicker-addon
 //= require bootstrap
+//= require highcharts
+//= require highcharts/themes/grid
+//= require highcharts/modules/exporting
 //= require_tree .

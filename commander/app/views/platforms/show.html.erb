@@ -18,6 +18,10 @@
     <td><b>Permissions:</b></td><td><%= @platform.permissions %></td>
   </tr>
   <tr>
+    <td><b>No Data Value:</b></td><td><%= @platform.no_data_value %></td>
+    <td><b>Graph View Length:</b></td><td><%= @platform.graph_length %></td>
+  </tr>
+  <tr>
     <td><b>Platform Metadata:</b></td>
     <td colspan="3"><%= @platform.platform_metadata %></td>
   </tr>
@@ -25,15 +29,12 @@
     <td><b>Geographic Location:</b></td>
     <td colspan="3"><%= @platform.geo_location %></td>
   </tr>
-  <tr>
-    <td><b>No Data Value:</b></td>
-    <td colspan="3"><%= @platform.no_data_value %></td>
-  </tr>
 </table>
 <br />
 <ul class="nav nav-pills nav-background" id="platformTab">
 	<li class="active"><a href="#sensors" data-toggle="pill">Sensor List</a></li>
 	<li><a href="#processing" data-toggle="pill">Process Sensors</a></li>
+  <li><a href="#dataview" data-toggle="pill">View Sensor Data</a></li>
 </ul>
 
 <div class="tab-content">
@@ -56,21 +57,24 @@
     <div class="controls">
      	<%= link_to 'New Process', new_platform_event_path(@platform), class: "btn btn-primary" %>
     </div>
-    <h3>Process Sensor List</h3>
+    <h3>Process Event List</h3>
     <br />
 
     <%= paginate @events, :param_name => "event_page" %>
   	<table>
   		<tr>
-        <th width="200">Field Name</th>
-  			<th width="150">Start Date/Time</th>
-  			<th width="150">End Date/Time</th>
-  			<th width="400">Command</th>
+        <th width="200">Processed Field</th>
+  			<th width="500">Description</th>
         <th widht="160"></th>
         <th widht="160"></th>
   		</tr>
   		<%= render @events, :locals => { :platform => @platform } %>
   	</table>
+  </div>
+
+  <div class="tab-pane" id="dataview">
+    <h3>View Both Raw and Processed Sensor Data</h3>
+    <%= render :partial => 'highchart', :locals => { nodata: @platform.no_data_value.to_f, raw_data: @raw_data, proc_data: @proc_data } %>
   </div>
 </div>
 
@@ -79,9 +83,5 @@
     e.preventDefault();
     $(this).tab('show');
   });
-  // $('#processing a').click(function (e) {
-  //   e.preventDefault();
-  //   $(this).tab('show');
-  // })
   <%= raw show_tab_for("platformTab") %>
 </script>

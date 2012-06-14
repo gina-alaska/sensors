@@ -10,6 +10,7 @@
     field :agency,              type: String
     field :authority,           type: String
     field :no_data_value,       type: String
+    field :graph_length,        type: Integer
 
     validates_presence_of :slug
     validates_presence_of :name
@@ -23,10 +24,15 @@
     validates_uniqueness_of :slug
 
     embeds_many :sensors
-    has_many :raw_data
+    has_many :raw_data 
+        
     has_many :processed_data
     has_many :events
     has_many :alerts
+
+    def async_process_events
+      Resque.enqueue(EventProcessor, self.slug, :all)
+    end
 
     def to_param
       self.slug

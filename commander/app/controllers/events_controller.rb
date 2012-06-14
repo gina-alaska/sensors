@@ -49,13 +49,10 @@ class EventsController < ApplicationController
     @event = @platform.events.build(params[:event])
     session["platformTabShow"] = '#processing'
 
-    if params[:start_check] == 1
-      @event[:start_at] = nil
-    end
-
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @platform, notice: 'Event was successfully created.' }
+        @event.async_process_event # Queue the processing event
+        format.html { redirect_to edit_platform_event_path(@platform, @event), notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
         format.html { render action: "new" }
@@ -74,6 +71,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
+        @event.async_process_event # Queue the processing event
         format.html { redirect_to @platform, notice: 'Event was successfully updated.' }
         format.json { head :no_content }
       else
@@ -97,12 +95,19 @@ class EventsController < ApplicationController
     end
   end
 
+  def add
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @event = Event.find(params[:id])
+    @event.commands.create(command: "copy", index: @event.commands.count)
+
+    redirect_to edit_platform_event_path(@platform, @event)
+  end
+
   protected
 
   def event_params
-    e = params[:event] #.slice(:start_at, :end_at, :name, :command)
-#    e[:start_at] = nil if params[:start_check]
-#    e[:end_at] = nil if params[:end_check]
+    e = params[:event]
+    e[:commands] = params[:commands]
     return e
   end
 end

@@ -16,6 +16,10 @@ class PlatformsController < ApplicationController
     @platform = Platform.where( slug: params[:id] ).first
     @sensors = @platform.sensors.page params[:page]
     @events = @platform.events.page params[:event_page]
+    @raw_data = @platform.raw_data.order_by([[:capture_date, :desc]]).
+        limit(@platform.graph_length).sort
+    @proc_data = @platform.processed_data.order_by([[:capture_date, :desc]]).
+        limit(@platform.graph_length).sort
 
     respond_to do |format|
       format.html # show.html.erb

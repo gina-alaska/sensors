@@ -1,9 +1,10 @@
   class Event
     include Mongoid::Document
-   # include Mongoid::MultiParameterAttributes
+  #  include Mongoid::MultiParameterAttributes
 
     field :name,                type: String
     field :description,         type: String
+    field :from,                type: Array
 
     validates_presence_of :name
     validates_uniqueness_of :name

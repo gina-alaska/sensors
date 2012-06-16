@@ -1,6 +1,0 @@
-<tr>
-	<td><%= event.name %></td>
-  <td class="command-background"><%= event.description %></td>
-	<td><%= link_to 'Edit', edit_platform_event_path(@platform, event), class: "btn btn-primary" %></td>
-  <td><%= button_to 'Delete', [@platform, event], confirm: 'Are you sure?', method: :delete, class: "btn btn-danger" %></td>
-</tr>

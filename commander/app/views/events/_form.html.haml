@@ -1,0 +1,67 @@
+.event-form.row-fluid.form-horizontal
+  = form_for([@platform, @event]) do |f|
+    - if @event.errors.any?
+      %div{:id => "error_explanation row-fluid"}
+        %h2
+          = pluralize(@event.errors.count, "error")
+          prohibited this event from being saved:
+        %ul
+          - @event.errors.full_messages.each do |msg|
+            %li= msg
+    .row-fluid
+      .span10
+        .row-fluid
+          .span6
+            .control-group
+              = f.label :name, "Processed Field Name:", :class=>"control-label"
+              .controls
+                = f.text_field :name
+            .control-group
+              = f.label :description, "Metadata Description:", :class=>"control-label"
+              .controls
+                = f.text_area :description, :rows => 6, :class=>"span12"
+          .span4
+            .control-group
+              = f.label :from, "From Raw Fields:", :class=>"control-label"
+              .controls
+                = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 10}
+      .field.span2.messages
+        messages here
+    - unless @event.new_record?
+      .row-fluid
+        .span2
+          = link_to 'Add Command', add_platform_event_path(@platform, @event), class: "btn btn-primary", :id => "add_command"
+      #commands
+        - @event.commands.each do |command|
+          = render :partial=>"command", :locals=>{:command => command}
+    %br/
+    .actions.row-fluid
+      = f.submit (@event.new_record? ? "Create Process" : "Update Process"), :class => "btn btn-primary"
+:javascript
+  $('#add_command').live('click', function(e) {
+    $.get($(e.target).prop('href'), function(data) {
+      $("#commands").append(data)
+    });
+
+    e.stopPropagation();
+    return false;
+  });
+  $('#commands a.delete').live('click', function(e) {
+    var target = $(e.target).parents(".event-update")
+    $.get($(e.target).prop('href'), function(data) {
+      $('#commands').append(data);
+    });
+
+    e.stopPropagation();
+    return false;
+  });
+
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ssz",
+        separator: " "});
+  });

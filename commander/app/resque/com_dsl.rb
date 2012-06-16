@@ -5,7 +5,7 @@ mean from: "field", window: 2.days
 median from: "field", window: 2.days
 average from: ["field1", "field2"]
 adjust from: "field", add: 10 or sub: 10
-
+merge from fields to proc
 
 source "field"  # @values = { "dest": raw["field"] }
 adjust 12  # @values["dest"] += 12

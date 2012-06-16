@@ -5,7 +5,7 @@ class Command
 	field :starts_at, type: DateTime
 	field :ends_at,   type: DateTime
 	field :command,   type: String
-	field :from,      type: String
+	field :window,    type: String
 
 	embedded_in :event
 end

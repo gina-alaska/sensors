@@ -1,0 +1,19 @@
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span1
+  = label_tag :command
+  = select_tag "commands[#{command.index}][command]", options_for_select(event_commands(command.command))
+.field.span1
+  = label_tag " "
+  = link_to 'Delete', remove_platform_event_path(@platform, @event, :command_id => command.id), confirm: 'Are you sure?', class: "btn btn-danger delete event-button-adjust"
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    title: "Copy Command",
+    content: "The copy command copies a single field from the raw data collection to the processed data collection with out any changes or processing."
+  });

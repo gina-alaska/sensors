@@ -26,6 +26,7 @@ class EventsController < ApplicationController
   # GET /events/new.json
   def new
     @platform = Platform.where( slug: params[:platform_id] ).first
+    @sensors = @platform.sensors.only(:source_field).all
     @event = Event.new
     session["platformTabShow"] = '#processing'
 
@@ -38,6 +39,7 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @platform = Platform.where( slug: params[:platform_id] ).first
+    @sensors = @platform.sensors.only(:source_field).all
     @event = Event.find(params[:id])
     session["platformTabShow"] = '#processing'
   end
@@ -98,9 +100,35 @@ class EventsController < ApplicationController
   def add
     @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])
-    @event.commands.create(command: "copy", index: @event.commands.count)
+    @command = @event.commands.create(command: "copy", index: @event.commands.count)
 
-    redirect_to edit_platform_event_path(@platform, @event)
+    respond_to do |format|
+      format.html {
+        if request.xhr?
+          render :partial => "command", :locals => {:command => @command}
+        else
+          redirect_to edit_platform_event_path(@platform, @event)
+        end        
+      }
+    end
+  end
+
+  def change
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @event = Event.find(params[:id])
+    @command = @event.commands.find(params[:command_id])
+    @command.command = params["command"]
+
+    render :partial => params["command"], :locals => {:command => @command}
+  end
+
+  def remove
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @event = Event.find(params[:id])
+    @command = @event.commands.find(params[:command_id])
+    @command.destroy
+#    render :text => "Removed"
+    render :partial => "remove", :locals => {:command_id => params[:command_id]}
   end
 
   protected

@@ -19,3 +19,11 @@
 //= require highcharts/themes/grid
 //= require highcharts/modules/exporting
 //= require_tree .
+
+$(document).ready(function(){
+	$("#commands").on("change", "select", function(){
+		var url=$(this).parents(".event-update").attr("data-url");
+		var com = $(this).find("option:selected").val();
+		$(this).parents(".event-update").load(url, "command="+com);
+	});
+});

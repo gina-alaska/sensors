@@ -1,4 +1,4 @@
-<div class="controls">
+<div class="sensor-controls">
   <%= link_to 'Edit', edit_platform_path(@platform), class: "btn btn-primary" %> 
   <%= link_to 'Back', platforms_path, class: "btn btn-primary" %>
 </div>
@@ -54,7 +54,7 @@
   </div>
 
   <div class="tab-pane" id="processing">
-    <div class="controls">
+    <div class="sensor-controls">
      	<%= link_to 'New Process', new_platform_event_path(@platform), class: "btn btn-primary" %>
     </div>
     <h3>Process Event List</h3>
@@ -64,6 +64,7 @@
   	<table>
   		<tr>
         <th width="200">Processed Field</th>
+        <th width="200">Raw Data Fields</th>
   			<th width="500">Description</th>
         <th widht="160"></th>
         <th widht="160"></th>

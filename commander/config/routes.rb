@@ -8,6 +8,8 @@ Commander::Application.routes.draw do
     resources :processed_data
     resources :events do
       get 'add', :on => :member
+      get 'change', :on => :member
+      get 'remove', :on => :member
     end
     resources :alerts
   end

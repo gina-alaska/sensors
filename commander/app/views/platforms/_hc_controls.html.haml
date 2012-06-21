@@ -1,0 +1,43 @@
+.row-fluid
+  %form#hc_control.well
+    .control-group
+      %label.control-label(for="starts_at")
+        Start Date:
+      .controls
+        %input.input-large.datepicker(type="text" name="starts_at")
+    .control-group
+      %label.control-label(for="ends_at")
+        End Date:
+      .controls
+        %input.input-large.datepicker(type="text" name="ends_at")
+    .control-group
+      %label.control-label(for="raw_sensor")
+        Raw Sensor:
+      .controls
+        %select.input-large(name="raw_sensor")
+          = sensors_select(@sensors_all)
+    .control-group
+      %label.control-label(for="proc_sensor")
+        Processed Sensor:
+      .controls
+        %select.input-large(name="proc_sensor")
+          = proc_select(@events_all)
+    .control-group
+      .controls
+        %input.btn.btn-primary(type="submit" value="Display Graph")
+
+:javascript
+  $('#hc_control').submit(function() {
+    $('#rawchart').load("#{graph_update_platform_path}", $(this).serialize());
+    return false;
+  });
+
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ssz",
+        separator: " "});
+  });

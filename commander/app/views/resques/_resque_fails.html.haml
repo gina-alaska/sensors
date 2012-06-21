@@ -1,0 +1,6 @@
+%table
+  - @failures.each_with_index do |f, index|
+    %tr
+      %td= f["error"]
+      %td= button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
+      %td= button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"

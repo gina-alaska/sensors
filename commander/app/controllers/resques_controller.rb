@@ -1,7 +1,6 @@
 class ResquesController < ApplicationController
 	def retry
   	@failures = Resque::Failure
-
   	@failures.requeue(params[:id])
 
     respond_to do |format|
@@ -23,4 +22,15 @@ class ResquesController < ApplicationController
         format.html { redirect_to dashboard_path, notice: 'Process Event removed.' }
     end
 	end
+
+  def poll
+    @failures = Resque::Failure.all(0, Resque::Failure.count)
+    if @failures.is_a? Hash
+      @failures = [@failures]
+    end
+
+    respond_to do |format|
+        format.html { render :partial => "resque_fails", :locals => {:failures => @failures}, :template => false }
+    end
+  end
 end

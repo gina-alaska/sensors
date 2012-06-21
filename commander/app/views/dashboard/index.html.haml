@@ -1,0 +1,22 @@
+.sensor-controls
+  = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
+%h3 Failed Processing Events
+.row-fluid
+  .span12
+    %table
+      %tr
+        %th{:width => "300"} Error Message
+        %th{:width => "180"}
+        %th{:width => "180"}
+      - @failures.each_with_index do |f, index|
+        %tr
+          %td
+            = f["error"]
+          %td
+            = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
+          %td
+            = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
+%hr/
+.row-fluid
+  .span12
+    Alerts here

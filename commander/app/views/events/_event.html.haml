@@ -1,7 +1,9 @@
 %tr
-  %td= event.name
-  = event.from.shift
-  %td= event.from.join(", ")
-  %td.command-background= event.description
-  %td= link_to 'Edit', edit_platform_event_path(@platform, event), class: "btn btn-primary"
-  %td= button_to 'Delete', [@platform, event], confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"
+  %td= raw "<span class=\"label label-info\">#{event.name}</span>"
+  %td= raw field_label(event.from)
+  %td= event.description
+  %td
+    %table
+      %tr
+        %td= link_to 'Edit', edit_platform_event_path(@platform, event), class: "btn btn-primary"
+        %td= button_to 'Delete', [@platform, event], confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"

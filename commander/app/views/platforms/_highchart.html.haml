@@ -1,0 +1,35 @@
+:javascript
+  var chart1;
+  $(document).ready(function() {
+    chart1 = new Highcharts.Chart({
+      chart: {
+        renderTo: 'rawchart',
+        type: 'line',
+        zoomType: 'x'
+      },
+      title: { text: 'Sensor Data for "#{raw_sensor}" and "#{proc_sensor}"' },
+      xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { day: '%b %e, %Y' },
+        maxZoom: 24 * 3600000
+        },
+      yAxis: {
+        title: { text: 'Value' }
+      },
+      series: [{
+        name: '#{raw_sensor}',
+        data: #{ raw_data.collect do |row|
+          data = row[raw_sensor].to_f == nodata.to_f ? "null" : row[raw_sensor] 
+            [ row.capture_date.strftime("%Q").to_i, data ]
+          end.to_json } 
+        }, {
+        name: '#{proc_sensor}',
+        data: #{ proc_data.collect do |row|
+            data = row[proc_sensor].to_f == nodata.to_f ? "null" : row[proc_sensor] 
+            [ row.capture_date.strftime("%Q").to_i, data ]
+          end.to_json }
+        } 
+      ]
+    })
+  });
+

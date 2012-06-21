@@ -14,4 +14,12 @@ module EventsHelper
 		end
     options_for_select(shash, selected)
 	end
+
+	def field_label(fields)
+		label = ""
+		fields.each do |field|
+			label += "<span class=\"label label-info\">#{field}</span> "
+		end
+		return label
+	end
 end

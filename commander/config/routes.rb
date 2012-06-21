@@ -3,6 +3,7 @@ Commander::Application.routes.draw do
   match "dashboard" => "dashboard#index"
 
   resources :platforms do
+    get 'graph_update', :on => :member
     resources :sensors
     resources :raw_data
     resources :processed_data
@@ -16,6 +17,7 @@ Commander::Application.routes.draw do
 
   resources :resques do
     member do
+      get :poll
       post :retry
     end
     collection do

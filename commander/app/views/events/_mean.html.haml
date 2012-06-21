@@ -20,3 +20,9 @@
     title: "Mean Command",
     content: "The mean command calculates the mean for a single field from the raw data collection and puts it into the processed data collection. You can apply a window width to the command to control how much of the data is used in the calculation."
   });
+
+  $('#commands_#{command.index}_window').popover({
+    animation: true,
+    title: "Mean Window",
+    content: "Window allows you to set the time frame over which the calculation will run for each interation. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
+  });

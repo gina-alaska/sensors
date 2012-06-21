@@ -15,11 +15,17 @@ class PlatformsController < ApplicationController
   def show
     @platform = Platform.where( slug: params[:id] ).first
     @sensors = @platform.sensors.page params[:page]
+    @sensors_all = @platform.sensors
     @events = @platform.events.page params[:event_page]
-    @raw_data = @platform.raw_data.order_by([[:capture_date, :desc]]).
-        limit(@platform.graph_length).sort
-    @proc_data = @platform.processed_data.order_by([[:capture_date, :desc]]).
-        limit(@platform.graph_length).sort
+    @events_all = @platform.events
+#    @raw_data = @platform.raw_data.order_by([[:capture_date, :desc]]).
+#        limit(@platform.graph_length).sort
+#    @proc_data = @platform.processed_data.order_by([[:capture_date, :desc]]).
+#        limit(@platform.graph_length).sort
+    @failures = Resque::Failure.all(0, Resque::Failure.count)
+    if @failures.is_a? Hash
+      @failures = [@failures]
+    end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -84,6 +90,19 @@ class PlatformsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to platforms_url }
       format.json { head :no_content }
+    end
+  end
+
+  def graph_update
+    starts_at = params["starts_at"] == "" ? nil : params["starts_at"]
+    ends_at = params["ends_at"] == "" ? nil : params["ends_at"]
+    @platform = Platform.where( slug: params[:id] ).first
+    @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
+    @proc_data = @platform.processed_data.captured_between(starts_at, ends_at).asc(:capture_date)
+    session["platformTabShow"] = '#dataview'
+
+    respond_to do |format|
+      format.html { render :partial => "highchart", :locals => {:raw_data => @raw_data, :proc_data => @proc_data, :raw_sensor => params["raw_sensor"], :proc_sensor => params["proc_sensor"], :nodata => @platform.no_data_value} }
     end
   end
 end

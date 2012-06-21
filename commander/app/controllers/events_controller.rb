@@ -127,7 +127,6 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @command = @event.commands.find(params[:command_id])
     @command.destroy
-#    render :text => "Removed"
     render :partial => "remove", :locals => {:command_id => params[:command_id]}
   end
 
@@ -136,6 +135,7 @@ class EventsController < ApplicationController
   def event_params
     e = params[:event]
     e[:commands] = params[:commands]
+    e[:from].reject! { |i| i == '' } if e[:from].count > 1
     return e
   end
 end

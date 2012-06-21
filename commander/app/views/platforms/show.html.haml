@@ -1,0 +1,101 @@
+.sensor-controls
+  = link_to 'Edit', edit_platform_path(@platform), class: "btn btn-primary"
+  = link_to 'Back', platforms_path, class: "btn btn-primary"
+%h2
+  Operations for the #{@platform.name} Platform
+%hr/
+.row-fluid
+  .span6
+    %table
+      %tr
+        %td{:width => "160"}
+          %b Name:
+        %td{:width => "200"}= @platform.name
+        %td{:width => "160"}
+          %b Slug:
+        %td{:width => "200"}= @platform.slug
+      %tr
+        %td
+          %b Agency:
+        %td= @platform.agency
+        %td
+          %b Authority:
+        %td= @platform.authority
+      %tr
+        %td
+          %b License:
+        %td= @platform.license
+        %td
+          %b Permissions:
+        %td= @platform.permissions
+      %tr
+        %td
+          %b No Data Value:
+        %td= @platform.no_data_value
+        %td
+          %b Graph View Length:
+        %td= @platform.graph_length
+      %tr
+        %td
+          %b Platform Metadata:
+        %td{:colspan => "3"}= @platform.platform_metadata
+      %tr
+        %td
+          %b Geographic Location:
+        %td{:colspan => "3"}= @platform.geo_location
+  .span6
+    %h4 Processing Messages
+    #resque
+.row-fluid
+  %br/
+  %ul#platformTab.nav.nav-pills.nav-background
+    %li.active
+      %a{"data-toggle" => "pill", :href => "#sensors"} Sensor List
+    %li
+      %a{"data-toggle" => "pill", :href => "#processing"} Process Sensors
+    %li
+      %a{"data-toggle" => "pill", :href => "#dataview"} View Sensor Data
+  .tab-content
+    #sensors.tab-pane.active
+      %h3 Associated Sensors List
+      = paginate @sensors
+      %table.table.table-striped.table-condensed
+        %tr
+          %th Source Field
+          %th Label
+          %th Sensor Metadata
+          %th
+        = render @sensors
+    #processing.tab-pane
+      .sensor-controls
+        = link_to 'New Process', new_platform_event_path(@platform), class: "btn btn-primary"
+      %h3 Process Event List
+      %br/
+      = paginate @events, :param_name => "event_page"
+      %table.table.table-striped.table-condensed
+        %tr
+          %th{:width => "200"} Processed Field
+          %th{:width => "200"} Raw Data Fields
+          %th{:width => "500"} Description
+          %th{:widht => "160"}
+          %th{:widht => "160"}
+        = render @events, :locals => { :platform => @platform }
+    #dataview.tab-pane
+      .row-fluid
+        .span2
+          = render :partial => 'hc_controls'
+        .span10
+          %h3 View Raw and Processed Sensor Data
+          #rawchart{:style => "width: 100%; height: 400px"}
+            %h4 To see graph, click the "Display Graph" button.
+            
+:javascript
+  $('#platformTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  #{raw show_tab_for("platformTab")}
+
+  setInterval(function(){
+    $('#resque').load("#{poll_resque_path}");
+  }, 30000 );

@@ -16,11 +16,17 @@ class PlatformsController < ApplicationController
     @platform = Platform.where( slug: params[:id] ).first
     @sensors = @platform.sensors.page params[:page]
     @sensors_all = @platform.sensors
-    @events = @platform.events.page params[:event_page]
+    @events = @platform.events.asc(:name).page params[:event_page]
     @events_all = @platform.events
     @failures = Resque::Failure.all(0, Resque::Failure.count)
     if @failures.is_a? Hash
       @failures = [@failures]
+    end
+
+    if session["graphParams"].nil?
+      value, units = @platform.graph_length.split(".")
+      length = value.to_i.send(units.to_sym)
+      session["graphParams"] = {"starts_at" => length, "ends_at" => nil, "raw_sensor" => @sensors_all.first.source_field, "proc_sensor" => nil}
     end
 
     respond_to do |format|
@@ -96,6 +102,7 @@ class PlatformsController < ApplicationController
     @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
     @proc_data = @platform.processed_data.captured_between(starts_at, ends_at).asc(:capture_date)
     session["platformTabShow"] = '#dataview'
+    session["graphParams"] = params
 
     respond_to do |format|
       format.html { render :partial => "highchart", :locals => {:raw_data => @raw_data, :proc_data => @proc_data, :raw_sensor => params["raw_sensor"], :proc_sensor => params["proc_sensor"], :nodata => @platform.no_data_value} }

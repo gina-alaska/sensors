@@ -12,8 +12,8 @@
   = label_tag :window
   = text_field_tag "commands[#{command.index}][window]", [command.window]
 .field.span1
-  = label_tag " "
-  = link_to 'Delete', remove_platform_event_path(@platform, @event, :command_id => command.id), confirm: 'Are you sure?', class: "btn btn-danger delete event-button-adjust"
+  = render :partial => "controls", :locals => {:platform => @platform, :event => @event, :command_id => command.id}
+
 :javascript
   $('#commands_#{command.index}_command').popover({
     animation: true,
@@ -25,4 +25,12 @@
     animation: true,
     title: "Mean Window",
     content: "Window allows you to set the time frame over which the calculation will run for each interation. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
-  });
+  });  
+  
+  $( ".datepicker" ).datetimepicker({
+      dateFormat: "yy-mm-dd",
+      changeYear: true,
+      changeMonth: true,
+      showSecond: true,
+      timeFormat: "hh:mm:ssz",
+      separator: " "});

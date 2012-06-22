@@ -8,12 +8,21 @@
 .field.span1
   = label_tag :command
   = select_tag "commands[#{command.index}][command]", options_for_select(event_commands(command.command))
+.field.span2
 .field.span1
-  = label_tag " "
-  = link_to 'Delete', remove_platform_event_path(@platform, @event, :command_id => command.id), confirm: 'Are you sure?', class: "btn btn-danger delete event-button-adjust"
+  = render :partial => "controls", :locals => {:platform => @platform, :event => @event, :command_id => command.id}
+
 :javascript
   $('#commands_#{command.index}_command').popover({
     animation: true,
     title: "Copy Command",
     content: "The copy command copies a single field from the raw data collection to the processed data collection with out any changes or processing."
   });
+  
+  $( ".datepicker" ).datetimepicker({
+      dateFormat: "yy-mm-dd",
+      changeYear: true,
+      changeMonth: true,
+      showSecond: true,
+      timeFormat: "hh:mm:ssz",
+      separator: " "});

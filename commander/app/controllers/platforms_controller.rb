@@ -18,10 +18,6 @@ class PlatformsController < ApplicationController
     @sensors_all = @platform.sensors
     @events = @platform.events.page params[:event_page]
     @events_all = @platform.events
-#    @raw_data = @platform.raw_data.order_by([[:capture_date, :desc]]).
-#        limit(@platform.graph_length).sort
-#    @proc_data = @platform.processed_data.order_by([[:capture_date, :desc]]).
-#        limit(@platform.graph_length).sort
     @failures = Resque::Failure.all(0, Resque::Failure.count)
     if @failures.is_a? Hash
       @failures = [@failures]

@@ -7,5 +7,6 @@ class Command
 	field :command,   type: String
 	field :window,    type: String
 
+  default_scope asc(:index)
 	embedded_in :event
 end

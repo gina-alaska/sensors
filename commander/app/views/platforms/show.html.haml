@@ -83,12 +83,12 @@
     #dataview.tab-pane
       .row-fluid
         .span2
+          %h3 View Sensor Data
           = render :partial => 'hc_controls'
         .span10
-          %h3 View Raw and Processed Sensor Data
           #rawchart{:style => "width: 100%; height: 400px"}
             %h4 To see graph, click the "Display Graph" button.
-            
+
 :javascript
   $('#platformTab a').click(function (e) {
     e.preventDefault();

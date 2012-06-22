@@ -4,7 +4,7 @@
       %label.control-label(for="starts_at")
         Start Date:
       .controls
-        %input.input-large.datepicker(type="text" name="starts_at")
+        %input.input-large.datepicker(type="text" name="starts_at" value="#{datepicker_format(DateTime.now - 3.days)}")
     .control-group
       %label.control-label(for="ends_at")
         End Date:
@@ -15,13 +15,13 @@
         Raw Sensor:
       .controls
         %select.input-large(name="raw_sensor")
-          = sensors_select(@sensors_all)
+          = hc_sensors_select(@sensors_all)
     .control-group
       %label.control-label(for="proc_sensor")
         Processed Sensor:
       .controls
         %select.input-large(name="proc_sensor")
-          = proc_select(@events_all)
+          = hc_proc_select(@events_all)
     .control-group
       .controls
         %input.btn.btn-primary(type="submit" value="Display Graph")

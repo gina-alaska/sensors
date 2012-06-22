@@ -4,7 +4,7 @@ class ResquesController < ApplicationController
   	@failures.requeue(params[:id])
 
     respond_to do |format|
-        format.html { redirect_to dashboard_path, notice: 'Process Event requeued.' }
+        format.html { redirect_to dashboard_path, notice: 'Process Event re-queued.' }
     end
 	end
 

@@ -105,7 +105,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html {
         if request.xhr?
-          render :partial => "command", :locals => {:command => @command}
+          render :partial => "command", :locals => {:platform => @platform, :event => @event}
         else
           redirect_to edit_platform_event_path(@platform, @event)
         end        
@@ -126,8 +126,58 @@ class EventsController < ApplicationController
     @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])
     @command = @event.commands.find(params[:command_id])
+    cindex = @command.index
+
+    # Adjust indexes and remove command from database
+    fixcom = @event.commands.where(:index.gt => cindex)
+    fixcom.each do |command|
+      command.index = command.index-1
+      command.save!
+    end
     @command.destroy
+
     render :partial => "remove", :locals => {:command_id => params[:command_id]}
+  end
+
+  def moveup
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @event = Event.find(params[:id])
+    @command = @event.commands.find(params[:command_id])
+    cindex = @command.index
+
+    if cindex > 0  # Switch command indexes
+      scom = @event.commands.where(index: cindex-1).first
+      if scom
+        scom.index = cindex
+        scom.save!
+        @command.index = cindex-1
+        @command.save!
+        @event.reload
+      end
+    end
+
+    render :partial=>"command", :locals=>{:platform => @platform, :event => @event}
+  end
+
+  def movedown
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @event = Event.find(params[:id])
+    @command = @event.commands.find(params[:command_id])
+    maxindex = @event.commands.desc(:index).first.index
+    cindex = @command.index
+
+    if cindex < maxindex  # Switch command indexes
+      scom = @event.commands.where(index: cindex+1).first
+      if scom
+        scom.index = cindex
+        scom.save!
+        @command.index = cindex+1
+        @command.save!
+        @event.reload
+      end
+    end
+
+    render :partial=>"command", :locals=>{:platform => @platform, :event => @event}
   end
 
   protected

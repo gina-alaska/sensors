@@ -11,6 +11,8 @@ Commander::Application.routes.draw do
       get 'add', :on => :member
       get 'change', :on => :member
       get 'remove', :on => :member
+      get 'moveup', :on => :member
+      get 'movedown', :on => :member
     end
     resources :alerts
   end

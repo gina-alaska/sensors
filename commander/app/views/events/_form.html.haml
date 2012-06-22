@@ -32,20 +32,16 @@
         .span2
           = link_to 'Add Command', add_platform_event_path(@platform, @event), class: "btn btn-primary", :id => "add_command"
       #commands
-        - @event.commands.each do |command|
-          = render :partial=>"command", :locals=>{:command => command}
+        = render :partial=>"command", :locals=>{:platform => @platform, :event => @event}
     %br/
     .actions.row-fluid
       = f.submit (@event.new_record? ? "Create Process" : "Update Process"), :class => "btn btn-primary"
 :javascript
-  $('#add_command').live('click', function(e) {
-    $.get($(e.target).prop('href'), function(data) {
-      $("#commands").append(data)
-    });
-
-    e.stopPropagation();
+  $('#add_command').live('click', function() {
+    $('#commands').load($(this).prop('href'));
     return false;
   });
+
   $('#commands a.delete').live('click', function(e) {
     var target = $(e.target).parents(".event-update")
     $.get($(e.target).prop('href'), function(data) {
@@ -56,12 +52,12 @@
     return false;
   });
 
-  $(function() {
-    $( ".datepicker" ).datetimepicker({
-        dateFormat: "yy-mm-dd",
-        changeYear: true,
-        changeMonth: true,
-        showSecond: true,
-        timeFormat: "hh:mm:ssz",
-        separator: " "});
+  $(document).on("click", "a.up", function() {
+    $('#commands').load($(this).prop('href'));
+    return false;
+  });
+
+  $(document).on("click", "a.down", function() {
+    $('#commands').load($(this).prop('href'));
+    return false;
   });

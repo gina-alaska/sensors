@@ -14,6 +14,7 @@ Commander::Application.routes.draw do
       get 'moveup', :on => :member
       get 'movedown', :on => :member
     end
+    resources :graphs
     resources :alerts
   end
 

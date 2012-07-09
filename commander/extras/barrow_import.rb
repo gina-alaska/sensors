@@ -52,7 +52,7 @@ class BarrowImport < DataImport
       datahash = { :capture_date => datadate }
 
       sdata.each do |header, data|
-        datahash[header.to_sym] = data
+        datahash[header] = data
       end
 
       raw_save( datahash )

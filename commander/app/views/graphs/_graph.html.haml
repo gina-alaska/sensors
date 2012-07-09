@@ -1,0 +1,12 @@
+.row-fluid
+  .span2
+    = graph.name
+  .span2
+    image here
+  .span2
+    %table
+      %tr
+        %td
+          = link_to 'Edit', edit_platform_graph_path(@platform, graph), class: "btn btn-primary"
+        %td
+          = link_to 'Delete',[@platform, graph], confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"

@@ -22,6 +22,7 @@ class PlatformsController < ApplicationController
     if @failures.is_a? Hash
       @failures = [@failures]
     end
+    @graphs = @platform.graphs
 
     if session["graphParams"].nil?
       value, units = @platform.graph_length.split(".")

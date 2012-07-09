@@ -24,10 +24,11 @@
     validates_uniqueness_of :slug
 
     embeds_many :sensors
+
     has_many :raw_data 
-        
     has_many :processed_data
     has_many :events
+    has_many :graphs
     has_many :alerts
 
     def async_process_events

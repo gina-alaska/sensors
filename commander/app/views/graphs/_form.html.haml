@@ -1,0 +1,21 @@
+.event-form.row-fluid.form-horizontal
+  = form_for([@platform, @graph]) do |f|
+    - if @graph.errors.any?
+      %div{:id => "error_explanation row-fluid"}
+        %h2
+          = pluralize(@graph.errors.count, "error")
+          prohibited this event from being saved:
+        %ul
+          - @graph.errors.full_messages.each do |msg|
+            %li= msg
+    .row-fluid
+      .span2
+        = f.label :name
+        = f.text_field :name
+    .row-fluid
+      .span12
+        = f.label :config
+        = f.text_area :config, :class=>"span12"
+    %br/
+    .row-fluid
+      = f.submit (@graph.new_record? ? "Create Graph" : "Update Graph"), :class => "btn btn-primary"

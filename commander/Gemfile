@@ -45,3 +45,4 @@ gem 'resque'
 gem 'kaminari'
 gem 'rinruby'
 gem "highcharts-rails", "~> 2.2.1"
+gem 'rmagick', :require => 'RMagick'

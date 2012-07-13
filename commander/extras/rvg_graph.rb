@@ -8,14 +8,20 @@ module RvgGraph
     include Magick
     attr_accessor :template
 
-    def initialize(slug, graph, starts_at, ends_at)
+    def initialize(slug, graph_id, starts_at, ends_at)
+      # get the platform
       @platform = Platform.where(slug: slug).first
+      # get the graph YAML configuration
+      graph = @platform.graphs.find(graph_id)
       @template = Psych.load(graph.config)
-      parse_config
+
+      # build the graph image
       @canvas = RVG.new(@template["graph"]["width"],
            @template["graph"]["height"])
       background_img = gen_background_img(@template["graph"])
       @canvas.background_image = background_img
+
+      # Set date range
       @start_date = starts_at
       @end_date = ends_at
     end
@@ -27,7 +33,7 @@ module RvgGraph
     def draw_title
       bcord = @template["graph"]["graph_bounds"].split(",")
       @canvas.text((bcord[2].to_i-bcord[0].to_i)/2+bcord[0].to_i,
-          bcord[1].to_i-10, self.title).styles(
+          bcord[1].to_i-14, @template["graph"]["title"]).styles(
           :fill=>"black", :font_size=>@template["graph"]["title_size"].to_i,
           :font_family=>'Verdana', :text_anchor=>"middle")
     end
@@ -45,9 +51,11 @@ module RvgGraph
         range = data["range"].split(",")
         top = range[0].to_f
         bottom = range[1].to_f
-        marks = data["mark"].split(",")
-        mark_high = marks[1].to_i if marks[0] == "high"
-        mark_low = marks[1].to_i if marks[0] == "low"
+        unless data["mark"].nil?
+          marks = data["mark"].split(",")
+          mark_high = marks[1].to_i if marks[0] == "high"
+          mark_low = marks[1].to_i if marks[0] == "low"
+        end
         data_top = data["graph_top"]
 
         agg_results = agg_data(collection, data_field)
@@ -99,7 +107,6 @@ module RvgGraph
 
           path = "M "
           result.each do |row|
-            puts "newx #{newx}"
             vdata = row[data_field.to_sym].to_f
             if vdata == @platform.no_data_value.to_f
               newx += ratiox
@@ -129,7 +136,6 @@ module RvgGraph
         savy = 0
 
         result.each do |row|
-          puts "newx #{newx}"
           vdata = row[data_field.to_sym].to_f
           if vdata == @platform.no_data_value.to_f
             savy = 0
@@ -168,7 +174,251 @@ module RvgGraph
           newx += ratiox
         end
         @canvas.line(savx.to_i, savy.to_i, newx.to_i, savy.to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size, :stroke_linecap=>"round")
+
+        # Draw any axis associated with this data
+        draw_axis(data, agg_results)
       end
+    end
+
+    def draw_axis(data, agg)
+      axis = data["axis"]
+      return unless axis
+      bcord = @template["graph"]["graph_bounds"].split(",")
+      x_min = bcord[0].to_f
+      x_max = bcord[2].to_f
+      y_min = bcord[1].to_f
+      y_max = bcord[3].to_f
+      range = data["range"].split(",")
+      range_min = range[0].to_f
+      range_max = range[1].to_f
+      data_top = data["graph_top"]
+      hard_min = data["hard_min"].nil? ? nil : data["hard_min"].to_f
+      hard_max = data["hard_max"].nil? ? nil : data["hard_max"].to_f
+
+      axis.each do |daxis|
+        dstyle = GraphStyle.new(daxis["style"])
+        place = daxis["placement"]
+        direction = "x" if place == "top" or place == "bottom"
+        direction = "y" if place == "left" or place == "right"
+        major_tics = daxis["major"].to_f
+        minor_tics = daxis["minor"].to_f
+        major_ticlen ||= daxis["major_len"].to_i
+        minor_ticlen ||= daxis["minor_len"].to_i
+        tic_offset = daxis["offset"].to_i
+
+        case direction
+        when "x"
+          if data["direction"] == "x-axis"
+            gmax = x_max
+            gmin = x_min
+          else
+            gmax = range_max
+            gmin = range_min
+          end
+        when "y"
+          if data["direction"] == "y-axis"
+            gmax = y_max
+            gmin = y_min
+          else
+            gmax = range_max
+            gmin = range_min
+          end
+        end
+
+        label = daxis["label"]
+        dmax = agg[:maxv].to_f
+        dmin = agg[:minv].to_f
+        dmin = hard_min unless hard_min.nil?
+        dmax = hard_max unless hard_max.nil?
+        hard_min = dmin if hard_min.nil?
+        hard_max = dmax if hard_max.nil?
+
+        # date axis
+        if label["units"] == "date"
+          dmin = agg[:capture_min].utc.to_i
+          dmax = agg[:capture_max].utc.to_i
+          hard_max = dmax
+        end
+
+        # Convert units if needed
+        unless label["units"].nil?
+          dmin = conv_units(data["units"], label["units"], dmin).to_f
+          dmax = conv_units(data["units"], label["units"], dmax).to_f
+          hard_max = conv_units(data["units"], label["units"], hard_max).to_f
+        end
+
+        # Find nice number range for axis tics/labels
+        unless label["units"] == "date"
+          nice_range = nicenum(dmax - dmin, false)
+          nice_tic_delta = nicenum(nice_range/(major_tics - 1), true).to_f
+          nice_min = (dmin / nice_tic_delta).floor * nice_tic_delta
+          nice_max = (dmax / nice_tic_delta).ceil * nice_tic_delta
+          minor_delta = nice_tic_delta / minor_tics unless minor_tics.nil?
+        else
+          drange = dmax - dmin
+          nice_min = dmin
+          nice_max = dmax
+          if drange < 3600            # 1 hour
+            nice_tic_delta = 300      # 5 min
+            minor_delta = 30          # 30 sec
+          elsif drange < 86400        # 1 day
+            nice_tic_delta = 3600     # 1 hour
+            minor_delta = 600         # 10 min
+          elsif drange < 2678400      # 1 month
+            nice_tic_delta = 86400    # 1 day
+            minor_delta = 3600        # 1 hour
+          else
+            nice_tic_delta = 2678400  # month
+            minor_delta = 86400       # 1 day
+          end
+        end
+
+        # Draw major tics and labels
+        pos = nice_min
+        round = label["round"]
+
+        while pos <= nice_max do 
+          if data_top == "negative"  # THIS NEEDS WORK, NOT DONE YET!!
+            if direction == "x" and data["direction"] == "x-axis"
+              gpos = (((pos - nice_min) * (gmax-gmin)) / (dmax-dmin)) + x_min
+            else
+              gpos = (((pos - nice_min) * (gmax-gmin)) / (dmax-dmin)) + range_min
+            end
+          else
+            if direction == "x" and data["direction"] == "x-axis"
+              gpos = x_max - (((pos - nice_min) * (gmax-gmin)) / (dmax-dmin))
+            else
+              gpos = range_max - (((pos - nice_min) * (gmax-gmin)) / (dmax-dmin))
+            end
+          end
+          ttext = pos
+          ttext = Time.at(pos).utc.strftime("%d %b") if label["units"] == "date"
+
+          case place
+          when "top"
+            @canvas.line(gpos.to_i, y_min.to_i, gpos.to_i, (y_min + major_ticlen).to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+            @canvas.text(gpos.to_i, y_min.to_i - tic_offset, text_format(ttext, round)).styles(:fill=>dstyle.color, :font_size=>dstyle.text_size, :font_family=>'Verdana', :text_anchor=>"middle")
+          when "bottom"
+            @canvas.line(gpos.to_i, y_max.to_i, gpos.to_i, (y_max - major_ticlen).to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+            @canvas.text(gpos.to_i, y_max.to_i + tic_offset, text_format(ttext, round)).styles(:fill=>dstyle.color, :font_size=>dstyle.text_size, :font_family=>'Verdana', :text_anchor=>"middle")
+          when "left"
+            @canvas.line(x_min.to_i, gpos.to_i, (x_min + major_ticlen).to_i, gpos.to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+            @canvas.text(x_min.to_i - tic_offset, gpos.to_i, text_format(ttext, round)).styles(:fill=>dstyle.color, :font_size=>dstyle.text_size, :font_family=>'Verdana', :text_anchor=>"end", :baseline_shift=>-((dstyle.text_size-2)/2))
+          when "right"
+            @canvas.line(x_max.to_i, gpos.to_i, (x_max - major_ticlen).to_i, gpos.to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+            @canvas.text(x_max.to_i + tic_offset, gpos.to_i, text_format(ttext, round)).styles(:fill=>dstyle.color, :font_size=>dstyle.text_size, :font_family=>'Verdana', :text_anchor=>"end", :baseline_shift=>-((dstyle.text_size-2)/2))
+          end
+
+          unless minor_tics.nil? or pos == nice_max
+            mtic = pos
+            while mtic <= (pos + nice_tic_delta)
+              if data_top == "negative"  # THIS NEEDS WORK, NOT DONE YET!!
+                if direction == "x" and data["direction"] == "x-axis"
+                  mpos = (((mtic - nice_min) * (gmax-gmin)) / (dmax-dmin)) + x_min
+                else
+                  mpos = (((mtic - nice_min) * (gmax-gmin)) / (dmax-dmin)) + range_min
+                end
+              else
+                if direction == "x" and data["direction"] == "x-axis"
+                  mpos = x_max - (((mtic - nice_min) * (gmax-gmin)) / (dmax-dmin))
+                else
+                  mpos = range_max - (((mtic - nice_min) * (gmax-gmin)) / (dmax-dmin))
+                end
+              end
+              case place
+              when "top"
+                @canvas.line(mpos.to_i, y_min.to_i, mpos.to_i, (y_min + minor_ticlen).to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+              when "bottom"
+                @canvas.line(mpos.to_i, y_max.to_i, mpos.to_i, (y_max - minor_ticlen).to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+              when "left"
+                @canvas.line(x_min.to_i, mpos.to_i, (x_min + minor_ticlen).to_i, mpos.to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+              when "right"
+                @canvas.line(x_max.to_i, mpos.to_i, (x_max - minor_ticlen).to_i, mpos.to_i).styles(:stroke=>dstyle.color, :stroke_width=>dstyle.line_size)
+              end
+              mtic += minor_delta
+            end
+          end
+
+          pos += nice_tic_delta
+          break if pos > hard_max 
+        end
+
+        # Draw axis label
+        unless label["units"] == "date"
+          lpos = (gmax - gmin)/2 + range_min
+        else
+          lpos = (gmax - gmin)/2 + gmin
+        end
+        middle = multiline_middle(label)
+        case place
+        when "top"
+          @canvas.styles(:fill=>dstyle.color, :font_size=>label["size"].to_i, :font_family=>'Verdana', :text_anchor=>'end', :baseline_shift=>-((label["size"]-2)/2)) do |txt|
+            label["text"].split("\n").each_with_index do |line, index|
+              txt.text(lpos - middle, y_min-label["offset"]).tspan(line).d(0,label["size"] * index)
+            end
+          end
+        when "bottom"
+          @canvas.styles(:fill=>dstyle.color, :font_size=>label["size"].to_i, :font_family=>'Verdana', :text_anchor=>'end', :baseline_shift=>-((label["size"]-2)/2)) do |txt|
+            label["text"].split("\n").each_with_index do |line, index|
+              txt.text(lpos, y_max+label["offset"]).tspan(line).d(0,label["size"] * index)
+            end
+          end
+        when "left"
+          @canvas.styles(:fill=>dstyle.color, :font_size=>label["size"].to_i, :font_family=>'Verdana', :text_anchor=>'end', :baseline_shift=>-((label["size"]-2)/2)) do |txt|
+            label["text"].split("\n").each_with_index do |line, index|
+              txt.text(x_min-label["offset"], lpos - middle).tspan(line).d(0,label["size"] * index)
+            end
+          end
+        when "right"
+          @canvas.styles(:fill=>dstyle.color, :font_size=>label["size"].to_i, :font_family=>'Verdana', :text_anchor=>'end', :baseline_shift=>-((label["size"]-2)/2)) do |txt|
+            label["text"].split("\n").each_with_index do |line, index|
+              txt.text(x_max+label["offset"], lpos - middle).tspan(line).d(0,label["size"] * index)
+            end
+          end
+        end
+      end
+    end
+
+    def text_format(text, round)
+      ntext = text
+      unless text.is_a? String
+        ntext = sprintf("%0.#{round}f", text)
+      end
+      return ntext
+    end
+
+    def multiline_middle(label)
+      temp = label["text"].split("\n")
+      height = (temp.length * label["size"]) / 2
+    end
+
+    # Thanks Heckbert!
+    def nicenum(range, round)
+      exponent = Math.log10(range).floor
+      fnum = range / (10 ** exponent)
+      if round
+        if (fnum < 1.5)
+          nice_fnum = 1
+        elsif fnum < 3
+          nice_fnum = 2
+        elsif fnum < 7
+          nice_fnum = 5
+        else
+          nice_fnum = 10
+        end
+      else 
+        if fnum <= 1
+          nice_fnum = 1
+        elsif fnum <= 2
+          nice_fnum = 2
+        elsif fnum <= 5
+          nice_fnum = 5
+        else
+          nice_fnum = 10
+        end
+      end
+
+      return nice_fnum * (10 ** exponent)
     end
 
     def draw_border(border_object)
@@ -207,221 +457,6 @@ module RvgGraph
             y_pos).translate(-width/2).skewY(skew)
         @canvas.use(break_line, bcord[2].to_i,
             y_pos).translate(-width/2).skewY(skew)
-      end
-    end
-
-    def draw_x_axis(xaxis_object)
-      bcord = @template["graph"]["graph_bounds"].split(",")
-      x_min = bcord[0].to_i
-      x_max = bcord[2].to_i
-      base_top = bcord[1].to_i
-      base_bottom = bcord[3].to_i
-      line_size = xaxis_object["line_size"]
-      color = "rgb(#{xaxis_object["color"]})"
-      minor_tic = xaxis_object["minor_tic_height"]
-      major_tic_h = xaxis_object["major_tic_height"]
-      major_tic = xaxis_object["major_tics"]
-      label_offset = xaxis_object["label_offset"]
-      label_size = xaxis_object["label_size"]
-
-      # calculate tics
-      days = self.date["days"]
-      width = x_max - x_min
-      day_width = (width/days).to_i
-      day_start = self.date["day_start"] - days
-      
-      # draw bottom x-axis
-      mtic = 1 # keep track of the major tics
-      if !base_bottom.nil?
-        @canvas.line(x_min, base_bottom, x_max, base_bottom).styles(
-             :stroke_width=>line_size, :stroke=>color)
-        x_min.step(x_max, day_width) do |x|
-          if mtic == major_tic
-            @canvas.line(x, base_bottom, x, base_bottom-major_tic_h).styles(
-               :stroke_width=>line_size, :stroke=>color)
-            mtic = 1
-            # Add in label
-            day = day_start+(x/day_width)
-            year = self.date["year"]
-            odate = Date.ordinal(year, day).strftime("%d %b")
-            @canvas.text(x, base_bottom+label_offset, odate).styles(
-                :fill=>color, :font_size=>label_size.to_i,
-                :font_family=>'Verdana', :text_anchor=>"middle")
-          else
-            @canvas.line(x, base_bottom, x, base_bottom-minor_tic).styles(
-               :stroke_width=>line_size, :stroke=>color)
-            mtic += 1
-          end
-        end
-      end
-
-      # draw top x-axis
-      mtic = 1
-      if !base_top.nil?
-        @canvas.line(x_min, base_top, x_max, base_top).styles(
-             :stroke_width=>line_size)
-        x_min.step(x_max, day_width) do |x|
-          if mtic == major_tic
-            @canvas.line(x, base_top, x, base_top+major_tic_h).styles(
-               :stroke_width=>line_size, :stroke=>color)
-            mtic = 1
-          else
-            @canvas.line(x, base_top, x, base_top+minor_tic).styles(
-               :stroke_width=>line_size, :stroke=>color)
-            mtic += 1
-          end
-        end
-      end
-    end
-
-    def draw_yaxis(data_object)
-      data_object.each do |data|
-        item = data["item"]
-        graph_set = @template["graph_data"][item]
-        yaxis_set = @template["y_axis"][item]["y_set"]
-        data_units = data["units"]
-
-        # Draw y-axis
-        if !@template["y_axis"][item]["left"].nil?
-          left_set = @template["y_axis"][item]["left"]
-          do_y_axis(left_set, graph_set, "left", yaxis_set, data_units)
-        end
-        if !@template["y_axis"][item]["right"].nil?
-          right_set = @template["y_axis"][item]["right"]
-          do_y_axis(right_set, graph_set, "right", yaxis_set, data_units)
-        end
-      end
-    end
-
-    def do_y_axis(axis_set, graph_set, side, yaxis_set, data_units)
-      top = graph_set["top"]
-      bottom = graph_set["bottom"]
-      maxval = graph_set["maxval"]
-      bcord = @template["graph"]["graph_bounds"].split(",")
-      numdiv = axis_set["numdiv"].to_i
-      tic_size = axis_set["tic_size"].to_i
-      tic_label_size = axis_set["tic_label_size"].to_i
-      tic_label_offset = axis_set["tic_label_offset"].to_i
-      tic_label_round = axis_set["round"].to_i
-      label = axis_set["label"]
-      label_size = axis_set["label_size"]
-      label_offset = axis_set["label_offset"].to_i
-      label_ypos = axis_set["label_ypos"].to_i
-
-      x_min = bcord[0].to_i
-      x_max = bcord[2].to_i
-      color ||= "rgb(#{yaxis_set["color"]})"
-      direction ||= yaxis_set["direction"]
-      skip ||= yaxis_set["skip"]
-      hard_min = yaxis_set.nil? ? nil : yaxis_set["hard_min"]
-      hard_max ||= yaxis_set["hard_max"]
-      
-      if hard_min.nil?
-        minval = graph_set["minval"]
-      else
-        minval = hard_min
-      end
-
-      if hard_max.nil?
-        maxval = graph_set["maxval"]
-      else
-        maxval = hard_max
-      end
-
-      data_range = maxval - minval
-      graph_range = bottom - top
-      graph_step = graph_range/numdiv
-      data_step = num_round((data_range.to_f/numdiv.to_f), tic_label_round)
-      tdata = num_round(minval, tic_label_round)
-
-      # Draw Labels
-      if side == "left"
-        y_pos = top + label_ypos
-        x_pos = x_min - label_offset
-        @canvas.text(x_pos, y_pos, label).styles(:fill=>color,
-            :font_size=>label_size.to_i, :font_family=>'Verdana',
-            :text_anchor=>'end')
-      else
-        y_pos = top + label_ypos
-        x_pos = x_max + label_offset
-        @canvas.text(x_pos, y_pos, label).styles(:fill=>color,
-            :font_size=>label_size.to_i, :font_family=>'Verdana',
-            :text_anchor=>'start')
-      end
-   
-      # Draw y-axis'
-      if direction == "top"
-        bottom.step(top, -graph_step) do |y|
-          if !skip.nil? && y == bottom
-            tdata = num_round(tdata += data_step, tic_label_round)
-            next
-          end
-          if side == "left"
-            units = axis_set["units"]
-            @canvas.line(x_min, y, x_min+tic_size, y).styles(:fill=>color)
-            if units != data_units
-              dtext = conv_units(data_units, units, tdata)
-            else
-              dtext = tdata
-            end
-            @canvas.text(x_min-tic_label_offset, y,
-                sprintf("%0.#{tic_label_round}f", dtext)).styles(
-                :fill=>color, :font_size=>tic_label_size.to_i,
-                :font_family=>'Verdana', :text_anchor=>'end',
-                :baseline_shift=>-((tic_label_size-2)/2))
-            tdata = num_round(tdata += data_step, tic_label_round)
-          else
-            units = axis_set["units"]
-            @canvas.line(x_max, y, x_max-tic_size, y).styles(:fill=>color)
-            if units != data_units
-              dtext = conv_units(data_units, units, tdata)
-            else
-              dtext = tdata
-            end
-            @canvas.text(x_max+tic_label_offset, y,
-                sprintf("%0.#{tic_label_round}f", dtext)).styles(
-                :fill=>color, :font_size=>tic_label_size.to_i,
-                :font_family=>'Verdana', :text_anchor=>'start',
-                :baseline_shift=>-((tic_label_size-2)/2))
-            tdata = num_round(tdata += data_step, tic_label_round)
-          end
-        end
-      else
-        top.step(bottom, graph_step) do |y|
-          if !skip.nil? && y == top
-            tdata = num_round(tdata += data_step, tic_label_round)
-            next
-          end
-          if side == "left"
-            units = axis_set["units"]
-            @canvas.line(x_min, y, x_min+tic_size, y).styles(:fill=>color)
-            if units != data_units
-              dtext = conv_units(data_units, units, tdata)
-            else
-              dtext = tdata
-            end
-            @canvas.text(x_min-tic_label_offset, y,
-                sprintf("%0.#{tic_label_round}f", dtext)).styles(
-                :fill=>color, :font_size=>tic_label_size.to_i,
-                :font_family=>'Verdana', :text_anchor=>'end',
-                :baseline_shift=>-((tic_label_size-2)/2))
-            tdata = num_round(tdata += data_step, tic_label_round)
-          else
-            units = axis_set["units"]
-            @canvas.line(x_max, y, x_max-tic_size, y).styles(:fill=>color)
-            if units != data_units
-              dtext = conv_units(data_units, units, tdata)
-            else
-              dtext = tdata
-            end
-            @canvas.text(x_max+tic_label_offset, y,
-                sprintf("%0.#{tic_label_round}f", dtext)).styles(
-                :fill=>color, :font_size=>tic_label_size.to_i,
-                :font_family=>'Verdana', :text_anchor=>'start',
-                :baseline_shift=>-((tic_label_size-2)/2))
-            tdata = num_round(tdata += data_step, tic_label_round)
-          end
-        end
       end
     end
 
@@ -503,12 +538,12 @@ module RvgGraph
     end
 
     def agg_data(collection, field)
-      results = {maxv: nil, minv: nil, count: nil}
+      results = {maxv: nil, minv: nil, count: nil, capture_min: nil, capture_max: nil}
       case collection
       when "raw"
-        data = @platform.raw_data.captured_between(@start_date, @end_date).only(field)
+        data = @platform.raw_data.captured_between(@start_date, @end_date).only(:capture_date, field)
       when "processed"
-        data = @platform.processed_data.captured_between(@start_date, @end_date).only(field)
+        data = @platform.processed_data.captured_between(@start_date, @end_date).only(:capture_date, field)
       else
         puts "Unknown collection name #{collection} in graph configuration!"
         raise
@@ -516,9 +551,12 @@ module RvgGraph
 
       data.each do |datum|
         value = datum[field].to_f
+        date = datum[:capture_date]
         unless value == @platform.no_data_value.to_f
           results[:maxv] = value if results[:maxv].nil? || value > results[:maxv]
           results[:minv] = value if results[:minv].nil? || value < results[:minv]
+          results[:capture_min] = date if results[:capture_min].nil? || date < results[:capture_min]
+          results[:capture_max] = date if results[:capture_max].nil? || date > results[:capture_max]
         end
       end
       results[:count] = data.count
@@ -527,13 +565,6 @@ module RvgGraph
     end
 
     private
-
-    def parse_config
-      self.template = @template
-      #self.title = @template["graph"]["title"] unless @template["graph"]["title"].nil?
-      #puts @template.graph_data
-      #self.graph_data = @template["graph_data"] unless @template["graph_data"].nil?
-    end
 
     def num_round(data, roundnum)
       if roundnum == 0
@@ -545,15 +576,13 @@ module RvgGraph
     end
 
     def conv_units(data_units, units, data)
-      newdata = (data * (9/5)) + 32 if data_units == "cel" and units == "far"
-      newdata = (data - 32) * (5/9) if data_units == "far" and units == "cel"
+      newdata = data
+      newdata = (data * 9)/5 + 32 if data_units == "cel" and units == "fahr"
+      newdata = ((data - 32) * 5) / 9 if data_units == "fahr" and units == "cel"
       newdata = data * 3.2808 if data_units == "met" and units == "feet"
       newdata = data * 1.09 if data_units == "feet" and units == "met"
+#      newdate = data.utc.to_i if units == "date"
       return newdata
-    end
-
-    def axis_scale
-
     end
   end
 

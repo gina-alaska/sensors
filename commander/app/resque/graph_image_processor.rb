@@ -7,10 +7,8 @@ class GraphImageProcessor
   @queue = :graph_image
 
   def self.perform(slug, graph_id)
-    platform = Platform.where( slug: slug ).first
-    graph = platform.graphs.find(graph_id)
     # These dates need to be smarter
-    starts_at = "2011-06-04 00:00:00 UTC"
+    starts_at = "2011-06-01 00:00:00 UTC"
     ends_at = "2011-06-06 00:00:00 UTC"
 
     path = Rails.root.join('graphs', slug)
@@ -20,11 +18,12 @@ class GraphImageProcessor
     file = path.join("#{graph_id}.jpg")
     puts "Creating Graph, output to #{file}"
 
-    newgraph = Ginagraph.new(slug, graph, starts_at, ends_at)
+    newgraph = Ginagraph.new(slug, graph_id, starts_at, ends_at)
     newgraph.draw_data(newgraph.template["graph_data"]) if newgraph.template["graph_data"]
     newgraph.draw_border(newgraph.template["border"]) if newgraph.template["border"]
+    newgraph.draw_title if newgraph.template["graph"]["title"]
     newgraph.save(file)
-    thumbfile = path.join("#{graph.id}_thumb.jpg")
+    thumbfile = path.join("#{graph_id}_thumb.jpg")
     img = Image.read(file).first
     thumb = img.resize_to_fit(200)
     thumb.write(thumbfile)

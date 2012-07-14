@@ -77,4 +77,16 @@ class GraphsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def image
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @graph = Graph.find(params[:id])
+    send_file @graph.image_path, :disposition => "inline"
+  end
+
+  def thumb
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @graph = Graph.find(params[:id])
+    send_file @graph.thumb_path, :disposition => "inline"
+  end
 end

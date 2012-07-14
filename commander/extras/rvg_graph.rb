@@ -264,9 +264,12 @@ module RvgGraph
           elsif drange < 86400        # 1 day
             nice_tic_delta = 3600     # 1 hour
             minor_delta = 600         # 10 min
-          elsif drange < 2678400      # 1 month
+          elsif drange < 604800       # 1 week
             nice_tic_delta = 86400    # 1 day
             minor_delta = 3600        # 1 hour
+          elsif drange < 2678400      # 1 month
+            nice_tic_delta = 86400    # 1 day
+            minor_delta = 43200       # 12 hours
           else
             nice_tic_delta = 2678400  # month
             minor_delta = 86400       # 1 day

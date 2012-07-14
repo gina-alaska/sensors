@@ -2,7 +2,8 @@
   .span2
     = graph.name
   .span2
-    image here
+    = link_to image_platform_graph_path(@platform, graph), :class => "graph_link" do
+      =image_tag thumb_platform_graph_path(@platform, graph)
   .span2
     %table
       %tr

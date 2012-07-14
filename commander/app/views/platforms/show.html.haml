@@ -102,6 +102,11 @@
               %b Graph Image
           %hr
           = render @graphs
+#graph_image_modal.modal.hide
+  .modal-header
+    %button.close{:type=>"button", "data-dismiss"=>"modal"} x
+  .modal-body
+    %img{:src => ""}
 
 :javascript
   $('#platformTab a').click(function (e) {
@@ -113,3 +118,9 @@
   setInterval(function(){
     $('#resque').load("#{poll_resque_path}");
   }, 30000 );
+
+  $('a.graph_link').click(function (e) {
+    e.preventDefault();
+    $("#graph_image_modal img").attr("src", $(e.currentTarget).attr("href"));
+    $('#graph_image_modal').modal('show');
+  });

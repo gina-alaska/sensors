@@ -7,15 +7,16 @@ class GraphImageProcessor
   @queue = :graph_image
 
   def self.perform(slug, graph_id)
-    # These dates need to be smarter
-    starts_at = "2011-06-01 00:00:00 UTC"
-    ends_at = "2011-06-06 00:00:00 UTC"
+    # Smarter dates
+    platform = Platform.where(slug: slug).first
+    ends_at = platform.raw_data.last.capture_date
+    starts_at = ends_at-eval(platform.graph_length)
 
-    path = Rails.root.join('graphs', slug)
+    path = File.join('graphs', slug)
     unless File.exists?(path)
       Dir.mkdir(path)
     end
-    file = path.join("#{graph_id}.jpg")
+    file = File.join(path, "#{graph_id}.jpg")
     puts "Creating Graph, output to #{file}"
 
     newgraph = Ginagraph.new(slug, graph_id, starts_at, ends_at)
@@ -23,10 +24,15 @@ class GraphImageProcessor
     newgraph.draw_border(newgraph.template["border"]) if newgraph.template["border"]
     newgraph.draw_title if newgraph.template["graph"]["title"]
     newgraph.save(file)
-    thumbfile = path.join("#{graph_id}_thumb.jpg")
+    thumbfile = File.join(path, "#{graph_id}_thumb.jpg")
     img = Image.read(file).first
     thumb = img.resize_to_fit(200)
     thumb.write(thumbfile)
+
+    # update the database graph image paths
+    graph = platform.graphs.find(graph_id)
+    graph.update_attributes(image_path: file, thumb_path: thumbfile)
+
     puts "Done!"
   end
 end

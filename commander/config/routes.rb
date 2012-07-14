@@ -14,7 +14,10 @@ Commander::Application.routes.draw do
       get 'moveup', :on => :member
       get 'movedown', :on => :member
     end
-    resources :graphs
+    resources :graphs do
+      get 'image', :on => :member
+      get 'thumb', :on => :member
+    end
     resources :alerts
   end
 

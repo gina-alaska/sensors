@@ -19,11 +19,9 @@ class GraphImageProcessor
     file = File.join(path, "#{graph_id}.jpg")
     puts "Creating Graph, output to #{file}"
 
-    newgraph = Ginagraph.new(slug, graph_id, starts_at, ends_at)
-    newgraph.draw_data(newgraph.template["graph_data"]) if newgraph.template["graph_data"]
-    newgraph.draw_border(newgraph.template["border"]) if newgraph.template["border"]
-    newgraph.draw_title if newgraph.template["graph"]["title"]
-    newgraph.save(file)
+    graph = Graph.new(slug, graph_id, starts_at, ends_at)
+    graph.draw
+    graph.save(file)
     thumbfile = File.join(path, "#{graph_id}_thumb.jpg")
     img = Image.read(file).first
     thumb = img.resize_to_fit(200)

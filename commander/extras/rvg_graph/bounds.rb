@@ -1,6 +1,6 @@
 # Pull graph boundry from template
 module RvgGraph
-  class GraphBounds
+  class Bounds
     attr_accessor :xmin, :xmax, :ymin, :ymax, :x_len, :y_len
 
     def initialize(bounds)

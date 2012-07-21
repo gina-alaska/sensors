@@ -15,11 +15,6 @@ module RvgGraph
       top = range[0].to_f
       bottom = range[1].to_f
       zero = data["zero"].to_f
-      unless data["mark"].nil?
-        marks = data["mark"].split(",")
-        mark_high = marks[1].to_i if marks[0] == "high"
-        mark_low = marks[1].to_i if marks[0] == "low"
-      end
       data_top = data["graph_top"]
 
       maxval = agg.maxval.to_f
@@ -27,7 +22,6 @@ module RvgGraph
       hard_min = data["hard_min"].nil? ? nil : data["hard_min"].to_f
       hard_max = data["hard_max"].nil? ? nil : data["hard_max"].to_f
       minval = 0
-      puts "maxval - #{maxval} minval - #{minval}"
       oldrange = hard_max - hard_min
       newrange = bottom - top
 

@@ -39,13 +39,13 @@ module RvgGraph
         raise
       end
 
+      # Draw any dividing lines for each object
+      Dividers.draw(bcord, data_object, @canvas, @platform, @start_date, @end_date)
+
       # Draw each data graph by type
       data_object.each do |data|
         # Get aggregate information from data
         agg = Agg.new(data["collection"], data["data_fields"].split(",").first, @platform, @start_date, @end_date)
-
-        # Draw any dividing lines for each object
-        Dividers.draw(bcord, data, agg, @canvas)
 
         case data["type"]
         when "line"
@@ -62,13 +62,13 @@ module RvgGraph
         # Draw any axis and text associated with this data
         Axis.draw(data, bcord, agg, @canvas) if data["axis"]
 #        draw_text(data["text"])
-
-        # Draw graph border
-        Border.draw(@template["border"], bcord, @canvas)
-
-        # Draw the graph title if there is one
-        draw_title(bcord) if @template["graph"]["title"]
       end
+
+      # Draw graph border
+      Border.draw(@template["border"], bcord, @canvas)
+
+      # Draw the graph title if there is one
+      draw_title(bcord) if @template["graph"]["title"]
     end
 
     def save(filename)
@@ -79,7 +79,8 @@ module RvgGraph
 
     def draw_title(bcord)
       title_offset = @template["graph"]["title_offset"].to_i
-      @canvas.text((bcord.xmax-bcord.xmin)/2+bcord.xmin, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :font_family=>'Verdana', :text_anchor=>"middle")
+#      @canvas.text((bcord.xmax-bcord.xmin)/2+bcord.xmin, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :font_family=>'Verdana', :text_anchor=>"middle")
+      @canvas.text((bcord.xmax-bcord.xmin)/2+bcord.xmin, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :text_anchor=>"middle")
     end
   end
 end

@@ -26,10 +26,17 @@ module RvgGraph
           bline.rect(width,thick,0,0).styles(:fill=>bstyle.fill_color, :stroke=>bstyle.fill_color)
           bline.line(0,0,width,0).styles(:stroke=>bstyle.color, :stroke_width=>bstyle.line_size+0.5)
           bline.line(0,thick,width,thick).styles(:stroke=>bstyle.color, :stroke_width=>bstyle.line_size+0.5)
+          bline.translate(-width/2)
         end
         # Draw break lines
-        canvas.use(break_line, bcord.xmin, y_pos).translate(-width/2).skewY(skew)
-        canvas.use(break_line, bcord.xmax, y_pos).translate(-width/2).skewY(skew)
+        canvas.g.translate(bcord.xmin, y_pos) do |grp|
+          grp.use(break_line, 0, 0)
+          grp.skewY(skew)
+        end
+        canvas.g.translate(bcord.xmax, y_pos) do |grp|
+          grp.use(break_line, 0, 0)
+          grp.skewY(skew)
+        end
       end
     end
   end

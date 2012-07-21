@@ -174,39 +174,44 @@ module RvgGraph
         end
 
         # Draw axis label
-        rotate = 'lr'
-        rotate = 'tb' if label["rotate"]
-        unless label["units"] == "date"
-          lpos = (gmax - gmin)/2 + range_min
-        else
-          lpos = (gmax - gmin)/2 + gmin
-        end
-        middle = LabelHelpers.middle(label)
+        lpos = (gmax - gmin)/2 + gmin
+        text_style = {:fill=>dstyle.color, :font_size=>label["size"].to_i, :font_family=>'Verdana', :text_anchor=>'middle', :baseline_shift=>-((label["size"]-2)/2)}
 
-        text_style = {:fill=>dstyle.color, :font_size=>label["size"].to_i, :font_family=>'Verdana', :text_anchor=>'end', :baseline_shift=>-((label["size"]-2)/2)}
         case place
         when "top"
           canvas.styles(text_style) do |txt|
-            label["text"].split("\n").each_with_index do |line, index|
-              txt.text(lpos - middle, y_min-label["offset"]).tspan(line).d(0,label["size"] * index)
+            txt.g.translate(lpos, y_min-label["offset"]) do |grp|
+              label["text"].split("\n").each_with_index do |line, index|
+                grp.text(0, 0).tspan(line).d(0,label["size"] * index)
+              end
+              grp.rotate(label["rotate"]) if label["rotate"]
             end
           end
         when "bottom"
           canvas.styles(text_style) do |txt|
-            label["text"].split("\n").each_with_index do |line, index|
-              txt.text(lpos, y_max+label["offset"]).tspan(line).d(0,label["size"] * index)
+            txt.g.translate(lpos, y_max+label["offset"]) do |grp|
+              label["text"].split("\n").each_with_index do |line, index|
+                grp.text(0, 0).tspan(line).d(0,label["size"] * index)
+              end
+              grp.rotate(label["rotate"]) if label["rotate"]
             end
           end
         when "left"
           canvas.styles(text_style) do |txt|
-            label["text"].split("\n").each_with_index do |line, index|
-              txt.text(x_min-label["offset"], lpos - middle).tspan(line).d(0,label["size"] * index)
+            txt.g.translate(x_min-label["offset"], lpos) do |grp|
+              label["text"].split("\n").each_with_index do |line, index|
+                grp.text(0, 0).tspan(line).d(0,label["size"] * index)
+              end
+              grp.rotate(label["rotate"]) if label["rotate"]
             end
           end
         when "right"
           canvas.styles(text_style) do |txt|
-            label["text"].split("\n").each_with_index do |line, index|
-              txt.text(x_max+label["offset"], lpos - middle).tspan(line).d(0,label["size"] * index)
+            txt.g.translate(x_max+label["offset"], lpos) do |grp|
+              label["text"].split("\n").each_with_index do |line, index|
+                grp.text(0, 0).tspan(line).d(0,label["size"] * index)
+              end
+              grp.rotate(label["rotate"]) if label["rotate"]
             end
           end
         end

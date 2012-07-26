@@ -82,7 +82,20 @@ module RvgGraph
 
     def draw_title(bcord)
       title_offset = @template["graph"]["title_offset"].to_i
-      @canvas.text((bcord.xmax-bcord.xmin)/2+bcord.xmin, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :text_anchor=>"middle")
+      anchor = "middle"
+      anchor = @template["graph"]["title_anchor"] unless @template["graph"]["title_anchor"].nil?
+      position = "center"
+      position = @template["graph"]["title_position"] unless @template["graph"]["title_position"].nil?
+      xpos = bcord.xmin
+      case position
+      when "left"
+        xpos = bcord.xmin
+      when "right"
+        xpos = bcord.xmax
+      when "center"
+        xpos = (bcord.xmax-bcord.xmin)/2+bcord.xmin
+      end
+      @canvas.text(xpos, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :text_anchor=>anchor)
     end
 
     def draw_text(text)

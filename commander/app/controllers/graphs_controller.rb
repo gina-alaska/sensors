@@ -89,4 +89,16 @@ class GraphsController < ApplicationController
     @graph = Graph.find(params[:id])
     send_file @graph.thumb_path, :disposition => "inline"
   end
+
+  def build
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @graph = Graph.find(params[:id])
+    session["platformTabShow"] = '#graphs'
+    @graph.async_graph_image_process # Queue the graph processing
+
+    respond_to do |format|
+      format.html { redirect_to @platform, notice: 'Graph was successfully re-built.' }
+      format.json { render json: @graph, status: :created, location: @graph }
+    end
+  end
 end

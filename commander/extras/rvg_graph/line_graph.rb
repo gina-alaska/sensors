@@ -51,7 +51,7 @@ module RvgGraph
       newx = x_min
       newy = 0
 
-      convert = CalcPosition.new(top, bottom, data_top, oldrange, newrange, minval)
+      convert = CalcPosition.new(top, bottom, data_top, oldrange, newrange, minval, 0)
 
       if dstyle.fill_color
         firstnum = result.first[data_field.to_sym].to_f
@@ -85,9 +85,11 @@ module RvgGraph
       newx = x_min.to_f
       savx = x_min.to_f
       savy = 0
+      dsave = 0
 
       result.each do |row|
         vdata = row[data_field.to_sym].to_f
+        dsave = vdata
         if vdata == platform.no_data_value.to_f
           savy = 0
           savx = newx

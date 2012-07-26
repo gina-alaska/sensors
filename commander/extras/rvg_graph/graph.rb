@@ -17,7 +17,11 @@ module RvgGraph
            @template["graph"]["height"])
 
       # Set date range
-      @start_date = starts_at
+      if graph.length
+        @start_date = ends_at-eval(graph.length)
+      else
+        @start_date = starts_at
+      end
       @end_date = ends_at
     end
 
@@ -45,6 +49,7 @@ module RvgGraph
       # Draw each data graph by type
       data_object.each do |data|
         # Get aggregate information from data
+        puts "data type #{data["type"]}"
         agg = Agg.new(data["collection"], data["data_fields"].split(",").first, @platform, @start_date, @end_date)
 
         case data["type"]
@@ -53,7 +58,7 @@ module RvgGraph
         when "depth"
           DepthGraph.draw(data, bcord, agg, @platform, @canvas)
         when "profile"
-#          ProfileGraph.draw(data, bcord, agg, @platform, @canvas, @start_date, @end_date)
+          ProfileGraph.draw(data, bcord, @platform, @canvas, @start_date, @end_date)
         else
           puts "Unknown graph type #{data["type"]}!!"
           raise
@@ -61,7 +66,7 @@ module RvgGraph
 
         # Draw any axis and text associated with this data
         Axis.draw(data, bcord, agg, @canvas) if data["axis"]
-#        draw_text(data["text"])
+        draw_text(data["text"]) unless data["text"].nil?
       end
 
       # Draw graph border
@@ -75,12 +80,17 @@ module RvgGraph
       @canvas.draw.write filename
     end
 
-  private
-
     def draw_title(bcord)
       title_offset = @template["graph"]["title_offset"].to_i
-#      @canvas.text((bcord.xmax-bcord.xmin)/2+bcord.xmin, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :font_family=>'Verdana', :text_anchor=>"middle")
       @canvas.text((bcord.xmax-bcord.xmin)/2+bcord.xmin, bcord.ymin-title_offset, @template["graph"]["title"]).styles(:fill=>"black", :font_size=>@template["graph"]["title_size"].to_i, :text_anchor=>"middle")
+    end
+
+    def draw_text(text)
+      text.each do |item|
+        tstyle = Style.new(item["style"])
+        text_pos = item["position"].split(",")
+        @canvas.text(text_pos[0].to_i, text_pos[1].to_i, item["text"]).styles(:fill=>tstyle.color, :font_size=>tstyle.text_size, :text_anchor=>tstyle.anchor)
+      end
     end
   end
 end

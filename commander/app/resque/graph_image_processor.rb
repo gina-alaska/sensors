@@ -9,6 +9,7 @@ class GraphImageProcessor
   def self.perform(slug, graph_id)
     # Smarter dates
     platform = Platform.where(slug: slug).first
+
     ends_at = platform.raw_data.last.capture_date
     starts_at = ends_at-eval(platform.graph_length)
 
@@ -20,6 +21,7 @@ class GraphImageProcessor
     puts "Creating Graph, output to #{file}"
 
     graph = Graph.new(slug, graph_id, starts_at, ends_at)
+
     graph.draw
     graph.save(file)
     thumbfile = File.join(path, "#{graph_id}_thumb.jpg")

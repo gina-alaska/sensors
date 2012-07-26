@@ -14,28 +14,27 @@ module RvgGraph
       range = data["range"].split(",")
       top = range[0].to_f
       bottom = range[1].to_f
-      zero = data["zero"].to_f
       data_top = data["graph_top"]
 
-      maxval = agg.maxval.to_f
+      maxval = agg.maxval.to_f * -1.0
 
       hard_min = data["hard_min"].nil? ? nil : data["hard_min"].to_f
       hard_max = data["hard_max"].nil? ? nil : data["hard_max"].to_f
-      minval = 0
       oldrange = hard_max - hard_min
       newrange = bottom - top
 
-      convert = CalcPosition.new(top, bottom, data_top, oldrange, newrange, minval)
-      data_max = convert.calc(maxval, true)
+      convert = CalcPosition.new(top, bottom, data_top, oldrange, newrange, hard_min, 0)
+      data_min = convert.calc(0, false)
+      data_max = convert.calc(maxval, false)
 
       # Draw fill
       if dstyle.fill_color
-        canvas.rect(x_max - x_min, data_max, x_min, top + zero).styles(:fill=>dstyle.fill_color)
+        canvas.rect(x_max - x_min, data_max-data_min, x_min, data_min).styles(:fill=>dstyle.fill_color)
       end
 
       # Draw boundry lines
-      canvas.line(x_min, top + zero, x_max, top + zero).styles(:stroke_width=>dstyle.line_size, :stroke_dasharray=>dstyle.line_type, :fill=>'none', :stroke=>dstyle.color )
-      canvas.line(x_min, data_max + top + zero, x_max, data_max + top + zero).styles(:stroke_width=>dstyle.line_size, :stroke_dasharray=>dstyle.line_type, :fill=>'none', :stroke=>dstyle.color )
+      canvas.line(x_min, data_min, x_max, data_min).styles(:stroke_width=>dstyle.line_size, :stroke_dasharray=>dstyle.line_type, :fill=>'none', :stroke=>dstyle.color )
+      canvas.line(x_min, data_max, x_max, data_max).styles(:stroke_width=>dstyle.line_size, :stroke_dasharray=>dstyle.line_type, :fill=>'none', :stroke=>dstyle.color )
     end
   end
 end

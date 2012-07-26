@@ -1,7 +1,7 @@
 # Collect and process graph object style information
 module RvgGraph
   class Style
-    attr_accessor :color, :fill_color, :profile_color, :fill_to, :line_size, :line_type, :text_size, :bg_color
+    attr_accessor :color, :fill_color, :profile_color, :fill_to, :line_size, :line_type, :text_size, :bg_color, :dot_size, :anchor
 
     def initialize(style_object)
       self.color = "rgb(#{style_object["color"]})" if style_object["color"]
@@ -11,6 +11,8 @@ module RvgGraph
 
       self.fill_to ||= style_object["fill_to"]
       self.line_size ||= style_object["line_size"]
+      self.dot_size ||= style_object["dot_size"]
+      self.anchor ||= style_object["anchor"]
       linetype ||= style_object["line_type"]
       if linetype
         lt = linetype.split(",")

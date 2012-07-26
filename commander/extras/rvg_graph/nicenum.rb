@@ -28,5 +28,26 @@ module RvgGraph
       end    
       return nice_fnum * (10 ** exponent)
     end
+
+    # Floor the date to the closest whole ammount specified.
+    def self.date_floor(date, floor)
+      case floor
+      when "hour"
+        newdate = date.change(:sec => 0)
+      when "day"
+        newdate = date.change(:min => 0)
+      when "week"
+        newdate = date.beginning_of_day
+      when "month"
+        newdate = date.beginning_of_week
+      when "year"
+        newdate = date.beginning_of_month
+      else
+        puts "Unknown floor #{floor} in date_floor function!"
+        raise
+      end
+
+      return newdate
+    end
   end
 end

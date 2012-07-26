@@ -17,6 +17,7 @@ Commander::Application.routes.draw do
     resources :graphs do
       get 'image', :on => :member
       get 'thumb', :on => :member
+      get 'build', :on => :member
     end
     resources :alerts
   end

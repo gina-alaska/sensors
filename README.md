@@ -14,7 +14,7 @@ The system can be divided into several major components:
 * Public Web Interface
 * Graphing Scripts
 * Other Web-API/Product Scripts
-
+* See GinaSensorData.png file in file list for organization.
 
 Ingestion Scripts
 --------

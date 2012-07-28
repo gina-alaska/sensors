@@ -1,0 +1,6 @@
+%tr
+  %td
+    = @alert.name
+  %td
+    = link_to 'Edit', edit_platform_alert_path(@platform, @alert), class: "btn btn-primary"
+    = link_to 'Delete', platform_alert_path(@platform, @alert), confirm: 'Are you sure?', class: "btn btn-danger delete"

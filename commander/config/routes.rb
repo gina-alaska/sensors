@@ -19,7 +19,13 @@ Commander::Application.routes.draw do
       get 'thumb', :on => :member
       get 'build', :on => :member
     end
-    resources :alerts
+    resources :alerts do
+      get 'add', :on => :member
+      get 'change', :on => :member
+      get 'remove', :on => :member
+      get 'moveup', :on => :member
+      get 'movedown', :on => :member
+    end
   end
 
   resources :resques do

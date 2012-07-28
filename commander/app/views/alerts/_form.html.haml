@@ -1,0 +1,65 @@
+.event-form.row-fluid.form-horizontal
+  = form_for([@platform, @alert]) do |f|
+    - if @alert.errors.any?
+      #error_explanation
+        %h2
+          = pluralize(@alert.errors.count, "error")
+          prohibited this alert from being saved:
+        %ul
+          - @alert.errors.full_messages.each do |msg|
+            %li= msg
+    .row-fluid
+      .span12
+        .row-fluid
+          .span6
+            %br/
+            .control-group
+              = f.label :name, "Name:", :class=>"control-label"
+              .controls
+                = f.text_field :name
+            .control-group
+              = f.label :starts_at, "Starts At:", :class=>"control-label"
+              .controls
+                = text_field_tag :starts_at, datepicker_format(@alert.starts_at), :class=>"datepicker"
+            .control-group
+              = f.label :ends_at, "Ends At:", :class=>"control-label"
+              .controls
+                = text_field_tag :ends_at, datepicker_format(@alert.ends_at), :class=>"datepicker"
+            .control-group
+              = f.label :emails, "Emails:", :class=>"control-label"
+              .controls
+                = f.text_field :emails
+            .control-group
+              = f.label :message, "Message:", :class=>"control-label"
+              .controls
+                = f.text_area :message, :rows => 4, :class => "span12"
+            .control-group
+              = f.label :send_to, "Send Message To:", :class=>"control-label"
+              .controls
+                = f.select :send_to, {"Email" => "email", "Commander" => "commander", "Both Email & Commander" => "both"}, {}
+            .control-group
+              = f.label :disabled, "Disable Alert:", :class=>"control-label"
+              .controls
+                = f.check_box :disabled
+    - unless @alert.new_record?
+      .row-fluid
+        .span2
+          = link_to 'Add Command', add_platform_alert_path(@platform, @alert), class: "btn btn-primary", :id => "add_command"
+      #commands
+        = render :partial=>"command", :locals=>{:platform => @platform, :alert => @alert}
+    %br/
+    .actions.row-fluid
+      = f.submit (@alert.new_record? ? "Create Alert" : "Update Alert"), :class => "btn btn-primary"
+:javascript
+  $('#add_command').live('click', function() {
+    $('#commands').load($(this).prop('href'));
+    return false;
+  });
+
+  $( ".datepicker" ).datetimepicker({
+      dateFormat: "yy-mm-dd",
+      changeYear: true,
+      changeMonth: true,
+      showSecond: true,
+      timeFormat: "hh:mm:ssz",
+      separator: " "});

@@ -12,5 +12,6 @@
     validates_uniqueness_of :source_field
     paginates_per 8
 
+    index({ source_field: 1 }, { unique: true })
     embedded_in :platform
   end

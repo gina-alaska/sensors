@@ -42,20 +42,17 @@
               .controls
                 = f.check_box :disabled
     - unless @alert.new_record?
-      .row-fluid
-        .span2
-          = link_to 'Add Command', add_platform_alert_path(@platform, @alert), class: "btn btn-primary", :id => "add_command"
-      #commands
-        = render :partial=>"command", :locals=>{:platform => @platform, :alert => @alert}
+      .span12
+        .row-fluid
+          = link_to 'Add Event', add_platform_alert_path(@platform, @alert), class: "btn btn-primary", :id => "add_command", :remote => true
+        #commands
+          = f.fields_for :alert_events do |event_builder|
+            = render "alert_events", :platform => @platform, :alert => @alert, :sensors => @sensors, :f => event_builder, :event => event_builder.object 
+    %br/
     %br/
     .actions.row-fluid
       = f.submit (@alert.new_record? ? "Create Alert" : "Update Alert"), :class => "btn btn-primary"
 :javascript
-  $('#add_command').live('click', function() {
-    $('#commands').load($(this).prop('href'));
-    return false;
-  });
-
   $( ".datepicker" ).datetimepicker({
       dateFormat: "yy-mm-dd",
       changeYear: true,
@@ -63,3 +60,17 @@
       showSecond: true,
       timeFormat: "hh:mm:ssz",
       separator: " "});
+
+  $('#commands a.delete').live('click', function(e) {
+    var target = $(e.target).parents(".event-update")
+    $.get($(e.target).prop('href'), function(data) {
+      $('#commands').append(data);
+    });
+
+    e.stopPropagation();
+    return false;
+  });
+
+  $('.command select').popover({
+    animation: true
+  });

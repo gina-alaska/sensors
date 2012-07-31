@@ -1,0 +1,12 @@
+= f.hidden_field :id
+.field.span1
+  = f.label :command
+  .command= f.select :command, alert_commands(event.command), {}, { "data-content" => "This event checks to see if the sensor or sensors are alive and still sending data. Amount is the time period to wait until the event is triggered (e.g., 1.day).", "data-original-title" => "Alive Event"} 
+.field.span2
+  = f.label :sensors
+  = f.select :sensors, sensors_select(sensors, event.sensors), {}, {:multiple => true, :size => 6, :style => "width: 220px;"}
+.field.span2
+  = f.label :amounts
+  = f.text_field :amounts
+.field.span1
+  = render :partial => "controls", :locals => {:platform => @platform, :event => @event, :command_id => event.id}

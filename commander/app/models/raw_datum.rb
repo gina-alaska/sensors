@@ -6,7 +6,7 @@
     validates_uniqueness_of :capture_date
 
     belongs_to :platform
-    index :capture_date
+    index({ capture_date: 1 }, { unique: true })
 
     scope :captured_between,  ->(starts_at, ends_at) {
     	data = self

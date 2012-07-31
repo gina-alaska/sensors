@@ -117,8 +117,9 @@
                 %tr
                   %th{:width => "200"} Alert Name
                   %th{:width => "200"} Send Alert To:
+                  %th{:width => "200"} Emails:
                   %th{:width => "200"} Controls
-                = render @alerts, :locals => {:platform => @platform}
+                = render @alerts, :locals => {:platform => @platform, :sensors => @sensors}
 #graph_image_modal.modal.hide
   .modal-header
     %button.close{:type=>"button", "data-dismiss"=>"modal"} x

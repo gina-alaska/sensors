@@ -1,3 +1,0 @@
-- @alert.alert_event.each do |command|
-  .row-fluid.event-update{"data-url" => change_platform_alert_path(@platform, @alert, :command_id=>command.id), :id => "command_list_#{command.id}"}
-    = render :partial => command.command, :locals => {:command => command}

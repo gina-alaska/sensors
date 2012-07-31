@@ -11,7 +11,7 @@ class Graph
   validates_uniqueness_of :name
 
   belongs_to :platform
-  index :name
+  index({ name: 1 })
 
   def async_graph_image_process
     Resque.enqueue(GraphImageProcessor, self.platform.slug, self.id)

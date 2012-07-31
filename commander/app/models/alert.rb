@@ -10,8 +10,9 @@
     field :send_to,             type: String
     field :disabled,            type: Boolean
 
-    index :starts_at
-    index :ends_at
+    index({ starts_at: 1 })
+    index({ ends_at: 1 })
     embeds_many :alert_events
+    accepts_nested_attributes_for :alert_events
     belongs_to :platform
   end

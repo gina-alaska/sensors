@@ -3,7 +3,7 @@ class AlertEvent
 
   field :index,     type: Integer
   field :command,   type: String
-  field :sensors,   type: String
+  field :sensors,   type: Array
   field :amounts,   type: String
   field :logic,     type: String
 

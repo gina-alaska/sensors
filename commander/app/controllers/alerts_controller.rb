@@ -41,6 +41,7 @@ class AlertsController < ApplicationController
   def edit
     @platform = Platform.where( slug: params[:platform_id] ).first
     @alert = Alert.find(params[:id])
+    @sensors = @platform.sensors
     session["platformTabShow"] = '#alerts'
   end
 
@@ -67,11 +68,10 @@ class AlertsController < ApplicationController
   def update
     @platform = Platform.where( slug: params[:platform_id] ).first
     @alert = Alert.find(params[:id])
-    @alert.attributes = params[:alert]
     session["platformTabShow"] = '#alerts'
 
     respond_to do |format|
-      if @alert.save
+      if @alert.update_attributes(alert_params)
         format.html { redirect_to @platform, notice: 'Alert was successfully updated.' }
         format.json { head :no_content }
       else
@@ -95,29 +95,47 @@ class AlertsController < ApplicationController
     end
   end
 
+  def remove
+    @platform = Platform.where( slug: params[:platform_id] ).first
+    @alert = Alert.find(params[:id])
+    @command = @alert.alert_events.find(params[:command_id])
+    cindex = @command.index
+
+    # Adjust indexes and remove command from database
+    fixcom = @alert.alert_events.where(:index.gt => cindex)
+    fixcom.each do |command|
+      command.index = command.index-1
+      command.save!
+    end
+    @command.destroy
+
+    render :partial => "remove", :locals => {:command_id => params[:command_id]}
+  end
+
   def add
     @platform = Platform.where( slug: params[:platform_id] ).first
     @alert = Alert.find(params[:id])
-    @command = @alert.alert_event.create(command: "alive", index: @alert.commands.count)
+    @command = @alert.alert_events.create(command: "alive", index: @alert.alert_events.count)
 
     respond_to do |format|
       format.html {
         if request.xhr?
-          render :partial => "command", :locals => {:platform => @platform, :alert => @alert}
+          render :partial => "alert_events", :locals => {:platform => @platform, :alert => @alert, :f => params["f"]}
         else
           redirect_to edit_platform_alert_path(@platform, @alert)
         end        
       }
+      format.js
     end
   end
 
-  def change
   protected
 
   def alert_params
     e = params[:alert]
-#    e[:commands] = params[:commands]
-    e[:from].reject! { |i| i == '' } if e[:from].count > 1
+    e[:alert_events_attributes].each do |ekey, edata|
+      e[:alert_events_attributes][ekey][:sensors].reject! { |i| i == '' } if e[:alert_events_attributes][ekey][:sensors].count > 1
+    end
     return e
   end
 end

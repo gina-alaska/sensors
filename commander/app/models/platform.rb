@@ -23,6 +23,7 @@
 
     validates_uniqueness_of :slug
 
+    index({ slug: 1 }, { unique: true })
     embeds_many :sensors
 
     has_many :raw_data 

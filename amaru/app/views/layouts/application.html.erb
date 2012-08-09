@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Amaru Sensor Data System</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <%= favicon_link_tag 'favicon.ico' %> 
+</head>
+<body>
+	<%= raw show_flash_messages %>
+	<div class="container-fluid">
+	  <div class="row-fluid header-sensor">
+	  	<div class="span12">
+	  		<div class="page-header">
+	  			<div class="amaru-image">
+	  				<img src="<%= image_path("amaru.png") %>"/>
+	  		  </div>
+	  			<h1>&nbsp;GINA Amaru<small style="color: #ffffff;"> Sensor Data System</small></h1>
+	  		</div>
+	  	</div>
+	  </div>
+	  <div class="row-fluid">
+	  	<div class="span12">
+	  		<ul class="nav nav-pills nav-background">
+	  			<li><a href="/">Home</a></li>
+	  			<li><a href="/platforms">Platforms</a></li>
+	  		</ul>
+	  	</div>
+	  </div>
+	  <div class="row-fluid">
+	  	<div class="span12">
+	      <%= yield %>
+	  	</div>
+	  </div>
+	  <div class="row-fluid footer-sensor">
+	  	<div class="span12">
+	  		Footer here
+    	</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+*=require css/ui-lightness/jquery-ui-1.7.3.custom
+*/
+
+@import "compass";
+
+$linkColor: #2e4a52;
+
+@import "bootstrap";
+@import "events";
+
+.header-sensor{
+	color: white;
+	@include gradient-vertical(#66a5b6, #3c616b);
+}
+
+.footer-sensor{
+	color: white;
+	@include gradient-vertical(#3c616b, #66a5b6);
+	margin-top: 10px;
+}
+
+.amaru-image{
+	float: right;
+  padding-right: 60px;
+}
+
+form.button_to{
+	margin-bottom: 0;
+}
+
+.nav-background{
+	background-color: #72b9cb;
+	padding-left: 10px;
+}
+
+.command-background{
+	background-color: #bee5ef;
+}
+
+.sensor-controls{
+	float: right;
+	padding-right: 10px;
+}
+
+.field select{
+	width: 80px;
+}
+
+.event-button-adjust{
+	margin-top: 22px;
+}
+
+.ui-datepicker {
+    background: #2e4a52;
+    border: 1px solid #555;
+    color: #EEE;
+}
+
+#ui-datepicker-div { display: none; }
+
+#graph_image_modal.modal {
+  width: 1000px;
+  margin: -250px 0 0 -500px;
+  .modal-body{ max-height: 600px; }
+}
+
+#graph_config {
+  font-family: monospace;
+}

@@ -1,0 +1,15 @@
+%tr
+  %td
+    = graph.name
+  %td
+    = link_to image_platform_graph_path(@platform, graph), :class => "graph_link" do
+      =image_tag thumb_platform_graph_path(@platform, graph)
+  %td
+    %table
+      %tr
+        %td
+          = link_to 'Edit', edit_platform_graph_path(@platform, graph), class: "btn btn-primary"
+        %td
+          = link_to 'Re-Build', build_platform_graph_path(@platform, graph), class: "btn btn-primary"
+        %td
+          = link_to 'Delete',[@platform, graph], confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"

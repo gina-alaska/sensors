@@ -1,0 +1,59 @@
+%h2= @platform.name unless @platform.new_record?
+= form_for(@platform) do |f|
+  - if @platform.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@platform.errors.count, "error")
+        prohibited this platform from being saved:
+      %ul
+        - @platform.errors.full_messages.each do |msg|
+          %li= msg
+  %hr/
+  .row-fluid
+    .span12
+      .control-group
+        = f.label :slug
+        .controls
+          = f.text_field :slug
+      .control-group
+        = f.label :name
+        .controls
+          = f.text_field :name
+      .control-group
+        = f.label :platform_metadata
+        .controls
+          = f.text_field :platform_metadata
+      .control-group
+        = f.label :geo_location
+        .controls
+          = f.text_field :geo_location
+      .control-group
+        = f.label :license
+        .controls
+          = f.text_field :license
+      .control-group
+        = f.label :permissions
+        .controls
+          = f.text_field :permissions
+      .control-group
+        = f.label :agency
+        .controls
+          = f.text_field :agency
+      .control-group
+        = f.label :authority
+        .controls
+          = f.text_field :authority
+      .control-group
+        = f.label :no_data_value
+        .controls
+          = f.text_field :no_data_value
+      .control-group
+        = f.label :graph_length
+        .controls
+          = f.text_field :graph_length
+      .control-group
+        = f.label :log_events
+        .controls
+          = f.check_box :log_events
+      .control-group
+        = f.submit

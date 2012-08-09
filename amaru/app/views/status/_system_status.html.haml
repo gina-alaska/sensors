@@ -1,0 +1,22 @@
+%table.table.table-striped.table-condensed
+  %tr
+    %th
+      System
+    %th
+      Status
+    %th
+      Time
+    %th
+      Message
+  - @status.each do |f|
+    %tr
+      %td= f["system"].upcase
+      %td= f["status"]
+      %td
+        - unless f["status"] == "Finished"
+          = "Started #{f["start_time"]}"
+        - else
+          = "Ended #{f["end_time"]}"
+      %td= f["message"]
+/      %td= button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
+/      %td= button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"

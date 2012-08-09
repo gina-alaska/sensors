@@ -1,0 +1,28 @@
+%h2= @sensor.source_field unless @sensor.new_record?
+= form_for([@platform, @sensor]) do |f|
+  - if @sensor.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@sensor.errors.count, "error")
+        prohibited this sensor from being saved:
+      %ul
+        - @sensor.errors.full_messages.each do |msg|
+          %li= msg
+  %hr/
+  .row-fluid
+    .span12
+      - if @sensor.new_record?
+        .control-group
+          = f.label :source_field
+          .controls
+            = f.text_field :source_field, :class => "span5"
+      .control-group
+        = f.label :label
+        .controls
+          = f.text_field :label, :class => "span5"
+      .control-group
+        = f.label :sensor_metadata
+        .controls
+          = f.text_field :sensor_metadata, :class => "span6"
+  .actions
+    = f.submit (@sensor.new_record? ? "Create Sensor" : "Update Sensor"), :class => "btn btn-primary"

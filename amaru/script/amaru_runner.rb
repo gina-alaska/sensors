@@ -4,10 +4,10 @@
 current_dir = File.expand_path(File.dirname(__FILE__))
 
 require current_dir + '/../config/environment.rb'
-require current_dir + '/data_import.rb'
-#require 'data_process'
-#require 'data_graph'
-#require 'data_alert'
+require current_dir + '/import.rb'
+require current_dir + '/process.rb'
+require current_dir + '/graph.rb'
+#require 'alert'
 
 include AmaruRunner
 
@@ -35,13 +35,11 @@ cmd_opts = case cmd
   when "process"
     Trollop::options do
       banner "Process Options:"
-      opt :slug, "Platform Slug", {:type => String, :required => true}
       opt :name, "Process Data Field", {:type => String, :required => true}
     end
   when "graph"
     Trollop::options do
       banner "Graph Options:"
-      opt :slug, "Platform Slug", {:type => String, :required => true}
       opt :name, "Graph Name", {:type => String, :required => true}
       opt :output, "Output File Name", {:type => String, :required => true}
       opt :start, "Start Date", {:type => String, :required => true}
@@ -62,9 +60,9 @@ case cmd
     AmaruRunner::data_import(cmd_opts[:slug], cmd_opts[:name], cmd_opts[:type], cmd_opts[:config], `pwd`)
     puts "Finished."
   when "process"
-    data_process(cmd_opts[:slug], cmd_opts[:name])
+    data_process(cmd_opts[:name])
   when "graph"
-    data_graph(cmd_opts[:slug], cmd_opts[:graph], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end])
+    data_graph(cmd_opts[:name], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end])
   when "alert"
     data_alert(cmd_opts[:slug], cmd_opts[:alert])
 end

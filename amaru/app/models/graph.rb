@@ -16,4 +16,8 @@ class Graph
   def async_graph_image_process
     Resque.enqueue(GraphImageProcessor, self.platform.slug, self.id)
   end
+
+  def async_graph_process(start_date, end_date, ouput_name)
+    Resque.enqueue(GraphProcessor, self.platform.slug, self.id, start_date, end_date, ouput_name)
+  end
 end

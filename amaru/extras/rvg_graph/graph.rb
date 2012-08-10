@@ -9,20 +9,22 @@ module RvgGraph
       @platform = Platform.where(slug: slug).first
 
       # get the graph YAML configuration
-      graph = @platform.graphs.find(graph_id)
-      @template = Psych.load(graph.config)
+      @graph = @platform.graphs.find(graph_id)
+      @template = Psych.load(@graph.config)
 
       # build the graph image
       @canvas = RVG.new(@template["graph"]["width"],
            @template["graph"]["height"])
 
       # Set date range
-      if graph.length
-        @start_date = ends_at-eval(graph.length)
+      if @graph.length
+        @start_date = ends_at-eval(@graph.length)
       else
         @start_date = starts_at
       end
       @end_date = ends_at
+      @status = @platform.status.build(system: "graph", message: "Processing graph #{@graph.name}.", status: "Running", start_time: DateTime.now)
+      @status.save
     end
 
     def draw
@@ -40,6 +42,7 @@ module RvgGraph
       bcord ||= Bounds.new(@template["graph"]["graph_bounds"])
       if bcord.nil?
         puts "No graph_bounds defined in template!"
+        status.update_attributes(status: "Error", message: "No graph_bounds defined in template for #{@graph.name}!", end_time: DateTime.now)
         raise
       end
 
@@ -61,6 +64,7 @@ module RvgGraph
           ProfileGraph.draw(data, bcord, @platform, @canvas, @start_date, @end_date)
         else
           puts "Unknown graph type #{data["type"]}!!"
+          status.update_attributes(status: "Error", message: "Unknown graph type #{data["type"]}!!", end_time: DateTime.now)
           raise
         end
 
@@ -78,6 +82,7 @@ module RvgGraph
 
     def save(filename)
       @canvas.draw.write filename
+      @status.update_attributes(status: "Finished", end_time: DateTime.now)
     end
 
     def draw_title(bcord)

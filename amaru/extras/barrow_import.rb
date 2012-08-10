@@ -6,11 +6,11 @@ class BarrowImport < DataImport
     super(configfile, slug, path)
 
     # Get sensor information if there is some
-    unless configfile == "false"
+    unless configfile.nil?
       sensor_config ||= @config["sensors"] # Read sensors options from config file
       date_config ||= @config["date"]      # Read date information
     else
-      @status.update_attributes(status: "Error", message: "I can't find the configuration file #{path+"/"+configfile}!", end_time: DateTime.now)
+      @status.update_attributes(status: "Error", message: "I can't find the configuration file", end_time: DateTime.now)
       raise "Configuration file missing! Date information is nessessary!"
     end
 

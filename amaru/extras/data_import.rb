@@ -12,9 +12,9 @@ class DataImport
     @status.save
 
     # Read in configuration file if available
-    unless configfile == "false"
-      if File.exists?( File.join(path, configfile) )
-        @config = YAML.load_file(File.join(path, configfile))
+    unless configfile.nil?
+      if File.exists?( File.join(path.chomp, configfile) )
+        @config = YAML.load_file(File.join(path.chomp, configfile))
       else
         @status.update_attributes(status: "Error", message: "I can't find the configuration file #{path+"/"+configfile}!", end_time: DateTime.now)
         raise "I can't find the configuration file \e[31m#{path+"/"+configfile}\e[0m!"

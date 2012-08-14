@@ -15,4 +15,8 @@
     embeds_many :alert_events
     accepts_nested_attributes_for :alert_events
     belongs_to :platform
+
+    def async_process_alert
+      Resque.enqueue(AlertProcessor, self.platform.slug, self.id)
+    end
   end

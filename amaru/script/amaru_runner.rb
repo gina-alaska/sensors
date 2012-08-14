@@ -7,7 +7,7 @@ require current_dir + '/../config/environment.rb'
 require current_dir + '/import.rb'
 require current_dir + '/process.rb'
 require current_dir + '/graph.rb'
-#require 'alert'
+require current_dir + '/alert.rb'
 
 include AmaruRunner
 
@@ -48,7 +48,6 @@ cmd_opts = case cmd
   when "alert"
     Trollop::options do
       banner "Alert Options:"
-      opt :slug, "Platform Slug", {:type => String, :required => true}
       opt :alert, "Alert Name", {:type => String, :required => true}
     end
 end
@@ -64,5 +63,5 @@ case cmd
   when "graph"
     data_graph(cmd_opts[:name], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end])
   when "alert"
-    data_alert(cmd_opts[:slug], cmd_opts[:alert])
+    data_alert(cmd_opts[:alert])
 end

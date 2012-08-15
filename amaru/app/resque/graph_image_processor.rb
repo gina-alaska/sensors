@@ -9,9 +9,14 @@ class GraphImageProcessor
   def self.perform(slug, graph_id)
     # Smarter dates
     platform = Platform.where(slug: slug).first
+    graph = platform.graphs.find(graph_id)
+
+    status = platform.status.build(system: "graph", message: "Building test images for graph #{graph.name}.", status: "Running", start_time: DateTime.now)
 
     ends_at = platform.raw_data.last.capture_date
     starts_at = ends_at-eval(platform.graph_length)
+
+    template = Psych.load(graph.config)
 
     path = File.join('graphs', slug)
     unless File.exists?(path)
@@ -20,19 +25,43 @@ class GraphImageProcessor
     file = File.join(path, "#{graph_id}.jpg")
     puts "Creating Graph, output to #{file}"
 
-    graph = Graph.new(slug, graph_id, starts_at, ends_at)
+    # Build data hash for graph
+    data_hash = Hash.new
+    data_hash["date"] = Array.new
 
-    graph.draw
-    graph.save(file)
+    template["data"].each do |tdata|
+      case tdata["collection"]
+      when "raw"
+        data = platform.raw_data.captured_between(starts_at, ends_at).all
+      when "processed"
+        data = platform.processed_data.captured_between(starts_at, ends_at).all
+      end
+
+      fields = tdata["name"].split(",")
+
+      data.each do |row|
+        fields.each do |field|
+          data_hash[field] ||= []
+          data_hash[field] << row[field.to_sym].to_f
+        end
+        data_hash['date'] ||= []
+        data_hash['date'] << row[:capture_date]
+      end
+    end
+
+    rvg_graph = Graph.new(graph.config, data_hash, platform.no_data_value)
+
+    rvg_graph.draw
+    rvg_graph.save(file)
     thumbfile = File.join(path, "#{graph_id}_thumb.jpg")
     img = Image.read(file).first
     thumb = img.resize_to_fit(200)
     thumb.write(thumbfile)
 
     # update the database graph image paths
-    graph = platform.graphs.find(graph_id)
     graph.update_attributes(image_path: file, thumb_path: thumbfile)
 
+    status.update_attributes(status: "Finished", end_time: DateTime.now)
     puts "Done!"
   end
 end

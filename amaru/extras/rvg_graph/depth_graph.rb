@@ -1,14 +1,12 @@
 # Draw a depth graph from the data
 module RvgGraph
   class DepthGraph
-    def self.draw(data, bcord, agg, platform, canvas)
+    def self.draw(data, bcord, agg, canvas)
       x_min = bcord.xmin
       x_max = bcord.xmax
       y_min = bcord.ymin
       y_max = bcord.ymax
 
-      collection = data["collection"]
-      data_field = data["data_fields"].split(",").first
       dstyle = Style.new(data["style"])
       direction = data["direction"]
       range = data["range"].split(",")

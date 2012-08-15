@@ -1,9 +1,11 @@
 # Draw background dividers on graph
 module RvgGraph
   class Dividers
-    def self.draw(bcord, data_object, canvas, platform, start_date, end_date)
+    def self.draw(bcord, data_object, canvas, data_hash, no_data)
       data_object.each do |data|
-        agg = Agg.new(data["collection"], data["data_fields"].split(",").first, platform, start_date, end_date)
+        agg = Agg.new(data_hash, data["name"], no_data)
+        next if data["axis"].nil?
+
         data["axis"].each do |axis|
           if axis["dividers"]
             divider_object = axis["dividers"]

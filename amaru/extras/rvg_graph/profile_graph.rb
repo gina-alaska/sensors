@@ -1,14 +1,12 @@
 module RvgGraph
   class ProfileGraph
-    def self.draw(data, bcord, platform, canvas, start_date, end_date)
+    def self.draw(data, bcord, canvas, data_hash, no_data)
       x_min = bcord.xmin
       x_max = bcord.xmax
       y_min = bcord.ymin
       y_max = bcord.ymax
       dstyle = Style.new(data["style"])
 
-      collection = data["collection"]
-      data_fields = data["data_fields"].split(",")
       agg_data = Array.new
 
       range = data["range"].split(",")
@@ -21,8 +19,9 @@ module RvgGraph
       phard_max = data["profile_max"].nil? ? nil : data["profile_max"].to_f
 
       # Get aggrigate data for each field
+      data_fields = data["name"].split(",")
       data_fields.each do |field|
-        agg_data.push(Agg.new(collection, field, platform, start_date, end_date))
+        agg_data.push(Agg.new(data_hash, field, no_data))
       end
 
       oldrange = hard_max - hard_min
@@ -91,17 +90,7 @@ module RvgGraph
       end
 
       # Draw current values
-      case collection
-      when "processed"
-        result = platform.processed_data.where(captured_date: end_date.utc).first
-      when "raw"
-        result = platform.raw_data.captured_between(end_date, end_date).first
-      else
-        puts "Unknown collection command #{collection} in graph configuration!"
-        raise
-      end
-
-      xsave = result[data_fields[0].to_sym]
+      xsave = data_hash[data_fields[0]][0]
       ypos = 0.7
       ysave = 0.7
       x2pos = 0
@@ -114,7 +103,7 @@ module RvgGraph
         y1pos = converty.calc(ysave, false)
         y2pos = converty.calc(ypos, false)
 
-        dpos = result[field.to_sym]
+        dpos = data_hash[field][0]
         x1pos = convertx.calc(xsave, false)
         x2pos = convertx.calc(dpos, false)
         

@@ -1,12 +1,10 @@
 # Draw a line graph from the data
 module RvgGraph
   class LineGraph
-    def self.draw(data, bcord, agg, platform, canvas, start_date, end_date)
+    def self.draw(data, bcord, agg, canvas, data_hash, no_data_value)
       x_min = bcord.xmin
       x_max = bcord.xmax
 
-      collection = data["collection"]
-      data_field = data["data_fields"].split(",").first
       dstyle = Style.new(data["style"])
       direction = data["direction"]
       range = data["range"].split(",")
@@ -18,7 +16,9 @@ module RvgGraph
         mark_low = marks[1].to_i if marks[0] == "low"
       end
       data_top = data["graph_top"]
+      data_name = data["name"]
 
+puts "maxval: #{agg.maxval} minval: #{agg.minval} count: #{agg.count}"
       maxval = agg.maxval.to_f
       minval = agg.minval.to_f
       count = agg.count.to_f
@@ -36,16 +36,6 @@ module RvgGraph
 
       oldrange = (maxval - minval).to_f
 
-      case collection
-      when "processed"
-        result = platform.processed_data.captured_between(start_date, end_date).only(:captured_date, data_field.to_sym)
-      when "raw"
-        result = platform.raw_data.captured_between(start_date, end_date).only(:captured_date, data_field.to_sym)
-      else
-        puts "Unknown collection command #{collection} in graph configuration!"
-        raise
-      end
-
       ratiox = (x_max - x_min)/count
       newrange = (bottom - top).to_f
       newx = x_min
@@ -54,15 +44,14 @@ module RvgGraph
       convert = CalcPosition.new(top, bottom, data_top, oldrange, newrange, minval, 0)
 
       if dstyle.fill_color
-        firstnum = result.first[data_field.to_sym].to_f
+        firstnum = data_hash[data_name].first
         firsty = convert.calc(firstnum, false)
-        lastnum = result.last[data_field.to_sym].to_f
+        lastnum = data_hash[data_name].last
         lasty = convert.calc(lastnum, false)
 
         path = "M "
-        result.each do |row|
-          vdata = row[data_field.to_sym].to_f
-          if vdata == platform.no_data_value.to_f
+        data_hash[data_name].each do |vdata|
+          if vdata == no_data_value.to_f
             newx += ratiox
             next
           end
@@ -87,10 +76,9 @@ module RvgGraph
       savy = 0
       dsave = 0
 
-      result.each do |row|
-        vdata = row[data_field.to_sym].to_f
+      data_hash[data_name].each_with_index do |vdata, index|
         dsave = vdata
-        if vdata == platform.no_data_value.to_f
+        if vdata == no_data_value.to_f
           savy = 0
           savx = newx
           newx += ratiox

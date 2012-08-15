@@ -1,30 +1,27 @@
 # Main graph object
+require 'yaml'
+
 module RvgGraph
   class Graph
     include Magick
-  #    attr_accessor :template, :canvas
-
-    def initialize(slug, graph_id, starts_at, ends_at)
-      # get the platform
-      @platform = Platform.where(slug: slug).first
-
-      # get the graph YAML configuration
-      @graph = @platform.graphs.find(graph_id)
-      @template = Psych.load(@graph.config)
+    
+    def initialize(config, data_hash, no_data)
+      # get the graph YAML template
+      if File.exists?(config)
+        @template = Psych.load_file(config)
+      else
+        @template = Psych.load(config)
+      end
 
       # build the graph image
       @canvas = RVG.new(@template["graph"]["width"],
            @template["graph"]["height"])
 
-      # Set date range
-      if @graph.length
-        @start_date = ends_at-eval(@graph.length)
-      else
-        @start_date = starts_at
-      end
-      @end_date = ends_at
-      @status = @platform.status.build(system: "graph", message: "Processing graph #{@graph.name}.", status: "Running", start_time: DateTime.now)
-      @status.save
+      # graph data
+      @data_hash = data_hash
+
+      # no data value
+      @no_data = no_data
     end
 
     def draw
@@ -42,29 +39,28 @@ module RvgGraph
       bcord ||= Bounds.new(@template["graph"]["graph_bounds"])
       if bcord.nil?
         puts "No graph_bounds defined in template!"
-        status.update_attributes(status: "Error", message: "No graph_bounds defined in template for #{@graph.name}!", end_time: DateTime.now)
         raise
       end
 
       # Draw any dividing lines for each object
-      Dividers.draw(bcord, data_object, @canvas, @platform, @start_date, @end_date)
+      Dividers.draw(bcord, data_object, @canvas, @data_hash, @no_data)
 
       # Draw each data graph by type
       data_object.each do |data|
         # Get aggregate information from data
+        data_name = data["name"].split(",").first
         puts "data type #{data["type"]}"
-        agg = Agg.new(data["collection"], data["data_fields"].split(",").first, @platform, @start_date, @end_date)
+        agg = Agg.new(@data_hash, data_name, @no_data)
 
         case data["type"]
         when "line"
-          LineGraph.draw(data, bcord, agg, @platform, @canvas, @start_date, @end_date)
+          LineGraph.draw(data, bcord, agg, @canvas, @data_hash, @no_data)
         when "depth"
-          DepthGraph.draw(data, bcord, agg, @platform, @canvas)
+          DepthGraph.draw(data, bcord, agg, @canvas)
         when "profile"
-          ProfileGraph.draw(data, bcord, @platform, @canvas, @start_date, @end_date)
+          ProfileGraph.draw(data, bcord, @canvas, @data_hash, @no_data)
         else
           puts "Unknown graph type #{data["type"]}!!"
-          status.update_attributes(status: "Error", message: "Unknown graph type #{data["type"]}!!", end_time: DateTime.now)
           raise
         end
 
@@ -82,7 +78,6 @@ module RvgGraph
 
     def save(filename)
       @canvas.draw.write filename
-      @status.update_attributes(status: "Finished", end_time: DateTime.now)
     end
 
     def draw_title(bcord)

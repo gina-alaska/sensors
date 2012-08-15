@@ -7,11 +7,42 @@ class GraphProcessor
   @queue = :graph_processor
 
   def self.perform(slug, graph_id, starts_at, ends_at, output_name)
+    platform = Platform.where(slug: slug).first
+    graph = platform.graphs.find(graph_id)
+    template = Psych.load(graph.config)
+
+    status = platform.status.build(system: "graphs", message: "Building graph image for #{graph.name}.", status: "Running", start_time: DateTime.now)
     puts "Creating Graph, output to #{output_name}"
 
-    graph = Graph.new(slug, graph_id, DateTime.parse(starts_at), DateTime.parse(ends_at))
+    # Build data hash for graph
+      data_hash = Hash.new
+    data_hash["date"] = Array.new
 
-    graph.draw
-    graph.save(output_name)
+    template["data"].each do |tdata|
+      case tdata["collection"]
+      when "raw"
+        data = platform.raw_data.captured_between(starts_at, ends_at).all
+      when "processed"
+        data = platform.processed_data.captured_between(starts_at, ends_at).all
+      end
+
+      fields = tdata["name"].split(",")
+
+      data.each do |row|
+        fields.each do |field|
+          data_hash[field] ||= []
+          data_hash[field] << row[field.to_sym].to_f
+        end
+        data_hash['date'] ||= []
+        data_hash['date'] << row[:capture_date]
+      end
+    end
+
+    rvg_graph = Graph.new(graph.config, data_hash, platform.no_data_value)
+
+    rvg_graph.draw
+    rvg_graph.save(output_name)
+
+    status.update_attributes(status: "Finished", end_time: DateTime.now)
   end
 end

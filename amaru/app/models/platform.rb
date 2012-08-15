@@ -10,7 +10,7 @@
     field :agency,              type: String
     field :authority,           type: String
     field :no_data_value,       type: String
-    field :graph_length,        type: Integer
+    field :graph_length,        type: String
     field :log_events,          type: Boolean
 
     validates_presence_of :slug

@@ -137,24 +137,11 @@
   });
   #{raw show_tab_for("platformTab")}
 
-  // Poll system status
-  //(function poll() {
-  // setTimeout(function() {
-  //     $.ajax({ url: "#{poll_statu_path}", success: function(data) {
-  //          $('#resque').load(data);
-  //     }, dataType: "json", complete: poll });
-  //  }, 15000);
-  //})();
-  //(function poll(){
-  //  $.ajax({ url: "#{poll_statu_path}", success: function(data){
-  //    //Update system status div
-  //     $('#resque').setValue(data.value);
-
-  //  }, dataType: "json", complete: poll, timeout: 30000 });
-  // })();
-  setInterval(function(){
-    $('#resque').load("#{poll_statu_path}");
-    }, 10000 );
+  (function poll(){
+  setTimeout(function(){
+    $('#resque').load("#{poll_status_path}", poll);
+    }, 5000 );
+    })();
 
   $('a.graph_link').click(function (e) {
     e.preventDefault();

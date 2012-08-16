@@ -10,7 +10,7 @@
     paginates_per 12
 
     embeds_many :commands
-    belongs_to :platform
+    belongs_to :groups
     accepts_nested_attributes_for :commands
 
     def async_process_event

@@ -10,5 +10,5 @@ class Statu
 
   attr_accessible :system, :start_time, :end_time, :message, :status
   index({ system: 1, start_time: 1 })
-  belongs_to :platform
+  belongs_to :groups
 end

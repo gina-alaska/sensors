@@ -18,10 +18,6 @@ class PlatformsController < ApplicationController
     @sensors_all = @platform.sensors
     @events = @platform.events.asc(:name).page params[:event_page]
     @events_all = @platform.events
-    @failures = Resque::Failure.all(0, Resque::Failure.count)
-    if @failures.is_a? Hash
-      @failures = [@failures]
-    end
     @graphs = @platform.graphs
     @alerts = @platform.alerts
     @status = @platform.status

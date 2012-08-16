@@ -47,3 +47,4 @@ gem 'rinruby'
 gem "highcharts-rails", "~> 2.2.1"
 gem 'rmagick', :require => 'RMagick'
 gem 'trollop'
+gem 'rvg_graph', :git => 'git://github.com/gina-alaska/rvg_graph.git'

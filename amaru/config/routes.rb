@@ -29,7 +29,7 @@ Commander::Application.routes.draw do
   end
 
   resources :status do
-    member do
+    collection do
       get :poll
     end
   end

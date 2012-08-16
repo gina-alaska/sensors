@@ -14,13 +14,13 @@ include AmaruRunner
 
 SUB_COMMANDS = %w(import process graph alert log)
 global_opts = Trollop::options do
-  banner "Access Amaru's internal functionality:\nimport\t-Import Data\nprocess\t-Process Data\ngraph\t-Create Graphs\nalert\t-Run Alerts"
+  banner "Access Amaru's internal functionality:\nimport\t-Import Data\nprocess\t-Process Data\ngraph\t-Create Graphs\nalert\t-Run Alerts\nlog\t-Log System Messages"
   stop_on SUB_COMMANDS
 end
 
 cmd = ARGV.shift
 if cmd.nil?
-  Trollop::die "\n\nUse one of the following sub-commands:\nimport\nprocess\ngraph\nalert\n use -h for full help\n"
+  Trollop::die "\n\nUse one of the following sub-commands:\nimport\nprocess\ngraph\nalert\nlog\n use -h for full help\n"
   exit -1
 end
 

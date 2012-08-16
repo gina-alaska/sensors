@@ -12,7 +12,21 @@
     - break if index >= 6
     %tr
       %td= f["system"].upcase
-      %td= f["status"]
+      - case f["status"]
+        - when "ALERT!"
+          %td.alert-error
+            =f["status"]
+        - when "Error"
+          %td.alert-error
+            =f["status"]
+        - when "Finished"
+          %td.alert-good
+            =f["status"]
+        - when "Running"
+          %td.alert-warn
+            =f["status"]
+        - else
+          = f["status"]
       %td
         - unless f["status"] == "Finished"
           = "Started #{f["start_time"]}"

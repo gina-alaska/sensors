@@ -12,7 +12,7 @@ class AlertProcessor
 		alert_com = AlertCommands.new(platform)
 
     # Add a status for event
-    status = platform.status.build(system: "alerts", message: "Processing alert #{alert.name}", status: "Running", start_time: DateTime.now)
+    status = platform.status.build(system: "alert", message: "Processing alert #{alert.name}.", status: "Running", start_time: DateTime.now)
     status.save
 
 #    if DateTime.now < alert.starts_at or DateTime.now > alert.ends_at
@@ -25,9 +25,7 @@ class AlertProcessor
 			method = event.command
   		alert_com.send(method.downcase.to_sym, alert, event, status)
 		end
-    status.update_attributes(status: "Finished", end_time: DateTime.now)
 	rescue => e
-    #status.update_attributes(status: "Error", message: e.message, end_time: DateTime.now)
 		puts "Failure!"
 		raise
 	end
@@ -45,7 +43,10 @@ class AlertCommands
 
     raw = @platform.raw_data.captured_between(starts_at, ends_at)
     if raw.count == 0 
+      status.update_attributes(status: "ALERT", message: "Platform #{@platform.name} is down, no new data for alert period of #{event.amounts}!", end_time: DateTime.now)
       AlertMailer::alert_email(alert, "Platform #{@platform.name} is down, no new data for alert period of #{event.amounts}!", @platform.name).deliver
+    else
+      status.update_attributes(status: "Finished", end_time: DateTime.now)
     end
 	end
 end

@@ -11,7 +11,7 @@ class GraphImageProcessor
     platform = Platform.where(slug: slug).first
     graph = platform.graphs.find(graph_id)
 
-    status = platform.status.build(system: "graph", message: "Building test images for graph #{graph.name}.", status: "Running", start_time: DateTime.now)
+    status = platform.status.build(system: "graphs", message: "Building test images for graph #{graph.name}.", status: "Running", start_time: DateTime.now)
 
     ends_at = platform.raw_data.last.capture_date
     starts_at = ends_at-eval(platform.graph_length)

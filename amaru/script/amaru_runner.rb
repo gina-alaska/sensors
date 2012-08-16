@@ -8,10 +8,11 @@ require current_dir + '/import.rb'
 require current_dir + '/process.rb'
 require current_dir + '/graph.rb'
 require current_dir + '/alert.rb'
+require current_dir + '/system_log.rb'
 
 include AmaruRunner
 
-SUB_COMMANDS = %w(import process graph alert)
+SUB_COMMANDS = %w(import process graph alert log)
 global_opts = Trollop::options do
   banner "Access Amaru's internal functionality:\nimport\t-Import Data\nprocess\t-Process Data\ngraph\t-Create Graphs\nalert\t-Run Alerts"
   stop_on SUB_COMMANDS
@@ -50,6 +51,13 @@ cmd_opts = case cmd
       banner "Alert Options:"
       opt :alert, "Alert Name", {:type => String, :required => true}
     end
+  when "log"
+    Trollop::options do
+      banner "Log System Messages Options:"
+      opt :name, "Log File Name", {:type => String, :required => true}
+      opt :keep, "Number of days to keep", {:type => Integer, :required => true}
+      opt :delete, "Delete System Messages from database", {:default => false, :required => false}
+    end
 end
 
 #platform = Platform.where(slug: slug).first
@@ -64,4 +72,6 @@ case cmd
     data_graph(cmd_opts[:name], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end])
   when "alert"
     data_alert(cmd_opts[:alert])
+  when "log"
+    system_log(cmd_opts[:name], cmd_opts[:keep], cmd_opts[:delete])
 end

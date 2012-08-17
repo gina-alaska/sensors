@@ -7,6 +7,8 @@ Commander::Application.routes.draw do
     resources :sensors
     resources :raw_data
     resources :processed_data
+  end
+  resources :group do
     resources :events do
       get 'add', :on => :member
       get 'change', :on => :member

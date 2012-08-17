@@ -1,27 +1,47 @@
 .row-fluid
-  .span12
-    %h4 System Messages
-    #resque
-%hr/
-.row-fluid
-  .sensor-controls
-    = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
-  %h3 Resque Processing Errors
-.row-fluid
-  .span12
-    %table
-      %tr
-        %th{:width => "300"} Error Message
-        %th{:width => "180"}
-        %th{:width => "180"}
-      - @failures.each_with_index do |f, index|
+  %ul#dashboardTab.nav.nav-pills.nav-background
+    %li.active
+      %a{"data-toggle" => "pill", :href => "#dashboard"} Dashboard
+    %li
+      %a{"data-toggle" => "pill", :href => "#groups"} Groups
+  .tab-content
+    #dashboard.tab-pane.active
+      .row-fluid
+        .span12
+          %h4 System Messages
+          #resque
+      %hr/
+      .row-fluid
+        .sensor-controls
+          = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
+        %h4 Processing Errors
+      .row-fluid
+        .span12
+          %table.table.table-striped.table-condensed
+            %tr
+              %th{:width => "300"} Error Message
+              %th{:width => "180"}
+              %th{:width => "180"}
+            - @failures.each_with_index do |f, index|
+              %tr
+                %td
+                  = f["error"]
+                %td
+                  = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
+                %td
+                  = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
+    #groups.tab-pane
+      .sensor-controls
+        = link_to 'New Group', new_group_path, class: "btn btn-primary"
+      %h3 Group List
+      %br/
+      %table.table.table-striped.table-condensed
         %tr
-          %td
-            = f["error"]
-          %td
-            = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
-          %td
-            = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
+          %th{:width => "200"} Group Name
+          %th{:width => "200"} Description
+          %th{:width => "400"} Controls
+          = render @group
+
 :javascript
   (function poll(){
   setTimeout(function(){

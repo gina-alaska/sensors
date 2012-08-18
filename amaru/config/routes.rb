@@ -2,26 +2,28 @@ Amaru::Application.routes.draw do
 
   match "dashboard" => "dashboard#index"
 
-  resources :groups do
-    resources :events do
-      get 'add', :on => :member
-      get 'change', :on => :member
-      get 'remove', :on => :member
-      get 'moveup', :on => :member
-      get 'movedown', :on => :member
-    end
-    resources :graphs do
-      get 'image', :on => :member
-      get 'thumb', :on => :member
-      get 'build', :on => :member
-    end
-    resources :alerts do
-      get 'add', :on => :member
-      get 'change', :on => :member
-      get 'remove', :on => :member
-      get 'moveup', :on => :member
-      get 'movedown', :on => :member
-    end
+  resources :groups
+
+  resources :alerts do
+    get 'add', :on => :member
+    get 'change', :on => :member
+    get 'remove', :on => :member
+    get 'moveup', :on => :member
+    get 'movedown', :on => :member
+  end
+
+  resources :graphs do
+    get 'image', :on => :member
+    get 'thumb', :on => :member
+    get 'build', :on => :member
+  end
+
+  resources :events do
+    get 'add', :on => :member
+    get 'change', :on => :member
+    get 'remove', :on => :member
+    get 'moveup', :on => :member
+    get 'movedown', :on => :member
   end
 
   resources :platforms do

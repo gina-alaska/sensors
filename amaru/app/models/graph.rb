@@ -10,7 +10,7 @@ class Graph
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  belongs_to :groups
+  has_and_belongs_to_many :groups
   index({ name: 1 })
 
   def async_graph_image_process

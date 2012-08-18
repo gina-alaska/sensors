@@ -26,9 +26,12 @@ class Platform
   index({ slug: 1 }, { unique: true })
   embeds_many :sensors
   has_and_belongs_to_many :groups
+  has_and_belongs_to_many :events
+  has_and_belongs_to_many :graphs
+  has_and_belongs_to_many :alerts
 
   has_many :raw_data 
-  has_many :processed_data
+#  has_many :processed_data
 
   def async_process_events
     Resque.enqueue(EventProcessor, self.slug, :all)

@@ -39,8 +39,9 @@ class EventsController < ApplicationController
   # GET /events/1/edit
   def edit
     @platform = Platform.where( slug: params[:platform_id] ).first
-    @sensors = @platform.sensors.only(:source_field).all
     @event = Event.find(params[:id])
+    @sensors = @event.groups.sensors.only(:source_field).all
+#    @sensors = @platform.sensors.only(:source_field).all
     session["platformTabShow"] = '#processing'
   end
 

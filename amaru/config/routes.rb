@@ -1,14 +1,8 @@
-Commander::Application.routes.draw do
+Amaru::Application.routes.draw do
 
   match "dashboard" => "dashboard#index"
 
-  resources :platforms do
-    get 'graph_update', :on => :member
-    resources :sensors
-    resources :raw_data
-    resources :processed_data
-  end
-  resources :group do
+  resources :groups do
     resources :events do
       get 'add', :on => :member
       get 'change', :on => :member
@@ -28,6 +22,13 @@ Commander::Application.routes.draw do
       get 'moveup', :on => :member
       get 'movedown', :on => :member
     end
+  end
+
+  resources :platforms do
+    get 'graph_update', :on => :member
+    resources :sensors
+    resources :raw_data
+    resources :processed_data
   end
 
   resources :status do

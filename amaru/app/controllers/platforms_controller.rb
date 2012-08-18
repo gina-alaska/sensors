@@ -38,6 +38,7 @@ class PlatformsController < ApplicationController
   # GET /platforms/new.json
   def new
     @platform = Platform.new
+    session["dashboardTabShow"] = '#platforms'
 
     respond_to do |format|
       format.html # new.html.erb
@@ -48,12 +49,14 @@ class PlatformsController < ApplicationController
   # GET /platforms/1/edit
   def edit
     @platform = Platform.where( slug: params[:id] ).first
+    session["dashboardTabShow"] = '#platforms'
   end
 
   # POST /platforms
   # POST /platforms.json
   def create
     @platform = Platform.new(params[:platform])
+    session["dashboardTabShow"] = '#platforms'
 
     respond_to do |format|
       if @platform.save
@@ -70,6 +73,7 @@ class PlatformsController < ApplicationController
   # PUT /platforms/1.json
   def update
     @platform = Platform.where( slug: params[:id] ).first
+    session["dashboardTabShow"] = '#platforms'
 
     respond_to do |format|
       if @platform.update_attributes(params[:platform])
@@ -87,6 +91,7 @@ class PlatformsController < ApplicationController
   def destroy
     @platform = Platform.find(params[:id])
     @platform.destroy
+    session["dashboardTabShow"] = '#platforms'
 
     respond_to do |format|
       format.html { redirect_to platforms_url }

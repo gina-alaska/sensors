@@ -8,8 +8,7 @@
       Time
     %th
       Message
-  - @status.each_with_index do |f, index|
-    - break if index >= 6
+  - @status.each do |f|
     %tr
       %td= f["system"].upcase
       - case f["status"]

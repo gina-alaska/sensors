@@ -4,6 +4,8 @@ class Group
   field :name,          type: String
   field :description,   type: String
 
+  paginates_per 12
+
   validates_presence_of :name
   validates_uniqueness_of :name
 

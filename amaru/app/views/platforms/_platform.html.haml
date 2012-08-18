@@ -1,0 +1,9 @@
+%tr
+  %td= platform.name
+  %td= platform.geo_location
+  %td= platform.agency
+  %td
+    %table
+      %tr
+        %td= link_to 'Edit', edit_platform_path(platform), class: "btn btn-primary"
+        %td= link_to 'Delete', platform_path(platform), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"

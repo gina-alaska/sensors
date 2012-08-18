@@ -2,4 +2,4 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application
-Commander::Application.initialize!
+Amaru::Application.initialize!

@@ -1,18 +1,3 @@
-<div class="controls">
-  <%= link_to 'New Platform', new_platform_path, class: "btn btn-primary" %>
-</div>
-<h2>Platform List</h2>
-
-<table>
-  <tr>
-    <th width="200">Name</th>
-    <th width="200">Geographic Location</th>
-    <th width="200">Agency</th>
-    <th width="80"></th>
-    <th width="80"></th>
-    <th width="80"></th>
-  </tr>
-
 <% @platforms.each do |platform| %>
   <tr>
     <td><%= platform.name %></td>
@@ -23,6 +8,4 @@
     <td><%= button_to 'Delete', platform, confirm: 'Are you sure?', method: :delete, class: "btn btn-danger" %></td>
   </tr>
 <% end %>
-</table>
-
 <br />

@@ -4,12 +4,17 @@
       %a{"data-toggle" => "pill", :href => "#dashboard"} Dashboard
     %li
       %a{"data-toggle" => "pill", :href => "#groups"} Groups
+    %li
+      %a{"data-toggle" => "pill", :href => "#platforms"} Platforms
+    %li
+      %a{"data-toggle" => "pill", :href => "#processing"} Process Sensors
   .tab-content
     #dashboard.tab-pane.active
       .row-fluid
         .span12
           %h4 System Messages
           #resque
+            =render "status/system_status"
       %hr/
       .row-fluid
         .sensor-controls
@@ -41,6 +46,32 @@
           %th{:width => "200"} Description
           %th{:width => "400"} Controls
           = render @group
+    #platforms.tab-pane
+      .sensor-controls
+        = link_to 'New Platform', new_platform_path, class: "btn btn-primary"
+      %h3 Platform List
+      %br/
+      %table.table.table-striped.table-condensed
+        %tr
+          %th{:width => "200"} Platform Name
+          %th{:width => "200"} Geographic Location
+          %th{:width => "200"} Agency
+          %th{:width => "200"} Controls
+          = render @platform
+    #processing.tab-pane
+      .sensor-controls
+        = link_to 'New Process', new_group_event_path(@group), class: "btn btn-primary"
+      %h3 Process Event List
+      %br/
+      = paginate @events, :param_name => "event_page"
+      %table.table.table-striped.table-condensed
+        %tr
+          %th{:width => "200"} Processed Field
+          %th{:width => "200"} Raw Data Fields
+          %th{:width => "500"} Description
+          %th{:widht => "160"}
+          %th{:widht => "160"}
+        = render @events, :locals => { :group => @group }
 
 :javascript
   (function poll(){
@@ -48,3 +79,9 @@
     $('#resque').load("#{poll_status_path}", poll);
     }, 5000 );
     })();
+
+  $('#dashboardTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  #{raw show_tab_for("dashboardTab")}

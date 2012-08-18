@@ -1,7 +1,5 @@
 %table
-  - @failures.each_with_index do |f, index|
-    = "index #{index}"
-    - break if index >= 6
+  - @failures.each do |f|
     %tr
       %td= f["error"]
       %td= button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"

@@ -9,7 +9,7 @@ class Event
   validates_uniqueness_of :name
   paginates_per 12
 
-  has_and_belongs_to_many :groups
+  belongs_to :groups
   embeds_many :commands
   accepts_nested_attributes_for :commands
 

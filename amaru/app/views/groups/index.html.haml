@@ -1,0 +1,11 @@
+
+.sensor-controls
+  = link_to 'New Group', new_group_path, class: "btn btn-primary"
+%h3 Group List
+%br/
+%table.table.table-striped.table-condensed
+  %tr
+    %th{:width => "200"} Group Name
+    %th{:width => "200"} Description
+    %th{:width => "400"} Controls
+    = render @group

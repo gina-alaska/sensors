@@ -1,0 +1,8 @@
+.navbar
+  .navbar-inner
+    .container
+      %ul.nav
+        %li{:class => (current_page?(dashboard_path) ? "active" : "")}
+          = link_to "Dashboard", dashboard_path
+        %li{:class => (current_page?(groups_path) ? "active" : "")}
+          = link_to "Groups", groups_path

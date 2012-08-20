@@ -43,8 +43,9 @@ cmd_opts = case cmd
       banner "Graph Options:"
       opt :name, "Graph Name", {:type => String, :required => true}
       opt :output, "Output File Name", {:type => String, :required => true}
-      opt :start, "Start Date", {:type => String, :required => true}
-      opt :end, "End Date", {:type => String, :required => true}
+      opt :start, "Start Date", {:type => String, :required => false}
+      opt :end, "End Date", {:type => String, :required => false}
+      opt :dump, "Dump Graph to YAML File"
     end
   when "alert"
     Trollop::options do
@@ -69,7 +70,7 @@ case cmd
   when "process"
     data_process(cmd_opts[:name])
   when "graph"
-    data_graph(cmd_opts[:name], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end])
+    data_graph(cmd_opts[:name], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end], cmd_opts[:dump])
   when "alert"
     data_alert(cmd_opts[:alert])
   when "log"

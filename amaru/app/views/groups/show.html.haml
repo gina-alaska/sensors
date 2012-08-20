@@ -1,0 +1,121 @@
+.row-fluid
+  .span6
+    .sensor-controls
+      = link_to 'Edit', edit_group_path(@group), class: "btn btn-primary"
+      = link_to 'Back', dashboard_path, class: "btn btn-primary"
+    %h2
+      Operations for the #{@group.name} group
+    %hr/
+    %table
+      %tr
+        %td{:width => "160"}
+          %b Name:
+        %td{:width => "200"}= @group.name
+        %td{:width => "160"}
+          %b Description:
+        %td{:width => "200"}= @group.description
+  .span6
+    %h4 System Messages
+    #resque
+.row-fluid
+  %br/
+  %ul#platformTab.nav.nav-pills.nav-background
+    %li.active
+      %a{"data-toggle" => "pill", :href => "#sensors"} Sensor List
+    %li
+      %a{"data-toggle" => "pill", :href => "#processing"} Process Sensors
+    %li
+      %a{"data-toggle" => "pill", :href => "#dataview"} View Sensor Data
+    %li
+      %a{"data-toggle" => "pill", :href => "#graphs"} Graphs
+    %li
+      %a{"data-toggle" => "pill", :href => "#alerts"} Alerts
+  .tab-content
+    #sensors.tab-pane.active
+      .sensor-controls
+        = link_to 'New Sensor', new_group_sensor_path(@group), class: "btn btn-primary"
+      %h3 Associated Sensors List
+      = paginate @sensors, :param_name => "sensors_page"
+      %table.table.table-striped.table-condensed
+        %tr
+          %th Source Field
+          %th Label
+          %th Sensor Metadata
+          %th
+        = render @sensors
+    #processing.tab-pane
+      .sensor-controls
+        = link_to 'New Process', new_group_event_path(@group), class: "btn btn-primary"
+      %h3 Process Event List
+      %br/
+      = paginate @events, :param_name => "event_page"
+      %table.table.table-striped.table-condensed
+        %tr
+          %th{:width => "200"} Processed Field
+          %th{:width => "200"} Raw Data Fields
+          %th{:width => "500"} Description
+          %th{:widht => "160"}
+          %th{:widht => "160"}
+        = render @events, :locals => { :group => @group }
+    #dataview.tab-pane
+      .row-fluid
+        .span2
+          %h3 View Sensor Data
+          = render :partial => 'hc_controls'
+        .span10
+          #rawchart{:style => "width: 100%; height: 400px"}
+            %h4 To see graph, click the "Display Graph" button.
+    #graphs.tab-pane
+      .sensor-controls
+        = link_to 'New Graph', new_group_graph_path(@group), class: "btn btn-primary"
+      %h3 Graph List
+      %br/
+      %table.table.table-striped.table-condensed
+        %tr
+          %th
+            Graph Name
+          %th
+            Graph Image
+          %th
+            Controls
+          = render @graphs
+    #alerts.tab-pane
+      .sensor-controls
+        = link_to 'New Alert', new_group_alert_path(@group), class: "btn btn-primary"
+      %h3 Alert List
+      %br/
+      .row-fluid
+        .span12
+          .row-fluid
+            .span12
+              %table.table.table-striped.table-condensed
+                %tr
+                  %th{:width => "200"} Alert Name
+                  %th{:width => "200"} Send Alert To:
+                  %th{:width => "200"} Emails:
+                  %th{:width => "200"} Controls
+                = render @alerts, :locals => {:group => @group, :sensors => @sensors}
+#graph_image_modal.modal.hide
+  .modal-header
+    %button.close{:type=>"button", "data-dismiss"=>"modal"} x
+  .modal-body
+    %img{:src => ""}
+
+:javascript
+  $('#platformTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  #{raw show_tab_for("platformTab")}
+
+  (function poll(){
+  setTimeout(function(){
+    $('#resque').load("#{poll_status_path}", poll);
+    }, 5000 );
+    })();
+
+  $('a.graph_link').click(function (e) {
+    e.preventDefault();
+    $("#graph_image_modal img").attr("src", $(e.currentTarget).attr("href"));
+    $('#graph_image_modal').modal('show');
+  });

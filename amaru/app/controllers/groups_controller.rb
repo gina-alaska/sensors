@@ -1,14 +1,18 @@
 class GroupsController < ApplicationController
+  def index
+    @group = Group.all
+  end
+
   def show
     @group = Group.where( id: params[:id] ).first
-#    @platform = Platform.where( slug: params[:id] ).first
-#    @sensors = @platform.sensors.page params[:page]
-#    @sensors_all = @platform.sensors
-#    @events = @platform.events.asc(:name).page params[:event_page]
-#    @events_all = @platform.events
-#    @graphs = @platform.graphs
-#    @alerts = @platform.alerts
-#    @status = @platform.status
+    @platform = @group.platforms.page params[:platform_page]
+    @sensors = @group.sensors.page params[:sensors_page]
+    @sensors_all = @group.all_raw_sensors
+    @events = @group.events.asc(:name).page params[:event_page]
+    @events_all = @group.events
+    @graphs = @group.graphs
+    @alerts = @group.alerts
+    @status = Statu.latest
 
 #    if session["graphParams"].nil?
 #      value, units = @platform.graph_length.split(".")
@@ -18,28 +22,25 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render json: @platform }
+      format.json { render json: @group }
     end
   end
 
   def new
     @group = Group.new
-    session["dashboardTabShow"] = '#groups'
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render json: @platform }
+      format.json { render json: @group }
     end
   end
 
   def edit
     @group = Group.where( id: params[:id] ).first
-    session["dashboardTabShow"] = '#groups'
   end
 
   def create
     @group = Group.new(params[:group])
-    session["dashboardTabShow"] = '#groups'
 
     respond_to do |format|
       if @group.save
@@ -54,7 +55,6 @@ class GroupsController < ApplicationController
 
   def update
     @group = Group.where( id: params[:id] ).first
-    session["dashboardTabShow"] = '#groups'
 
     respond_to do |format|
       if @group.update_attributes(params[:group])
@@ -70,7 +70,6 @@ class GroupsController < ApplicationController
   def destroy
     @group = Group.find(params[:id])
     @group.destroy
-    session["dashboardTabShow"] = '#groups'
 
     respond_to do |format|
       format.html { redirect_to dashboard_path }

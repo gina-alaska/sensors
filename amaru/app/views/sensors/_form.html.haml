@@ -1,5 +1,5 @@
 %h2= @sensor.source_field unless @sensor.new_record?
-= form_for([@platform, @sensor]) do |f|
+= form_for([@group, @sensor]) do |f|
   - if @sensor.errors.any?
     #error_explanation
       %h2

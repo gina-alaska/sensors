@@ -26,17 +26,19 @@ Amaru::Application.routes.draw do
       get 'movedown', :on => :member
     end
 
-    resources :platforms do
+    resources :platforms
+    resources :platform do
       get 'graph_update', :on => :member
       resources :sensors
       resources :raw_data
       resources :processed_data
     end
-  end
 
-  resources :status do
-    collection do
-      get :poll
+    resources :status do
+      collection do
+        get :poll
+        get :group_poll
+      end
     end
   end
 

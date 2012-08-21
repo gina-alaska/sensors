@@ -1,0 +1,20 @@
+%table
+  %tr
+    %th{:width => "160"}
+      %b Slug
+    %th{:width => "160"}
+      %b Name
+    %th{:width => "160"}
+      %b Geo Location
+    %th{:width => "160"}
+      %b Controls
+  - @platforms.each do |platform|
+    %tr
+      %td= raw "<span class=\"label label-info\">#{@platform.slug}</span>"
+      %td= raw field_label(@platform.name)
+      %td= @platform.geo_location
+      %td
+        %table
+          %tr
+            %td= link_to 'Edit', edit_group_platform_path(@group,@platform), class: "btn btn-primary"
+            %td= button_to 'Delete', @platform, confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"

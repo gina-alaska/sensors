@@ -29,7 +29,7 @@
 
 :javascript
   $('#hc_control').submit(function() {
-    $('#rawchart').load("#{graph_update_platform_path}", $(this).serialize());
+    $('#rawchart').load("#{graph_update_group_platform_path(@group, @platform)}", $(this).serialize());
     return false;
   });
 

@@ -25,7 +25,7 @@ class SensorsController < ApplicationController
   # GET /sensors/new
   # GET /sensors/new.json
   def new
-    @platform = Platform.where( slug: params[:platform_id] ).first
+    @group = Group.where( id: params[:group_id] ).first
     @sensor = Sensor.new
     session["platformTabShow"] = '#sensors'
 
@@ -37,19 +37,19 @@ class SensorsController < ApplicationController
 
   # GET /sensors/1/edit
   def edit
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @sensor = @platform.sensors.find(params[:id])
+    @group = Group.where( id: params[:group_id] ).first
+    @sensor = @group.sensors.find(params[:id])
   end
 
   # POST /sensors
   # POST /sensors.json
   def create
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @sensor = @platform.sensors.build(params[:sensor])
+    @group = Group.where( id: params[:group_id] ).first
+    @sensor = @group.sensors.build(params[:sensor])
 
     respond_to do |format|
       if @sensor.save
-        format.html { redirect_to @platform, notice: 'Sensor was successfully updated.' }
+        format.html { redirect_to @group, notice: 'Sensor was successfully created.' }
         format.json { head :no_content }
       else
         format.html { render action: "new" }
@@ -61,13 +61,13 @@ class SensorsController < ApplicationController
   # PUT /sensors/1
   # PUT /sensors/1.json
   def update
-    @platform = Platform.where( slug: params[:platform_id] ).first
+    @group = Group.where( id: params[:group_id] ).first
     @sensor = @platform.sensors.find(params[:id])
     session["platformTabShow"] = '#sensors'
 
     respond_to do |format|
       if @sensor.update_attributes(params[:sensor])
-        format.html { redirect_to @platform, notice: 'Sensor was successfully updated.' }
+        format.html { redirect_to @group, notice: 'Sensor was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -83,7 +83,7 @@ class SensorsController < ApplicationController
     @sensor.destroy
 
     respond_to do |format|
-      format.html { redirect_to sensors_url }
+      format.html { redirect_to groups_path }
       format.json { head :no_content }
     end
   end

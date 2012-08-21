@@ -2,7 +2,7 @@
   .span6
     .sensor-controls
       = link_to 'Edit', edit_group_path(@group), class: "btn btn-primary"
-      = link_to 'Back', dashboard_path, class: "btn btn-primary"
+      = link_to 'Back', groups_path, class: "btn btn-primary"
     %h2
       Operations for the #{@group.name} group
     %hr/
@@ -17,6 +17,7 @@
   .span6
     %h4 System Messages
     #resque
+      =render "status/system_status"
 .row-fluid
   %br/
   %ul#platformTab.nav.nav-pills.nav-background
@@ -34,7 +35,7 @@
     #sensors.tab-pane.active
       .sensor-controls
         = link_to 'New Sensor', new_group_sensor_path(@group), class: "btn btn-primary"
-      %h3 Associated Sensors List
+      %h3 Processed Sensors List
       = paginate @sensors, :param_name => "sensors_page"
       %table.table.table-striped.table-condensed
         %tr
@@ -110,7 +111,7 @@
 
   (function poll(){
   setTimeout(function(){
-    $('#resque').load("#{poll_status_path}", poll);
+    $('#resque').load("#{group_poll_group_status_path(@group)}", poll);
     }, 5000 );
     })();
 

@@ -12,7 +12,7 @@ class GroupsController < ApplicationController
     @events_all = @group.events
     @graphs = @group.graphs
     @alerts = @group.alerts
-    @status = Statu.latest
+    @status = @group.status.latest
 
 #    if session["graphParams"].nil?
 #      value, units = @platform.graph_length.split(".")

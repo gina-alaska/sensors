@@ -1,0 +1,29 @@
+.row-fluid
+  .span6
+    .sensor-controls
+      = link_to 'Edit', edit_group_path(@group), class: "btn btn-primary"
+      = link_to 'Back', groups_path, class: "btn btn-primary"
+    %h2
+      Operations for the #{@group.name} group
+    %hr/
+    %table
+      %tr
+        %td{:width => "160"}
+          %b Name:
+        %td{:width => "200"}= @group.name
+        %td{:width => "160"}
+          %b Description:
+        %td{:width => "200"}= @group.description
+  .span6
+    %h4 System Messages
+    #resque
+      =render "status/system_status"
+.row-fluid
+  .navbar
+    .navbar-inner.group-nav-background
+      .container
+        %ul.nav
+          %li{:class => (current_page?(group_platforms_path(@group)) ? "group-active" : "")}
+            = link_to "Platforms", group_platforms_path(@group)
+          %li{:class => (current_page?(group_sensors_path(@group)) ? "active" : "")}
+            = link_to "Groups", group_sensors_path(@group)

@@ -28,6 +28,6 @@
 :javascript
   (function poll(){
   setTimeout(function(){
-    $('#resque').load("#{poll_status_path}", poll);
+    $('#resque').load("#{poll_group_status_path(@group)}", poll);
     }, 5000 );
     })();

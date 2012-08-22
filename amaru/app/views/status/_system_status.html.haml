@@ -8,29 +8,27 @@
       Time
     %th
       Message
-  - @status.each do |f|
+  - @status.each do |message|
     %tr
-      %td= f["system"].upcase
-      - case f["status"]
+      %td= message["system"].upcase
+      - case message["status"]
         - when "ALERT!"
           %td.alert-error
-            =f["status"]
+            =message["status"]
         - when "Error"
           %td.alert-error
-            =f["status"]
+            =message["status"]
         - when "Finished"
           %td.alert-good
-            =f["status"]
+            =message["status"]
         - when "Running"
           %td.alert-warn
-            =f["status"]
+            =message["status"]
         - else
-          = f["status"]
+          = message["status"]
       %td
-        - unless f["status"] == "Finished"
-          = "Started #{f["start_time"]}"
+        - unless message["status"] == "Finished"
+          = "Started #{message["start_time"]}"
         - else
-          = "Ended #{f["end_time"]}"
-      %td= f["message"]
-/      %td= button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
-/      %td= button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
+          = "Ended #{message["end_time"]}"
+      %td= message["message"]

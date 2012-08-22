@@ -1,6 +1,5 @@
 class Statu
   include Mongoid::Document
-#  include Mongoid::MultiParameterAttributes
 
   field :system,              type: String
   field :start_time,          type: DateTime
@@ -10,7 +9,8 @@ class Statu
 
   attr_accessible :system, :start_time, :end_time, :message, :status
   index({ system: 1, start_time: 1 })
-  belongs_to :groups
+  has_and_belongs_to_many :groups
+  belongs_to :platform
 
   scope :latest, ->(number = 6) {
     self.desc(:start_time).limit(number)

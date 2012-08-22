@@ -1,0 +1,24 @@
+.sensor-controls
+  = link_to 'New Sensor', new_group_sensor_path(@group), class: "btn btn-primary"
+%h3 Group Sensor List
+%br/
+%table.table.table-striped.table-condensed
+  %tr
+    %th Source Field
+    %th Label
+    %th Metadata
+    %th Controls
+  - @sensors.each do |sensor|
+    %tr
+      %td{:width => "200"}
+        = sensor.source_field
+      %td{:width => "200"}
+        = sensor.label
+      %td{:width => "200"}
+        = sensor.sensor_metadata
+      %td
+        %table
+          %tr
+            %td= link_to 'Edit', edit_group_sensor_path(@group, sensor), class: "btn btn-primary"
+            %td= button_to 'Delete', group_sensor_path(@group, sensor), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"
+%br/

@@ -3,6 +3,24 @@ class GroupsController < ApplicationController
     @group = Group.all
   end
 
+  def platforms
+    @group = Group.where(id: params[:id]).first
+    @platforms = @group.platforms
+    pf_list = Platform.asc(:name).only(:name, :slug).collect do |p|
+      [p.name, p.slug]
+    end
+    gr_list = @group.platforms.only(:name, :slug).collect do |p|
+      [p.name, p.slug]
+    end
+    @platform_list = pf_list - gr_list
+    @status = @group.status.desc(:start_time).limit(6)
+
+    respond_to do |format|
+      format.html { render layout: "group_layout" }
+      format.json { render json: @platforms }
+    end
+  end
+
   def show
     @group = Group.where( id: params[:id] ).first
     @platform = @group.platforms.page params[:platform_page]
@@ -73,6 +91,17 @@ class GroupsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to dashboard_path }
+      format.json { head :no_content }
+    end
+  end
+
+  def add_platform
+    @group = Group.where( id: params[:id] ).first
+    @platform = Platform.where( slug: params[:slug]).first
+    @group.platforms << @platform
+
+    respond_to do |format|
+      format.html { redirect_to group_platforms_path }
       format.json { head :no_content }
     end
   end

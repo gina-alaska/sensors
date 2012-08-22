@@ -4,6 +4,7 @@ Amaru::Application.routes.draw do
 
   resources :groups do
     resources :sensors
+    resources :processed_data
     resources :alerts do
       get 'add', :on => :member
       get 'change', :on => :member
@@ -26,13 +27,8 @@ Amaru::Application.routes.draw do
       get 'movedown', :on => :member
     end
 
-    resources :platforms
-    resources :platform do
-      get 'graph_update', :on => :member
-      resources :sensors
-      resources :raw_data
-      resources :processed_data
-    end
+    post 'add_platform', :on => :member
+    get 'platforms', :on => :member
 
     resources :status do
       collection do
@@ -40,6 +36,11 @@ Amaru::Application.routes.draw do
         get :group_poll
       end
     end
+  end
+
+  resources :platforms do
+    get 'graph_update', :on => :member
+    resources :raw_data
   end
 
   resources :resques do

@@ -1,4 +1,4 @@
-class GroupSensorsController < ApplicationController
+class PlatformSensorsController < ApplicationController
   layout "group_layout"
 
   def index

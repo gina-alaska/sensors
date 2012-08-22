@@ -6,3 +6,5 @@
           = link_to "Dashboard", dashboard_path
         %li{:class => (current_page?(groups_path) ? "active" : "")}
           = link_to "Groups", groups_path
+        %li{:class => (current_page?(platforms_path) ? "active" : "")}
+          = link_to "Platforms", platforms_path

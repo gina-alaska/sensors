@@ -24,8 +24,9 @@ class Platform
   validates_uniqueness_of :slug
 
   index({ slug: 1 }, { unique: true })
-  embeds_many :sensors
+  embeds_many :sensors, as: :sensor_parent
   has_many :raw_data 
+  has_many :status 
 
   def async_process_events
     Resque.enqueue(EventProcessor, self.slug, :all)

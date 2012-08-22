@@ -43,14 +43,16 @@ form.button_to{
 }
 
 .group-nav-background{
-  a:link {color: #bbbbbb;}
   color: white;
   background-color: #3c616b;
   background-image: none;
 }
 
-.group-active{
-  background-color: #66a5b6;
+#group-navbar{
+  &.navbar .nav > li > a { 
+    color: #bbb;
+    &:hover{ color: #fff; }
+   }
 }
 
 .sensor-controls{

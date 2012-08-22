@@ -18,12 +18,13 @@
     %h4 System Messages
     #resque
       =render "status/system_status"
+%br/
 .row-fluid
   .navbar
     .navbar-inner.group-nav-background
       .container
         %ul.nav
-          %li{:class => (current_page?(group_platforms_path(@group)) ? "group-active" : "")}
-            = link_to "Platforms", group_platforms_path(@group)
+          %li{:class => (current_page?(platforms_group_path(@group)) ? "group-active" : "")}
+            = link_to "Platforms", platforms_group_path(@group)
           %li{:class => (current_page?(group_sensors_path(@group)) ? "active" : "")}
-            = link_to "Groups", group_sensors_path(@group)
+            = link_to "Group Sensors", group_sensors_path(@group)

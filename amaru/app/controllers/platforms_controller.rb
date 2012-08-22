@@ -1,10 +1,16 @@
 class PlatformsController < ApplicationController
-  layout "group_layout"
+#  layout "platform_layout"
 
   def index
-    @group = Group.where(id: params[:group_id]).first
-    @platforms = @group.platforms
-    @status = @group.status.latest
+    @platforms = Platform.page params[:platform_page]
+#    pf_list = Platform.asc(:name).only(:name, :slug).collect do |p|
+#      [p.name, p.slug]
+#    end
+#    gr_list = @group.platforms.only(:name, :slug).collect do |p|
+#      [p.name, p.slug]
+#    end
+#    @platform_list = pf_list - gr_list
+#    @status = @group.status.desc(:start_time).limit(6)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -50,7 +56,6 @@ class PlatformsController < ApplicationController
   # GET /platforms/1/edit
   def edit
     @platform = Platform.where( slug: params[:id] ).first
-    session["dashboardTabShow"] = '#platforms'
   end
 
   # POST /platforms
@@ -61,8 +66,8 @@ class PlatformsController < ApplicationController
 
     respond_to do |format|
       if @platform.save
-        format.html { redirect_to @platform, notice: 'Platform was successfully created.' }
-        format.json { render json: @platform, status: :created, location: @platform }
+        format.html { redirect_to platforms_path, notice: 'Platform was successfully created.' }
+        format.json { render json: platforms_path, status: :created, location: @platform }
       else
         format.html { render action: "new" }
         format.json { render json: @platform.errors, status: :unprocessable_entity }
@@ -74,11 +79,10 @@ class PlatformsController < ApplicationController
   # PUT /platforms/1.json
   def update
     @platform = Platform.where( slug: params[:id] ).first
-    session["dashboardTabShow"] = '#platforms'
 
     respond_to do |format|
       if @platform.update_attributes(params[:platform])
-        format.html { redirect_to @platform, notice: 'Platform was successfully updated.' }
+        format.html { redirect_to platforms_path, notice: 'Platform was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

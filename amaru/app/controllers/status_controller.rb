@@ -10,7 +10,7 @@ class StatusController < ApplicationController
 
   def group_poll
     @group = Group.where( id: params[:group_id] ).first
-    @status = @group.status.latest
+    @status = @group.current_messages
 
     respond_to do |format|
         format.html { render :partial => "system_status", :locals => {:status => @status}, :template => false }

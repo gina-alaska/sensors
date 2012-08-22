@@ -1,0 +1,30 @@
+.row-fluid
+  .span12
+    .sensor-controls
+      = form_tag(add_platform_group_path(@group)) do
+        = label_tag :slug, "Platforms:", :class=>"btn brn-primary"
+        = select_tag :slug, options_for_select(@platform_list)
+        = submit_tag "Add Platform", :class => "btn btn-primary"
+    %h3 Platform List
+.row-fluid
+  .span12
+    %table.table.table-striped.table-condensed
+      %tr
+        %th{:width => "160"}
+          %b Slug
+        %th{:width => "160"}
+          %b Name
+        %th{:width => "160"}
+          %b Geo Location
+        %th{:width => "160"}
+          %b Controls
+      - @platforms.each do |platform|
+        %tr
+          %td= platform.slug
+          %td= platform.name
+          %td= platform.geo_location
+          %td
+            %table
+              %tr
+                %td= link_to 'Edit', edit_group_platform_path(@group,platform), class: "btn btn-primary"
+                %td= button_to 'Delete', platform, confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"

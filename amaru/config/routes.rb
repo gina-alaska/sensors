@@ -5,6 +5,7 @@ Amaru::Application.routes.draw do
   resources :groups do
     resources :sensors
     resources :processed_data
+    resources :group_sensors
     resources :alerts do
       get 'add', :on => :member
       get 'change', :on => :member
@@ -41,6 +42,7 @@ Amaru::Application.routes.draw do
   resources :platforms do
     get 'graph_update', :on => :member
     resources :raw_data
+    resources :platform_sensors
   end
 
   resources :resques do

@@ -1,7 +1,7 @@
 .row-fluid
   .span6
     .sensor-controls
-      = link_to 'Edit', edit_group_path(@group), class: "btn btn-primary"
+      = link_to 'Edit', edit_group_path(@group, :single=>true), class: "btn btn-primary"
       = link_to 'Back', groups_path, class: "btn btn-primary"
     %h2
       Operations for the #{@group.name} group
@@ -14,6 +14,8 @@
         %td{:width => "160"}
           %b Description:
         %td{:width => "200"}= @group.description
+      %tr
+        %td
   .span6
     %h4 System Messages
     #resque
@@ -24,7 +26,21 @@
     .navbar-inner.group-nav-background
       .container
         %ul.nav
-          %li{:class => (current_page?(group_platforms_path(@group)) ? "group-active" : "")}
-            = link_to "Platforms", group_platforms_path(@group)
+          %li{:class => (current_page?(platforms_group_path(@group)) ? "active" : "")}
+            = link_to "Platforms", platforms_group_path(@group)
           %li{:class => (current_page?(group_group_sensors_path(@group)) ? "active" : "")}
-            = link_to "Group Sensors", group_group_sensors_path(@group)
+            = link_to "Sensors", group_group_sensors_path(@group)
+          %li{:class => (current_page?(group_events_path(@group)) ? "active" : "")}
+            = link_to "Processes", group_events_path(@group)
+          %li{:class => (current_page?(group_alerts_path(@group)) ? "active" : "")}
+            = link_to "Alerts", group_alerts_path(@group)
+          %li{:class => (current_page?(group_graphs_path(@group)) ? "active" : "")}
+            = link_to "Graphs", group_graphs_path(@group)
+
+:javascript
+
+  (function poll(){
+  setTimeout(function(){
+    $('#resque').load("#{group_poll_group_status_path(@group)}", poll);
+    }, 5000 );
+    })();

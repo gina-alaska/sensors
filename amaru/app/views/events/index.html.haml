@@ -1,19 +1,25 @@
-%h1 Listing events
-%table
-  %tr
-    %th Starts at
-    %th Ends at
-    %th Command
-    %th
-    %th
-    %th
-  - @events.each do |event|
-    %tr
-      %td= event.starts_at
-      %td= event.ends_at
-      %td= event.command
-      %td= link_to 'Show', event
-      %td= link_to 'Edit', edit_event_path(event)
-      %td= link_to 'Destroy', event, confirm: 'Are you sure?', method: :delete
+.row-fluid
+  .span12
+    .sensor-controls
+      = link_to 'New Event', new_group_event_path(@group), class: "btn btn-primary"
+    %h2 Listing Processing Events
+.row-fluid
+  .span12
+    %table.table.table-stripped.table-condenced
+      %tr
+        %th Starts At
+        %th Ends At
+        %th Command
+        %th Controls
+      - @events.each do |event|
+        %tr
+          %td= event.starts_at
+          %td= event.ends_at
+          %td= event.command
+          %td
+            %table
+              %tr
+                %td= link_to 'Show', event
+                %td= link_to 'Edit', edit_group_event_path(@group, event)
+                %td= link_to 'Destroy', event, confirm: 'Are you sure?', method: :delete
 %br/
-= link_to 'New Event', new_event_path

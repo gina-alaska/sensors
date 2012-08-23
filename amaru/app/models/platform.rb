@@ -10,7 +10,6 @@ class Platform
   field :agency,              type: String
   field :authority,           type: String
   field :no_data_value,       type: String
-  field :graph_length,        type: String
 
   validates_presence_of :slug
   validates_presence_of :name
@@ -24,6 +23,7 @@ class Platform
   validates_uniqueness_of :slug
 
   index({ slug: 1 }, { unique: true })
+  has_and_belongs_to_many :groups
   embeds_many :sensors, as: :sensor_parent
   has_many :raw_data 
   has_many :status 
@@ -34,5 +34,9 @@ class Platform
 
   def to_param
     self.slug
+  end
+
+  def all_group_sensors
+    self.groups.collect{ |group| group.sensors.collect(&:source_field)}.flatten.uniq
   end
 end

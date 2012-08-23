@@ -29,6 +29,7 @@ Amaru::Application.routes.draw do
     end
 
     post 'add_platform', :on => :member
+    get 'remove_platform', :on => :member
     get 'platforms', :on => :member
 
     resources :status do

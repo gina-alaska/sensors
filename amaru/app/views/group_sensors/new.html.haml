@@ -1,4 +1,4 @@
 .sensor-controls
-  = link_to 'Back', @group, class: "btn btn-primary"
-%h1 New Sensor
+  = link_to 'Back', group_group_sensors_path(@group), class: "btn btn-primary"
+%h2 New Sensor
 = render 'sensors/form'

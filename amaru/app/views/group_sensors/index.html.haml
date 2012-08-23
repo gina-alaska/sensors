@@ -1,6 +1,6 @@
 .sensor-controls
-  = link_to 'New Sensor', new_group_sensor_path(@group), class: "btn btn-primary"
-%h3 Group Sensor List
+  = link_to 'New Sensor', new_group_group_sensor_path(@group), class: "btn btn-primary"
+%h3 Processed Sensor List
 %br/
 %table.table.table-striped.table-condensed
   %tr
@@ -19,6 +19,6 @@
       %td
         %table
           %tr
-            %td= link_to 'Edit', edit_group_sensor_path(@group, sensor), class: "btn btn-primary"
-            %td= button_to 'Delete', group_sensor_path(@group, sensor), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"
+            %td= link_to 'Edit', edit_group_group_sensor_path(@group, sensor), class: "btn btn-primary"
+            %td= button_to 'Delete', group_group_sensor_path(@group, sensor), confirm: 'Are you sure? This will also delete all processed data for this sensor!', method: :delete, class: "btn btn-danger"
 %br/

@@ -1,0 +1,25 @@
+.row-fluid
+  .span12
+    .sensor-controls
+      = link_to 'New Alert', new_group_alert_path(@group), class: "btn btn-primary"
+    %h2 Listing Alerts
+.row-fluid
+  .span12
+    %table.table.table-stripped.table-condenced
+      %tr
+        %th Starts At
+        %th Ends At
+        %th Alert Name
+        %th Controls
+      - @alerts.each do |event|
+        %tr
+          %td= alert.starts_at
+          %td= alert.ends_at
+          %td= alert.command
+          %td
+            %table
+              %tr
+                %td= link_to 'Show', alert
+                %td= link_to 'Edit', edit_group_alert_path(@group, alert)
+                %td= link_to 'Destroy', alert, confirm: 'Are you sure?', method: :delete
+%br/

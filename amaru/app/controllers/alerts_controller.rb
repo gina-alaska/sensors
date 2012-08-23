@@ -1,10 +1,10 @@
-
 class AlertsController < ApplicationController
-  # GET /alerts
-  # GET /alerts.json
+  layout "group_layout"
+  
   def index
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alerts = Alert.all
+    @group = Group.where( id: params[:group_id] ).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @alerts = @group.alerts
 
     respond_to do |format|
       format.html # index.html.erb

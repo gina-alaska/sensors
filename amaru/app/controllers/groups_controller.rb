@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
+
   def index
-    @group = Group.all
+    @groups = Group.all
   end
 
   def platforms
@@ -55,6 +56,8 @@ class GroupsController < ApplicationController
 
   def edit
     @group = Group.where( id: params[:id] ).first
+    session[:return_to] = group_path(@group) if params[:single] == "true"
+    session[:return_to] = groups_path if params[:single] == "false"
   end
 
   def create
@@ -74,9 +77,10 @@ class GroupsController < ApplicationController
   def update
     @group = Group.where( id: params[:id] ).first
 
+logger.info session[:return_to]
     respond_to do |format|
       if @group.update_attributes(params[:group])
-        format.html { redirect_to dashboard_path, notice: 'Group was successfully updated.' }
+        format.html { redirect_to session.delete(:return_to), notice: 'Group was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -90,7 +94,7 @@ class GroupsController < ApplicationController
     @group.destroy
 
     respond_to do |format|
-      format.html { redirect_to dashboard_path }
+      format.html { redirect_to groups_path }
       format.json { head :no_content }
     end
   end
@@ -101,7 +105,18 @@ class GroupsController < ApplicationController
     @group.platforms << @platform
 
     respond_to do |format|
-      format.html { redirect_to group_platforms_path }
+      format.html { redirect_to platforms_group_path(@group) }
+      format.json { head :no_content }
+    end
+  end
+
+  def remove_platform
+    @group = Group.where( id: params[:id] ).first
+    @platform = @group.platforms.find(params[:platform_id])
+    @group.platforms.delete( @platform )
+
+    respond_to do |format|
+      format.html { redirect_to platforms_group_path(@group) }
       format.json { head :no_content }
     end
   end

@@ -18,12 +18,6 @@
         %select.input-large(name="raw_sensor")
           = hc_sensors_select(@sensors_all, session["graphParams"]["raw_sensor"])
     .control-group
-      %label.control-label(for="proc_sensor")
-        Processed Sensor:
-      .controls
-        %select.input-large(name="proc_sensor")
-          = hc_proc_select(@events_all, session["graphParams"]["proc_sensor"])
-    .control-group
       .controls
         %input.btn.btn-primary(type="submit" value="Display Graph")
 

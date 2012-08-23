@@ -1,9 +1,11 @@
 
 class EventsController < ApplicationController
-  # GET /events
-  # GET /events.json
+  layout "group_layout"
+
   def index
-    @events = Event.all
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @events = @group.events.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -11,8 +13,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/1
-  # GET /events/1.json
   def show
     @event = Event.find(params[:id])
 
@@ -22,8 +22,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/new
-  # GET /events/new.json
   def new
     @platform = Platform.where( slug: params[:platform_id] ).first
     @sensors = @platform.sensors.only(:source_field).all
@@ -36,7 +34,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/1/edit
   def edit
     @platform = Platform.where( slug: params[:platform_id] ).first
     @event = Event.find(params[:id])

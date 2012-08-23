@@ -7,7 +7,6 @@
     = csrf_meta_tags
     = favicon_link_tag 'favicon.ico'
   %body
-    = raw show_flash_messages
     .container-fluid
       = render "layouts/header"
       .row-fluid
@@ -16,6 +15,7 @@
       .row-fluid
         .span12
           = yield
+      = raw show_flash_messages
       .row-fluid.footer-sensor
         .span12
           Footer here

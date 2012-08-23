@@ -1,8 +1,9 @@
 class Group
   include Mongoid::Document
 
-  field :name,          type: String
-  field :description,   type: String
+  field :name,                type: String
+  field :description,         type: String
+  field :graph_length,        type: String
 
   paginates_per 6
 
@@ -22,6 +23,6 @@ class Group
   end
 
   def current_messages(number = 6)
-    self.platforms.collect{ |platform| platform.status.desc(:start_time) }.flatten.values_at(0..number)
+    self.platforms.collect{ |platform| platform.status.desc(:start_time) }.flatten.values_at(0...number)
   end
 end

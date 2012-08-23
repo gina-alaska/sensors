@@ -1,5 +1,5 @@
 .sensor-controls
-  = link_to 'New Sensor', new_group_sensor_path(@group), class: "btn btn-primary"
+  = link_to 'New Sensor', new_group_group_sensor_path(@group), class: "btn btn-primary"
 %h3 Group Sensor List
 %br/
 %table.table.table-striped.table-condensed
@@ -19,6 +19,6 @@
       %td
         %table
           %tr
-            %td= link_to 'Edit', edit_group_sensor_path(@group, sensor), class: "btn btn-primary"
-            %td= button_to 'Delete', group_sensor_path(@group, sensor), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"
+            %td= link_to 'Edit', edit_group_group_sensor_path(@group, sensor), class: "btn btn-primary"
+            %td= button_to 'Delete', group_group_sensor_path(@group, sensor), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"
 %br/

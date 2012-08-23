@@ -1,4 +1,17 @@
 class GraphsController < ApplicationController
+  layout "group_layout"
+
+  def index
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @graphs = @group.graphs.all
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @events }
+    end
+  end
+
   def show
     @platform = Platform.where( slug: params[:platform_id] ).first
     @graph = Graph.find(params[:id])

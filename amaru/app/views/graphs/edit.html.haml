@@ -1,4 +1,4 @@
 .sensor-controls
-  = link_to 'Back', @platform, class: "btn btn-primary"
-%h2 Edit Graph
+  = link_to 'Back', group_graphs_path(@group), class: "btn btn-primary"
+%h2 Edit Graph <i>#{@graph.name}</i>
 = render 'form'

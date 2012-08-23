@@ -28,16 +28,16 @@ class GraphsController < ApplicationController
   end
 
   def edit
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = Graph.find(params[:id])
-    session["platformTabShow"] = '#graphs'
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @graph = @group.graphs.find(params[:id])
   end
 
   def update
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = Graph.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @graph = @group.graphs.find(params[:id])
     @graph.update_attributes(params[:graph])
-    session["platformTabShow"] = '#graphs'
 
     respond_to do |format|
       if @graph.save
@@ -52,9 +52,9 @@ class GraphsController < ApplicationController
   end
 
   def new
-    @platform = Platform.where( slug: params[:platform_id] ).first
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
     @graph = Graph.new
-    session["platformTabShow"] = '#graphs'
 
     respond_to do |format|
       format.html
@@ -63,14 +63,14 @@ class GraphsController < ApplicationController
   end
 
   def create
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = @platform.graphs.build(params[:graph])
-    session["platformTabShow"] = '#graphs'
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @graph = @group.graphs.build(params[:graph])
 
     respond_to do |format|
       if @graph.save
-#        @graph.async_process_event # Queue the processing event
-        format.html { redirect_to @platform, notice: 'Graph was successfully created.' }
+        @graph.async_graph_image_process # Queue the processing event
+        format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully created.' }
         format.json { render json: @graph, status: :created, location: @graph }
       else
         format.html { render action: "new" }
@@ -80,37 +80,37 @@ class GraphsController < ApplicationController
   end
 
   def destroy
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = Graph.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @graph = @group.graphs.find(params[:id])
     @graph.destroy
-    session["platformTabShow"] = '#graphs'
 
     respond_to do |format|
-      format.html { redirect_to @platform }
+      format.html { redirect_to group_graphs_path(@group) }
       format.json { head :no_content }
     end
   end
 
   def image
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = Graph.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @graph = @group.graphs.find(params[:id])
     send_file @graph.image_path, :disposition => "inline"
   end
 
   def thumb
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = Graph.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @graph = @group.graphs.find(params[:id])
     send_file @graph.thumb_path, :disposition => "inline"
   end
 
   def build
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @graph = Graph.find(params[:id])
-    session["platformTabShow"] = '#graphs'
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @graph = @group.graphs.find(params[:id])
     @graph.async_graph_image_process # Queue the graph processing
 
     respond_to do |format|
-      format.html { redirect_to @platform, notice: 'Graph was successfully re-built.' }
+      format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully re-built.' }
       format.json { render json: @graph, status: :created, location: @graph }
     end
   end

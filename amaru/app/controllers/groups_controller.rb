@@ -56,7 +56,7 @@ class GroupsController < ApplicationController
 
   def edit
     @group = Group.where( id: params[:id] ).first
-    session[:return_to] = group_path(@group) if params[:single] == "true"
+    session[:return_to] = platforms_group_path(@group) if params[:single] == "true"
     session[:return_to] = groups_path if params[:single] == "false"
   end
 

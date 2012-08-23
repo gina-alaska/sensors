@@ -1,5 +1,5 @@
 .event-form.row-fluid.form-horizontal
-  = form_for([@platform, @event]) do |f|
+  = form_for([@group, @event]) do |f|
     - if @event.errors.any?
       %div{:id => "error_explanation row-fluid"}
         %h2
@@ -30,9 +30,9 @@
     - unless @event.new_record?
       .row-fluid
         .span2
-          = link_to 'Add Command', add_platform_event_path(@platform, @event), class: "btn btn-primary", :id => "add_command"
+          = link_to 'Add Command', add_group_event_path(@group, @event), class: "btn btn-primary", :id => "add_command"
       #commands
-        = render :partial=>"command", :locals=>{:platform => @platform, :event => @event}
+        = render :partial=>"command", :locals=>{:group => @group, :event => @event}
     %br/
     .actions.row-fluid
       = f.submit (@event.new_record? ? "Create Process" : "Update Process"), :class => "btn btn-primary"

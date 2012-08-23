@@ -1,5 +1,5 @@
 .event-form.row-fluid.form-horizontal
-  = form_for([@platform, @graph]) do |f|
+  = form_for([@group, @graph]) do |f|
     - if @graph.errors.any?
       %div{:id => "error_explanation row-fluid"}
         %h2

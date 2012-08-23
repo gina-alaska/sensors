@@ -9,4 +9,4 @@
   = f.label :amounts
   = f.text_field :amounts
 .field.span1
-  = render :partial => "controls", :locals => {:platform => @platform, :event => @event, :command_id => event.id}
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => event.id}

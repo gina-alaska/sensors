@@ -1,5 +1,5 @@
 .event-form.row-fluid.form-horizontal
-  = form_for([@platform, @alert]) do |f|
+  = form_for([@group, @alert]) do |f|
     - if @alert.errors.any?
       #error_explanation
         %h2
@@ -44,10 +44,10 @@
     - unless @alert.new_record?
       .span12
         .row-fluid
-          = link_to 'Add Event', add_platform_alert_path(@platform, @alert), class: "btn btn-primary", :id => "add_command", :remote => true
+          = link_to 'Add Event', add_platform_alert_path(@group, @alert), class: "btn btn-primary", :id => "add_command", :remote => true
         #commands
           = f.fields_for :alert_events do |event_builder|
-            = render "alert_events", :platform => @platform, :alert => @alert, :sensors => @sensors, :f => event_builder, :event => event_builder.object 
+            = render "alert_events", :group => @group, :alert => @alert, :sensors => @sensors, :f => event_builder, :event => event_builder.object 
     %br/
     %br/
     .actions.row-fluid

@@ -12,8 +12,6 @@ class AlertsController < ApplicationController
     end
   end
 
-  # GET /alerts/1
-  # GET /alerts/1.json
   def show
     @platform = Platform.where( slug: params[:platform_id] ).first
     @alert = Alert.find(params[:id])
@@ -24,12 +22,10 @@ class AlertsController < ApplicationController
     end
   end
 
-  # GET /alerts/new
-  # GET /alerts/new.json
   def new
-    @platform = Platform.where( slug: params[:platform_id] ).first
+    @group = Group.where( id: params[:group_id] ).first
+    @status = @group.status.desc(:start_time).limit(6)
     @alert = Alert.new
-    session["platformTabShow"] = '#alerts'
 
     respond_to do |format|
       format.html # new.html.erb
@@ -37,24 +33,21 @@ class AlertsController < ApplicationController
     end
   end
 
-  # GET /alerts/1/edit
   def edit
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alert = Alert.find(params[:id])
-    @sensors = @platform.sensors
-    session["platformTabShow"] = '#alerts'
+    @group = Group.where( id: params[:group_id] ).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @alert = @group.alerts.find(params[:id])
+    @sensors = @group.all_raw_sensors
   end
 
-  # POST /alerts
-  # POST /alerts.json
   def create
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alert = @platform.alerts.build(params[:alert])
-    session["platformTabShow"] = '#alerts'
+    @group = Group.where( id: params[:group_id] ).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @alert = @group.alerts.build(params[:alert])
 
     respond_to do |format|
       if @alert.save
-        format.html { redirect_to @platform, notice: 'Alert was successfully created.' }
+        format.html { redirect_to group_alerts_path(@group), notice: 'Alert was successfully created.' }
         format.json { render json: @alert, status: :created, location: @alert }
       else
         format.html { render action: "new" }
@@ -63,8 +56,6 @@ class AlertsController < ApplicationController
     end
   end
 
-  # PUT /alerts/1
-  # PUT /alerts/1.json
   def update
     @platform = Platform.where( slug: params[:platform_id] ).first
     @alert = Alert.find(params[:id])
@@ -81,8 +72,6 @@ class AlertsController < ApplicationController
     end
   end
 
-  # DELETE /alerts/1
-  # DELETE /alerts/1.json
   def destroy
     @platform = Platform.where( slug: params[:platform_id] ).first
     @alert = Alert.find(params[:id])

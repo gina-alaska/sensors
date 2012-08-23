@@ -23,10 +23,10 @@ class EventsController < ApplicationController
   end
 
   def new
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @sensors = @platform.sensors.only(:source_field).all
+    @group = Group.where(id: params[:group_id]).first
+    @sensors = @group.all_raw_sensors
+    @status = @group.status.desc(:start_time).limit(6)
     @event = Event.new
-    session["platformTabShow"] = '#processing'
 
     respond_to do |format|
       format.html # new.html.erb

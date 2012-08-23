@@ -10,14 +10,14 @@ class Graph
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  belongs_to :groups
+  belongs_to :group
   index({ name: 1 })
 
   def async_graph_image_process
-    Resque.enqueue(GraphImageProcessor, self.platform.slug, self.id)
+    Resque.enqueue(GraphImageProcessor, self.group.id, self.id)
   end
 
-  def async_graph_process(start_date, end_date, ouput_name)
-    Resque.enqueue(GraphProcessor, self.platform.slug, self.id, start_date, end_date, ouput_name)
+  def async_graph_process(start_date, end_date, output_name)
+    Resque.enqueue(GraphProcessor, self.group.id, self.id, start_date, end_date, output_name)
   end
 end

@@ -6,19 +6,26 @@ class GraphImageProcessor
   include Magick
   @queue = :graph_image
 
-  def self.perform(slug, graph_id)
-    # Smarter dates
-    platform = Platform.where(slug: slug).first
-    graph = platform.graphs.find(graph_id)
+  def self.perform(group_id, graph_id)
+    @group = Group.where(id: group_id).first
+    platform = @group.platforms.first
+    graph = @group.graphs.find(graph_id)
 
-    status = platform.status.build(system: "graphs", message: "Building test images for graph #{graph.name}.", status: "Running", start_time: DateTime.now)
+    status = @group.status.build(system: "graphs", message: "Building test images for graph #{graph.name}.", status: "Running", start_time: DateTime.now)
+    status.group = @group
+    status.platform = platform
+    status.save!
 
     ends_at = platform.raw_data.last.capture_date
-    starts_at = ends_at-eval(platform.graph_length)
+    if @group.graph_length.nil?
+      starts_at = ends_at - eval(1.day)
+    else
+      starts_at = ends_at-eval(@group.graph_length)
+    end
 
     template = Psych.load(graph.config)
 
-    path = File.join('graphs', slug)
+    path = File.join('graphs', platform.slug)
     unless File.exists?(path)
       Dir.mkdir(path)
     end
@@ -34,7 +41,7 @@ class GraphImageProcessor
       when "raw"
         data = platform.raw_data.captured_between(starts_at, ends_at).all
       when "processed"
-        data = platform.processed_data.captured_between(starts_at, ends_at).all
+        data = @group.processed_data.captured_between(starts_at, ends_at).all
       end
 
       fields = tdata["name"].split(",")

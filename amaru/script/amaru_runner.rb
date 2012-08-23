@@ -31,6 +31,7 @@ cmd_opts = case cmd
       opt :slug, "Platform Slug", {:type => String, :required => true}
       opt :name, "Ingest data filename", {:type => String, :required => true}
       opt :type, "Ingest data import type (csv,json)", {:type => String, :required => true}
+      opt :group, "Group Name", {:type => String, :required => false}
       opt :config, "Import configuration file", {:type => String, :required => false}
     end
   when "process"
@@ -65,7 +66,7 @@ end
 case cmd
   when "import"
     puts "Running Import:"
-    AmaruRunner::data_import(cmd_opts[:slug], cmd_opts[:name], cmd_opts[:type], cmd_opts[:config], `pwd`)
+    AmaruRunner::data_import(cmd_opts[:group], cmd_opts[:slug], cmd_opts[:name], cmd_opts[:type], cmd_opts[:config], `pwd`)
     puts "Finished."
   when "process"
     data_process(cmd_opts[:name])

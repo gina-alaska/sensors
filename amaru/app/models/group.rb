@@ -12,7 +12,7 @@ class Group
 
   embeds_many :sensors, as: :sensor_parent
   has_and_belongs_to_many :platforms
-  has_and_belongs_to_many :status
+  has_many :status
   has_many :events
   has_many :graphs
   has_many :alerts

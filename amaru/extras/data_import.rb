@@ -1,14 +1,26 @@
 class DataImport
   
-	def initialize( configfile, slug, path )
+	def initialize( configfile, group, slug, path )
     # Find or initialize the platform
+    @group = Group.where(name: group).first || Group.new unless group.nil?
     @platform = Platform.where(slug: slug).first || Platform.new
+
+    if @group.new_record? and !group.nil?
+      @group.update_attributes!( name: group )
+    end
     if @platform.new_record?
-      @platform.update_attributes!( slug: slug )
+      @platform.update_attributes!( slug: slug, name: slug )
+    end
+
+    # Associate this platform with the group if needed
+    unless @group.platforms.where(slug: slug).exists? and group.nil?
+      @group.platforms << @platform
     end
 
     # Initialize the status system
     @status = @platform.status.build(system: "import", message: "Importing data for platform #{slug}.", status: "Running", start_time: DateTime.now)
+    @status.group = @group unless group.nil?
+    @status.platform = @platform
     @status.save
 
     # Read in configuration file if available
@@ -75,6 +87,7 @@ class DataImport
     newdata = ProcessedDatum.create(datahash)
 
     if newdata.valid?
+      @group.processed_data << newdata unless @group.nil?
       @platform.processed_data << newdata
     else
       @status.update_attributes(status: "Error", message: "Processed data insert failed MongoDB validation!", end_time: DateTime.now)

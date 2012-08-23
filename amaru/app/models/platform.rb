@@ -12,20 +12,13 @@ class Platform
   field :no_data_value,       type: String
 
   validates_presence_of :slug
-  validates_presence_of :name
-  validates_presence_of :platform_metadata
-  validates_presence_of :geo_location
-  validates_presence_of :license
-  validates_presence_of :permissions
-  validates_presence_of :agency
-  validates_presence_of :authority
-
   validates_uniqueness_of :slug
 
   index({ slug: 1 }, { unique: true })
   has_and_belongs_to_many :groups
   embeds_many :sensors, as: :sensor_parent
   has_many :raw_data 
+  has_many :processed_data 
   has_many :status 
 
   def async_process_events

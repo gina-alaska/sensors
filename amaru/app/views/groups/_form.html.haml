@@ -21,6 +21,10 @@
               = f.label :description, "Description:", :class=>"control-label"
               .controls
                 = f.text_field :description
+            .control-group
+              = f.label :graph_length, "Graph Length:", :class=>"control-label"
+              .controls
+                = f.text_field :graph_length
     %br/
     .actions.row-fluid
       = f.submit (@group.new_record? ? "Create Group" : "Update Group"), :class => "btn btn-primary"

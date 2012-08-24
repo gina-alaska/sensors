@@ -1,10 +1,7 @@
 
 class DashboardController < ApplicationController
   def index
-    @group = Group.page.all
-    @platform = Platform.page.all
-    @status = Statu.latest
-    @events = Event.page.all
+    @status = Statu.latest(12)
 
   	@failures = Resque::Failure.all(0, Resque::Failure.count)
   	if @failures.is_a? Hash

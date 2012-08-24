@@ -3,7 +3,7 @@
     .span12
       %h4 System Messages
       #resque
-        =render "status/system_status"
+        =render "status/system_status", status: @status
   %hr/
   .row-fluid
     .sensor-controls
@@ -28,6 +28,6 @@
 :javascript
   (function poll(){
   setTimeout(function(){
-    $('#resque').load("#{poll_group_status_path(@group)}", poll);
+    $('#resque').load("#{poll_path}", poll);
     }, 5000 );
     })();

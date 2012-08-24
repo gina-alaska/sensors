@@ -21,7 +21,7 @@
   .span6
     %h4 System Messages For Group <i>#{@group.name}</i>
     #resque
-      =render "status/system_status"
+      =render "status/system_status", status: @group.current_messages
 %br/
 .row-fluid
   .navbar
@@ -30,8 +30,8 @@
         %ul.nav
           %li{:class => (current_page?(platforms_group_path(@group)) ? "active" : "")}
             = link_to "Platforms", platforms_group_path(@group)
-          %li{:class => (current_page?(group_group_sensors_path(@group)) ? "active" : "")}
-            = link_to "Sensors", group_group_sensors_path(@group)
+          %li{:class => (current_page?(group_sensors_path(@group)) ? "active" : "")}
+            = link_to "Sensors", group_sensors_path(@group)
           %li{:class => (current_page?(group_events_path(@group)) ? "active" : "")}
             = link_to "Processes", group_events_path(@group)
           %li{:class => (current_page?(group_alerts_path(@group)) ? "active" : "")}

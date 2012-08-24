@@ -8,7 +8,7 @@
       Time
     %th{:width => "300"}
       Message
-  - @status.each do |message|
+  - status.each do |message|
     %tr
       %td= message["system"].upcase
       - case message["status"]
@@ -25,7 +25,8 @@
           %td.alert-warn
             =message["status"]
         - else
-          =message["status"]
+          %td
+            =message["status"]
       %td
         - unless message["status"] == "Finished"
           = "Started #{message["start_time"]}"

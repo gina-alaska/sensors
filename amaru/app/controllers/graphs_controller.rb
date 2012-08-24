@@ -1,13 +1,11 @@
 class GraphsController < ApplicationController
-  layout "group_layout"
 
   def index
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.current_messages
     @graphs = @group.graphs.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render layout: "group_layout" }
       format.json { render json: @events }
     end
   end
@@ -29,13 +27,11 @@ class GraphsController < ApplicationController
 
   def edit
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @graph = @group.graphs.find(params[:id])
   end
 
   def update
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @graph = @group.graphs.find(params[:id])
     @graph.update_attributes(params[:graph])
 
@@ -53,7 +49,6 @@ class GraphsController < ApplicationController
 
   def new
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @graph = Graph.new
 
     respond_to do |format|
@@ -64,7 +59,6 @@ class GraphsController < ApplicationController
 
   def create
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @graph = @group.graphs.build(params[:graph])
 
     respond_to do |format|
@@ -81,7 +75,6 @@ class GraphsController < ApplicationController
 
   def destroy
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @graph = @group.graphs.find(params[:id])
     @graph.destroy
 
@@ -105,7 +98,6 @@ class GraphsController < ApplicationController
 
   def build
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @graph = @group.graphs.find(params[:id])
     @graph.async_graph_image_process # Queue the graph processing
 

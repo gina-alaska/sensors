@@ -15,7 +15,6 @@ class PlatformsController < ApplicationController
     @sensors_all = @platform.sensors
     @group_sensors = @platform.all_group_sensors
     @groups = @platform.groups.collect(&:name)
-    @status = @platform.status
 
     respond_to do |format|
       format.html # show.html.erb
@@ -23,8 +22,6 @@ class PlatformsController < ApplicationController
     end
   end
 
-  # GET /platforms/new
-  # GET /platforms/new.json
   def new
     @platform = Platform.new
     session["dashboardTabShow"] = '#platforms'
@@ -35,7 +32,6 @@ class PlatformsController < ApplicationController
     end
   end
 
-  # GET /platforms/1/edit
   def edit
     @platform = Platform.where( slug: params[:id] ).first
     case params[:group_id]
@@ -49,8 +45,6 @@ class PlatformsController < ApplicationController
     end
   end
 
-  # POST /platforms
-  # POST /platforms.json
   def create
     @platform = Platform.new(params[:platform])
     session["dashboardTabShow"] = '#platforms'
@@ -66,8 +60,6 @@ class PlatformsController < ApplicationController
     end
   end
 
-  # PUT /platforms/1
-  # PUT /platforms/1.json
   def update
     @platform = Platform.where( slug: params[:id] ).first
 
@@ -82,8 +74,6 @@ class PlatformsController < ApplicationController
     end
   end
 
-  # DELETE /platforms/1
-  # DELETE /platforms/1.json
   def destroy
     @platform = Platform.find(params[:id])
     @platform.destroy

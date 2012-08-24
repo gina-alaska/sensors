@@ -1,14 +1,12 @@
 
 class EventsController < ApplicationController
-  layout "group_layout"
 
   def index
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.current_messages
     @events = @group.events.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render layout: "group_layout" }
       format.json { render json: @events }
     end
   end
@@ -25,7 +23,6 @@ class EventsController < ApplicationController
   def new
     @group = Group.where(id: params[:group_id]).first
     @sensors = @group.all_raw_sensors
-    @status = @group.status.desc(:start_time).limit(6)
     @event = Event.new
 
     respond_to do |format|
@@ -37,7 +34,6 @@ class EventsController < ApplicationController
   def edit
     @group = Group.where(id: params[:group_id]).first
     @sensors = @group.all_raw_sensors
-    @status = @group.status.desc(:start_time).limit(6)
     @event = Event.find(params[:id])
 #    @sensors = @event.groups.sensors.only(:source_field).all
 #    @sensors = @platform.sensors.only(:source_field).all
@@ -46,7 +42,6 @@ class EventsController < ApplicationController
   def create
     @group = Group.where(id: params[:group_id]).first
     @sensors = @group.all_raw_sensors
-    @status = @group.status.desc(:start_time).limit(6)
     @event = @group.events.build(params[:event])
 
     respond_to do |format|
@@ -63,7 +58,6 @@ class EventsController < ApplicationController
 
   def update
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @event = @group.events.find(params[:id])
     @event.attributes = event_params
 
@@ -81,7 +75,6 @@ class EventsController < ApplicationController
 
   def destroy
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
     @event = @group.events.find(params[:id])
     @event.destroy
 

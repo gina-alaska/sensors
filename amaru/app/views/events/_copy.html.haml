@@ -10,7 +10,7 @@
   = select_tag "commands[#{command.index}][command]", options_for_select(event_commands(command.command))
 .field.span2
 .field.span1
-  = render :partial => "controls", :locals => {:platform => @platform, :event => @event, :command_id => command.id}
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
 
 :javascript
   $('#commands_#{command.index}_command').popover({

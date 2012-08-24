@@ -12,7 +12,7 @@
   = label_tag :window
   = text_field_tag "commands[#{command.index}][window]", [command.window]
 .field.span1
-  = render :partial => "controls", :locals => {:platform => @platform, :event => @event, :command_id => command.id}
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
 
 :javascript
   $('#commands_#{command.index}_command').popover({
@@ -24,7 +24,7 @@
   $('#commands_#{command.index}_window').popover({
     animation: true,
     title: "Mean Window",
-    content: "Window allows you to set the time frame over which the calculation will run for each interation. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
+    content: "Window allows you to set the time frame over which the calculation will run for each iteration. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
   });  
   
   $( ".datepicker" ).datetimepicker({

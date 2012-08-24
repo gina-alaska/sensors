@@ -25,8 +25,6 @@
               = f.label :from, "From Raw Fields:", :class=>"control-label"
               .controls
                 = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 10}
-      .field.span2.messages
-        messages here
     - unless @event.new_record?
       .row-fluid
         .span2

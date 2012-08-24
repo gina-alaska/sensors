@@ -35,24 +35,24 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @platform = Platform.where( slug: params[:platform_id] ).first
+    @group = Group.where(id: params[:group_id]).first
+    @sensors = @group.all_raw_sensors
+    @status = @group.status.desc(:start_time).limit(6)
     @event = Event.find(params[:id])
-    @sensors = @event.groups.sensors.only(:source_field).all
+#    @sensors = @event.groups.sensors.only(:source_field).all
 #    @sensors = @platform.sensors.only(:source_field).all
-    session["platformTabShow"] = '#processing'
   end
 
-  # POST /events
-  # POST /events.json
   def create
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = @platform.events.build(params[:event])
-    session["platformTabShow"] = '#processing'
+    @group = Group.where(id: params[:group_id]).first
+    @sensors = @group.all_raw_sensors
+    @status = @group.status.desc(:start_time).limit(6)
+    @event = @group.events.build(params[:event])
 
     respond_to do |format|
       if @event.save
         @event.async_process_event # Queue the processing event
-        format.html { redirect_to edit_platform_event_path(@platform, @event), notice: 'Event was successfully created.' }
+        format.html { redirect_to edit_group_event_path(@group, @event), notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
         format.html { render action: "new" }
@@ -61,18 +61,16 @@ class EventsController < ApplicationController
     end
   end
 
-  # PUT /events/1
-  # PUT /events/1.json
   def update
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
-    session["platformTabShow"] = '#processing'
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @event = @group.events.find(params[:id])
     @event.attributes = event_params
 
     respond_to do |format|
       if @event.save
         @event.async_process_event # Queue the processing event
-        format.html { redirect_to @platform, notice: 'Event was successfully updated.' }
+        format.html { redirect_to group_events_path(@group), notice: 'Event was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -81,13 +79,11 @@ class EventsController < ApplicationController
     end
   end
 
-  # DELETE /events/1
-  # DELETE /events/1.json
   def destroy
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @event = @group.events.find(params[:id])
     @event.destroy
-    session["platformTabShow"] = '#processing'
 
     respond_to do |format|
       format.html { redirect_to @platform }
@@ -96,16 +92,16 @@ class EventsController < ApplicationController
   end
 
   def add
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @event = @group.events.find(params[:id])
     @command = @event.commands.create(command: "copy", index: @event.commands.count)
 
     respond_to do |format|
       format.html {
         if request.xhr?
-          render :partial => "command", :locals => {:platform => @platform, :event => @event}
+          render :partial => "command", :locals => {:group => @group, :event => @event}
         else
-          redirect_to edit_platform_event_path(@platform, @event)
+          redirect_to edit_group_event_path(@group, @event)
         end        
       }
     end

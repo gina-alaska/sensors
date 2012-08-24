@@ -10,7 +10,7 @@ module EventsHelper
 	def sensors_select(sensors, selected)
 		shash = Hash.new
 		sensors.each do |sensor|
-			shash["#{sensor["source_field"]}"] = sensor["source_field"]
+			shash["#{sensor}"] = sensor
 		end
     options_for_select(shash, selected)
 	end

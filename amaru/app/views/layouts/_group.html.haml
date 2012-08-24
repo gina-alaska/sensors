@@ -4,7 +4,7 @@
       = link_to 'Edit', edit_group_path(@group, :single=>true), class: "btn btn-primary"
       = link_to 'Back', groups_path, class: "btn btn-primary"
     %h2
-      Operations for the #{@group.name} group
+      Operations For Group <i>#{@group.name}</i>
     %hr/
     %table
       %tr
@@ -16,8 +16,10 @@
         %td{:width => "200"}= @group.description
       %tr
         %td
+          %b Default Graph Length:
+        %td= @group.graph_length
   .span6
-    %h4 System Messages
+    %h4 System Messages For Group <i>#{@group.name}</i>
     #resque
       =render "status/system_status"
 %br/

@@ -1,3 +1,3 @@
 - @event.commands.each do |command|
-  .row-fluid.event-update{"data-url" => change_platform_event_path(@platform, @event, :command_id=>command.id), :id => "command_list_#{command.id}"}
+  .row-fluid.event-update{"data-url" => change_group_event_path(@group, @event, :command_id=>command.id), :id => "command_list_#{command.id}"}
     = render :partial => command.command, :locals => {:command => command}

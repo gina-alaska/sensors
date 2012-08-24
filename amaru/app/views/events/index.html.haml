@@ -7,19 +7,16 @@
   .span12
     %table.table.table-stripped.table-condenced
       %tr
-        %th Starts At
-        %th Ends At
-        %th Command
+        %th Processed Field
+        %th Description
         %th Controls
       - @events.each do |event|
         %tr
-          %td= event.starts_at
-          %td= event.ends_at
-          %td= event.command
+          %td= event.name
+          %td= event.description
           %td
             %table
               %tr
-                %td= link_to 'Show', event
-                %td= link_to 'Edit', edit_group_event_path(@group, event)
-                %td= link_to 'Destroy', event, confirm: 'Are you sure?', method: :delete
+                %td= link_to 'Edit', edit_group_event_path(@group, event), class: "btn btn-primary"
+                %td= link_to 'Destroy', group_event_path(@group, event), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"
 %br/

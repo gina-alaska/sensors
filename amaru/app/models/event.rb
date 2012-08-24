@@ -9,12 +9,12 @@ class Event
   validates_uniqueness_of :name
   paginates_per 12
 
-  belongs_to :groups
+  belongs_to :group
   embeds_many :commands
   accepts_nested_attributes_for :commands
 
   def async_process_event
-    Resque.enqueue(EventProcessor, self.platform.slug, self.id)
+    Resque.enqueue(EventProcessor, self.group.id, self.id)
   end
 
 end

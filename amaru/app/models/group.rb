@@ -22,6 +22,10 @@ class Group
     self.platforms.collect{ |platform| platform.sensors.collect(&:source_field)}.flatten.uniq
   end
 
+  def all_platform_slugs
+    self.platforms.collect(&:slug)
+  end
+
   def current_messages(number = 6)
     self.platforms.collect{ |platform| platform.status.desc(:start_time) }.flatten.values_at(0...number)
   end

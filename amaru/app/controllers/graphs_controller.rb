@@ -3,7 +3,7 @@ class GraphsController < ApplicationController
 
   def index
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
+    @status = @group.current_messages
     @graphs = @group.graphs.all
 
     respond_to do |format|

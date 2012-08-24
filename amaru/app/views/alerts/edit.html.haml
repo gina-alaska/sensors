@@ -1,4 +1,4 @@
 .sensor-controls
-  = link_to 'Back', @platform, class: "btn btn-primary"
-%h1 Editing Alert
+  = link_to 'Back', group_alerts_path(@group), class: "btn btn-primary"
+%h1 Editing Alert <i>#{@alert.name}</i>
 = render 'form'

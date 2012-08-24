@@ -52,6 +52,7 @@ cmd_opts = case cmd
     Trollop::options do
       banner "Alert Options:"
       opt :alert, "Alert Name", {:type => String, :required => true}
+      opt :slug, "Platform Slug (not required for alive alert)", {:type => String, :required => false}
     end
   when "log"
     Trollop::options do
@@ -73,7 +74,7 @@ case cmd
   when "graph"
     data_graph(cmd_opts[:name], cmd_opts[:output], cmd_opts[:start], cmd_opts[:end], cmd_opts[:dump])
   when "alert"
-    data_alert(cmd_opts[:alert])
+    data_alert(cmd_opts[:slug], cmd_opts[:alert])
   when "log"
     system_log(cmd_opts[:name], cmd_opts[:keep], cmd_opts[:delete])
 end

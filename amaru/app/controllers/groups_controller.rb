@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
       [p.name, p.slug]
     end
     @platform_list = pf_list - gr_list
-    @status = @group.status.desc(:start_time).limit(6)
+    @status = @group.current_messages
 
     respond_to do |format|
       format.html { render layout: "group_layout" }
@@ -31,7 +31,7 @@ class GroupsController < ApplicationController
     @events_all = @group.events
     @graphs = @group.graphs
     @alerts = @group.alerts
-    @status = @group.status.latest
+    @status = @group.current_messages
 
 #    if session["graphParams"].nil?
 #      value, units = @platform.graph_length.split(".")

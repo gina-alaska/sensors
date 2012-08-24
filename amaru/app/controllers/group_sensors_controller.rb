@@ -3,7 +3,7 @@ class GroupSensorsController < ApplicationController
 
   def index
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
+    @status = @group.current_messages
     @sensors = @group.sensors.all
 
     respond_to do |format|

@@ -20,11 +20,11 @@
             .control-group
               = f.label :starts_at, "Starts At:", :class=>"control-label"
               .controls
-                = text_field_tag :starts_at, datepicker_format(@alert.starts_at), :class=>"datepicker"
+                = f.text_field :starts_at, value: datepicker_format(@alert.starts_at), :class=>"datepicker"
             .control-group
               = f.label :ends_at, "Ends At:", :class=>"control-label"
               .controls
-                = text_field_tag :ends_at, datepicker_format(@alert.ends_at), :class=>"datepicker"
+                = f.text_field :ends_at, value: datepicker_format(@alert.ends_at), :class=>"datepicker"
             .control-group
               = f.label :emails, "Emails:", :class=>"control-label"
               .controls
@@ -44,7 +44,7 @@
     - unless @alert.new_record?
       .span12
         .row-fluid
-          = link_to 'Add Event', add_platform_alert_path(@group, @alert), class: "btn btn-primary", :id => "add_command", :remote => true
+          = link_to 'Add Event', add_group_alert_path(@group, @alert), class: "btn btn-primary", :id => "add_command", :remote => true
         #commands
           = f.fields_for :alert_events do |event_builder|
             = render "alert_events", :group => @group, :alert => @alert, :sensors => @sensors, :f => event_builder, :event => event_builder.object 

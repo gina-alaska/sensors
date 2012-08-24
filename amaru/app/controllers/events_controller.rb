@@ -4,7 +4,7 @@ class EventsController < ApplicationController
 
   def index
     @group = Group.where(id: params[:group_id]).first
-    @status = @group.status.desc(:start_time).limit(6)
+    @status = @group.current_messages
     @events = @group.events.all
 
     respond_to do |format|

@@ -1,13 +1,13 @@
 class AlertsController < ApplicationController
-  layout "group_layout"
+#  layout "group_layout"
   
   def index
     @group = Group.where( id: params[:group_id] ).first
-    @status = @group.status.desc(:start_time).limit(6)
-    @alerts = @group.alerts
+    @status = @group.current_messages
+    @alerts = @group.alerts.all
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render layout: "group_layout" }
       format.json { render json: @alerts }
     end
   end
@@ -47,7 +47,7 @@ class AlertsController < ApplicationController
 
     respond_to do |format|
       if @alert.save
-        format.html { redirect_to group_alerts_path(@group), notice: 'Alert was successfully created.' }
+        format.html { redirect_to edit_group_alert_path(@group, @alert), notice: 'Alert was successfully created.' }
         format.json { render json: @alert, status: :created, location: @alert }
       else
         format.html { render action: "new" }
@@ -57,13 +57,13 @@ class AlertsController < ApplicationController
   end
 
   def update
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alert = Alert.find(params[:id])
-    session["platformTabShow"] = '#alerts'
+    @group = Group.where( id: params[:group_id] ).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @alert = @group.alerts.find(params[:id])
 
     respond_to do |format|
       if @alert.update_attributes(alert_params)
-        format.html { redirect_to @platform, notice: 'Alert was successfully updated.' }
+        format.html { redirect_to group_alerts_path(@group), notice: 'Alert was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -73,20 +73,20 @@ class AlertsController < ApplicationController
   end
 
   def destroy
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alert = Alert.find(params[:id])
+    @group = Group.where( id: params[:group_id] ).first
+    @status = @group.status.desc(:start_time).limit(6)
+    @alert = @group.alerts.find(params[:id])
     @alert.destroy
-    session["platformTabShow"] = '#alerts'
 
     respond_to do |format|
-      format.html { redirect_to @platform }
+      format.html { redirect_to group_alerts_path(@group) }
       format.json { head :no_content }
     end
   end
 
   def remove
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alert = Alert.find(params[:id])
+    @group = Group.where( id: params[:group_id] ).first
+    @alert = @group.alerts.find(params[:id])
     @command = @alert.alert_events.find(params[:command_id])
     cindex = @command.index
 
@@ -102,16 +102,16 @@ class AlertsController < ApplicationController
   end
 
   def add
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @alert = Alert.find(params[:id])
+    @group = Group.where( id: params[:group_id] ).first
+    @alert = @group.alerts.find(params[:id])
     @command = @alert.alert_events.create(command: "alive", index: @alert.alert_events.count)
 
     respond_to do |format|
       format.html {
         if request.xhr?
-          render :partial => "alert_events", :locals => {:platform => @platform, :alert => @alert, :f => params["f"]}
+          render :partial => "alert_events", :locals => {:group => @group, :alert => @alert, :f => params["f"]}
         else
-          redirect_to edit_platform_alert_path(@platform, @alert)
+          redirect_to edit_group_alert_path(@group, @alert)
         end        
       }
       format.js
@@ -122,8 +122,10 @@ class AlertsController < ApplicationController
 
   def alert_params
     e = params[:alert]
-    e[:alert_events_attributes].each do |ekey, edata|
-      e[:alert_events_attributes][ekey][:sensors].reject! { |i| i == '' } if e[:alert_events_attributes][ekey][:sensors].count > 1
+    unless e[:alert_events_attributes].nil?
+      e[:alert_events_attributes].each do |ekey, edata|
+        e[:alert_events_attributes][ekey][:sensors].reject! { |i| i == '' } if e[:alert_events_attributes][ekey][:sensors].count > 1
+      end
     end
     return e
   end

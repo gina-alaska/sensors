@@ -1,5 +1,4 @@
-%h2= @sensor.source_field unless @sensor.new_record?
-= form_for([@group, @sensor]) do |f|
+= form_for([@parent, @sensor]) do |f|
   - if @sensor.errors.any?
     #error_explanation
       %h2
@@ -16,6 +15,11 @@
           = f.label :source_field
           .controls
             = f.text_field :source_field, :class => "span5"
+      -else
+        .control-group
+          Source Field:
+          %b
+            = @sensor.source_field
       .control-group
         = f.label :label
         .controls

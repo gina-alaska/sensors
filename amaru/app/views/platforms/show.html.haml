@@ -4,7 +4,7 @@
       = link_to 'Edit', edit_platform_path(@platform, :group_id=>"show"), class: "btn btn-primary"
       = link_to 'Back', platforms_path, class: "btn btn-primary"
     %h2
-      Display for the <i>#{@platform.name}</i> Platform
+      Display For <i>#{@platform.name}</i> Platform
     %hr/
     %table
       %tr
@@ -58,7 +58,7 @@
   .tab-content
     #sensors.tab-pane.active
       .sensor-controls
-        = link_to 'New Sensor', new_platform_platform_sensor_path(@platform), class: "btn btn-primary"
+        = link_to 'New Sensor', new_platform_sensor_path(@platform), class: "btn btn-primary"
       %h3 Associated Sensors List
       = paginate @sensors
       %table.table.table-striped.table-condensed

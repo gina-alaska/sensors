@@ -1,11 +1,13 @@
 Amaru::Application.routes.draw do
 
-  match "dashboard" => "dashboard#index"
-
   resources :groups do
+    post 'add_platform', :on => :member
+    get 'remove_platform', :on => :member
+    get 'platforms', :on => :member
+
     resources :sensors
     resources :processed_data
-    resources :group_sensors
+
     resources :alerts do
       get 'add', :on => :member
       get 'change', :on => :member
@@ -28,13 +30,8 @@ Amaru::Application.routes.draw do
       get 'movedown', :on => :member
     end
 
-    post 'add_platform', :on => :member
-    get 'remove_platform', :on => :member
-    get 'platforms', :on => :member
-
     resources :status do
       collection do
-        get :poll
         get :group_poll
       end
     end
@@ -43,7 +40,7 @@ Amaru::Application.routes.draw do
   resources :platforms do
     get 'graph_update', :on => :member
     resources :raw_data
-    resources :platform_sensors
+    resources :sensors
   end
 
   resources :resques do
@@ -55,6 +52,9 @@ Amaru::Application.routes.draw do
       delete :destroy
     end
   end
+
+  match "dashboard" => "dashboard#index"
+  match "poll" => "status#poll"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,32 @@
+types:
+  name: datetime
+    type: date
+      start: today
+      end: never
+  name: temp
+    type: number
+      range: "-40, 40"
+      delta: "1.2"
+      jitter: "0.05"
+  name: dist
+    type: number
+      range: "0, 5"
+      delta: "0.2"
+      jitter: "0.05"
+failures:
+sims:
+  - number: 10                                #number of simulations
+    time: 15                                  #time between data captures (minutes)
+    jitter: 12                                #time jitter +/- (minutes)
+    sensors: "date, t001, t002, d001, d002"   #sensor names
+    type: "datetime, temp, temp, dist, dist"  #sensor types
+  - number: 10                                #number of simulations
+    time: 15                                  #time between data captures (minutes)
+    jitter: 12                                #time jitter +/- (minutes)
+    sensors: "date, t001, t002, t003, t004"   #sensor names
+    type: "datetime, temp, temp, temp, temp"  #sensor types
+  - number: 10                                #number of simulations
+    time: 15                                  #time between data captures (minutes)
+    jitter: 12                                #time jitter +/- (minutes)
+    sensors: "date, d001, d002, d003, d004"   #sensor names
+    type: "datetime, dist, dist, dist, dist"  #sensor types

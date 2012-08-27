@@ -38,6 +38,8 @@
             = link_to "Alerts", group_alerts_path(@group)
           %li{:class => (current_page?(group_graphs_path(@group)) ? "active" : "")}
             = link_to "Graphs", group_graphs_path(@group)
+          %li{:class => (current_page?(group_graphs_path(@group)) ? "active" : "")}
+            = link_to "Data View", group_graphs_path(@group)
 
 :javascript
 

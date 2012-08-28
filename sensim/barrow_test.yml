@@ -1,32 +1,77 @@
-types:
-  name: datetime
-    type: date
-      start: today
-      end: never
-  name: temp
-    type: number
-      range: "-40, 40"
-      delta: "1.2"
-      jitter: "0.05"
-  name: dist
-    type: number
-      range: "0, 5"
-      delta: "0.2"
-      jitter: "0.05"
-failures:
+command: "../amaru/scrip/amaru-runner.rb"
 sims:
   - number: 10                                #number of simulations
-    time: 15                                  #time between data captures (minutes)
-    jitter: 12                                #time jitter +/- (minutes)
-    sensors: "date, t001, t002, d001, d002"   #sensor names
-    type: "datetime, temp, temp, dist, dist"  #sensor types
+    time: 900                                 #time between data captures (seconds)
+    jitter: 240                               #time jitter +/- (seconds)
+    slug: "test_series_1_"
+    sensors:
+      - name: "date"
+        type: "date"
+        start: "today"
+        end: "never"
+      - name: "t001"
+        type: "number"
+        range: "-40, 40"
+        delta: 1.2
+      - name: "t002"
+        type: "number"
+        range: "-40, 40"
+        delta: 1.2
+      - name: "d001"
+        type: "number"
+        range: "0, 5"
+        delta: 0.2
+      - name: "d002"
+        type: "number"
+        range: "0, 5"
+        delta: 0.2
   - number: 10                                #number of simulations
-    time: 15                                  #time between data captures (minutes)
-    jitter: 12                                #time jitter +/- (minutes)
-    sensors: "date, t001, t002, t003, t004"   #sensor names
-    type: "datetime, temp, temp, temp, temp"  #sensor types
+    time: 900                                 #time between data captures (seconds)
+    jitter: 240                               #time jitter +/- (seconds)
+    slug: "test_series_2_"
+    sensors: 
+      - name: "date"
+        type: "date"
+        start: "today"
+        end: "never"
+      - name: "t001"
+        type: "number"
+        range: "-40, 40"
+        delta: 1.2
+      - name: "t002"
+        type: "number"
+        range: "-40, 40"
+        delta: 1.2
+      - name: "t003"
+        type: "number"
+        range: "-40, 40"
+        delta: 1.2
+      - name: "t004"
+        type: "number"
+        range: "-40, 40"
+        delta: 1.2
   - number: 10                                #number of simulations
-    time: 15                                  #time between data captures (minutes)
-    jitter: 12                                #time jitter +/- (minutes)
-    sensors: "date, d001, d002, d003, d004"   #sensor names
-    type: "datetime, dist, dist, dist, dist"  #sensor types
+    time: 900                                 #time between data captures (seconds)
+    jitter: 240                               #time jitter +/- (seconds)
+    slug: "test_series_3_"
+    sensors: 
+      - name: "date"
+        type: "date"
+        start: "today"
+        end: "never"
+      - name: "d001"
+        type: "number"
+        range: "0, 5"
+        delta: 0.2
+      - name: "d002"
+        type: "number"
+        range: "0, 5"
+        delta: 0.2
+      - name: "d003"
+        type: "number"
+        range: "0, 5"
+        delta: 0.2
+      - name: "d004"
+        type: "number"
+        range: "0, 5"
+        delta: 0.2

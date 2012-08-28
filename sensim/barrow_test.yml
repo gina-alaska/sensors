@@ -1,4 +1,4 @@
-command: "../amaru/scrip/amaru-runner.rb"
+data_dump: "/home/jgrimes/projects/sensors/amaru/data_dump"
 sims:
   - number: 10                                #number of simulations
     time: 900                                 #time between data captures (seconds)

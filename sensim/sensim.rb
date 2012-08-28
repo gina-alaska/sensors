@@ -31,17 +31,17 @@ config["sims"].each do |sim|
   numbers = sim["number"].to_i
   (0...numbers).each_with_index do |number, index|
     platform = Hash.new
-    platform["name"] = sim["slug"] + index.to_s
+    platform["slug"] = sim["slug"] + index.to_s
     platform["time"] = sim["time"]
     platform["jitter"] = sim["jitter"]
-    platform["command"] = config["command"]
     platform["sensors"] = sim["sensors"]
-    platforms.push(platform)
+    platforms.push(platform_sim.new(platform))
   end
 end
 puts "Done."
 
 puts "Press \'q\' to stop simulation."
+output_dir = config["data_dump"]
 
 # Save STTY state
 stty_save = `stty -g`

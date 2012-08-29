@@ -28,41 +28,32 @@ platforms = Array.new
 # Build platforms to simulate
 puts "Building platforms..."
 config["sims"].each do |sim|
-  numbers = sim["number"].to_i
-  (0...numbers).each_with_index do |number, index|
+  num_platforms = sim["number"].to_i
+  (0...num_platforms).each_with_index do |number, index|
     platform = Hash.new
     platform["slug"] = sim["slug"] + index.to_s
     platform["time"] = sim["time"]
     platform["jitter"] = sim["jitter"]
     platform["sensors"] = sim["sensors"]
-    platforms.push(platform_sim.new(platform))
+    platforms.push(Platform_sim.new(platform))
   end
 end
 puts "Done."
 
-puts "Press \'q\' to stop simulation."
+puts "Press <cntl-c> to stop simulation."
 output_dir = config["data_dump"]
-
-# Save STTY state
-stty_save = `stty -g`
 
 # Simulate Platforms...
 EM.run do
-  if getchar == "q"
-    EM.stop
-  end
+  EM.threadpool_size = 30
 
-  platforms.each do |platform|
-    EM.add_periodic_timer(platform["time"].to_i) do
-      sleep(rand(platform["jitter"]))
-      run_sim(platform)
-    end
-
-    if getchar == "q"
-      EM.stop
+  EM.add_periodic_timer(1) do
+    platforms.each do |platform|
+      next unless platform.time_to_run
+      EM.defer do
+        file_data = platform.run_sim
+        puts file_data
+      end
     end
   end 
 end
-
-# Restore STTY state
-system("stty #{stty_save}")

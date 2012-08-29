@@ -2,6 +2,8 @@ module PlatformSim
   require 'active_support/all'
 
   class Platform_sim
+    attr_reader :slug
+    
     def initialize(platform)
       @slug = platform["slug"]
       @gen_time = platform["time"].to_i

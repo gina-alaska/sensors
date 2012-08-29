@@ -20,6 +20,7 @@ class Platform
   has_many :raw_data 
   has_many :processed_data 
   has_many :status 
+  paginates_per 10
 
   def async_process_events
     Resque.enqueue(EventProcessor, self.slug, :all)

@@ -2,6 +2,7 @@
   = link_to 'New Platform', new_platform_path, class: "btn btn-primary"
 %h3 Platform List
 %br/
+= paginate @platforms
 %table.table.table-striped.table-condensed
   %tr
     %th{:width => "200"} Name

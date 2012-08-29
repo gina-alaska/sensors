@@ -7,6 +7,8 @@ current_dir = File.expand_path(File.dirname(__FILE__))
 require 'eventmachine'
 require 'trollop'
 require 'yaml'
+require 'net/http'
+require 'uri'
 require current_dir + '/platform_sim'
 include PlatformSim
 
@@ -40,7 +42,7 @@ config["sims"].each do |sim|
 end
 puts "Done."
 
-puts "Press <cntl-c> to stop simulation."
+puts "Press <ctrl-c> to stop simulation."
 output_dir = config["data_dump"]
 
 # Simulate Platforms...
@@ -51,7 +53,15 @@ EM.run do
     platforms.each do |platform|
       next unless platform.time_to_run
       EM.defer do
+        puts "top"
         file_data = platform.run_sim
+        begin
+          uri = URI.parse("http://localhost:3000/csv/#{platform.slug}")
+          Net::HTTP.post_form(uri, {"data" => file_data})
+        rescue => e
+          puts e.inspect
+          puts e.backtrace
+        end
         puts file_data
       end
     end

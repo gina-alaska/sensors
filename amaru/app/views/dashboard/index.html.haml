@@ -1,14 +1,14 @@
 .row-fluid
   .row-fluid
     .span12
-      %h4 System Messages
+      %h3 System Messages
       #resque
         =render "status/system_status", status: @status
   %hr/
   .row-fluid
     .sensor-controls
       = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
-    %h4 Processing Errors
+    %h3 Processing Errors
   .row-fluid
     .span12
       %table.table.table-striped.table-condensed

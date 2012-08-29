@@ -54,7 +54,9 @@ Amaru::Application.routes.draw do
   end
 
   match "dashboard" => "dashboard#index"
+  match "tools" => "tools#index"
   match "poll" => "status#poll"
+  match "csv/:slug" => "import#csv"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

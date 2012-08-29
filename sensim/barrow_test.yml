@@ -25,7 +25,7 @@ sims:
         type: "number"
         range: "0, 5"
         delta: 0.2
-  - number: 10                                #number of simulations
+  - number: 10                               #number of simulations
     time: 900                                 #time between data captures (seconds)
     jitter: 240                               #time jitter +/- (seconds)
     slug: "test_series_2_"

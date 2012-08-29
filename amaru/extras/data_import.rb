@@ -5,7 +5,7 @@ class DataImport
     @group = Group.where(name: group).first || Group.new unless group.nil?
     @platform = Platform.where(slug: slug).first || Platform.new
 
-    if @group.new_record? and !group.nil?
+    if !group.nil? and @group.new_record?
       @group.update_attributes!( name: group )
     end
     if @platform.new_record?
@@ -13,7 +13,7 @@ class DataImport
     end
 
     # Associate this platform with the group if needed
-    unless @group.platforms.where(slug: slug).exists? and group.nil?
+    if !group.nil? and !@group.platforms.where(slug: slug).exists?
       @group.platforms << @platform
     end
 

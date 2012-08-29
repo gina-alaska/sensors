@@ -1,7 +1,7 @@
 class PlatformsController < ApplicationController
 
   def index
-    @platforms = Platform.page params[:platform_page]
+    @platforms = Platform.asc(:name).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
@@ -75,7 +75,7 @@ class PlatformsController < ApplicationController
   end
 
   def destroy
-    @platform = Platform.find(params[:id])
+    @platform = Platform.where(slug: params[:id])
     @platform.destroy
     session["dashboardTabShow"] = '#platforms'
 

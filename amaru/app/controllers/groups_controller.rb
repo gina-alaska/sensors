@@ -6,7 +6,7 @@ class GroupsController < ApplicationController
 
   def platforms
     @group = Group.where(id: params[:id]).first
-    @platforms = @group.platforms
+    @platforms = @group.platforms.asc(:slug).page(params[:page]).per(6)
     pf_list = Platform.asc(:name).only(:name, :slug).collect do |p|
       [p.name, p.slug]
     end
@@ -30,12 +30,6 @@ class GroupsController < ApplicationController
     @events_all = @group.events
     @graphs = @group.graphs
     @alerts = @group.alerts
-
-#    if session["graphParams"].nil?
-#      value, units = @platform.graph_length.split(".")
-#      length = value.to_i.send(units.to_sym)
-#      session["graphParams"] = {"starts_at" => length, "ends_at" => nil, #"raw_sensor" => @sensors_all.first.source_field, "proc_sensor" => nil}
-#    end
 
     respond_to do |format|
       format.html # show.html.erb

@@ -6,8 +6,7 @@
         = select_tag :slug, options_for_select(@platform_list)
         = submit_tag "Add Platform", :class => "btn btn-primary"
     %h3 Platform List
-.row-fluid
-  .span12
+    = paginate @platforms
     %table.table.table-striped.table-condensed
       %tr
         %th{:width => "160"}
@@ -18,13 +17,4 @@
           %b Geo Location
         %th{:width => "160"}
           %b Controls
-      - @platforms.each do |platform|
-        %tr
-          %td= platform.slug
-          %td= platform.name
-          %td= platform.geo_location
-          %td
-            %table
-              %tr
-                %td= link_to 'Edit', edit_platform_path(platform, :group_id=>@group.id), class: "btn btn-primary"
-                %td= link_to 'Remove', remove_platform_group_path(@group, platform_id: platform.id), confirm: 'Are you sure?', class: "btn btn-danger"
+      = render @platforms

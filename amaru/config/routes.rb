@@ -55,6 +55,7 @@ Amaru::Application.routes.draw do
 
   match "dashboard" => "dashboard#index"
   match "tools" => "tools#index"
+  match "by_sensor" => "tools#by_sensor"
   match "poll" => "status#poll"
   match "csv/:slug" => "import#csv"
 

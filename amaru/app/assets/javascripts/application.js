@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require js/jquery-ui-timepicker-addon
+//= require js/jquery.editableSelect
 //= require bootstrap
 //= require highcharts
 //= require highcharts/themes/grid

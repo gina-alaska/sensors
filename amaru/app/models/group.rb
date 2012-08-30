@@ -27,6 +27,6 @@ class Group
   end
 
   def current_messages(number = 6)
-    self.platforms.collect{ |platform| platform.status.desc(:start_time) }.flatten.values_at(0...number)
+    Statu.where(:platform_id.in => self.platforms.collect(&:id)).desc(:start_time).limit(number)
   end
 end

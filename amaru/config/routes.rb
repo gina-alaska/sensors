@@ -4,6 +4,8 @@ Amaru::Application.routes.draw do
     post 'add_platform', :on => :member
     get 'remove_platform', :on => :member
     get 'platforms', :on => :member
+    get 'data_view', :on => :member
+    get 'graph_update', :on => :member
 
     resources :sensors
     resources :processed_data

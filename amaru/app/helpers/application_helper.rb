@@ -22,4 +22,16 @@ module ApplicationHelper
       return tab
     end
   end
+
+  def hc_sensors_select(sensors, selected)
+    options_for_select(sensors, selected)
+  end
+
+  def hc_proc_select(fields, selected)
+    shash = Hash.new
+    fields.each do |proc|
+      shash[proc["label"]] = proc["source_field"]
+    end
+    options_for_select(shash, selected)
+  end
 end

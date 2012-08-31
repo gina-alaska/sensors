@@ -1,0 +1,25 @@
+.row-fluid
+  .span2
+    %h4 View Processed and Raw Sensor Data
+    = render 'hc_controls', sensors_all: @sensors_all
+  .span10
+    #rawchart{:style => "width: 100%; height: 400px"}
+      %h4 To see graph, click the "Display Graph" button.
+#graph_image_modal.modal.hide
+  .modal-header
+    %button.close{:type=>"button", "data-dismiss"=>"modal"} x
+  .modal-body
+    %img{:src => ""}
+
+:javascript
+  $('#platformTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  #{raw show_tab_for("platformTab")}
+
+  $('a.graph_link').click(function (e) {
+    e.preventDefault();
+    $("#graph_image_modal img").attr("src", $(e.currentTarget).attr("href"));
+    $('#graph_image_modal').modal('show');
+  });

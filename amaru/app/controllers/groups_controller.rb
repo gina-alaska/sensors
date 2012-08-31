@@ -21,6 +21,17 @@ class GroupsController < ApplicationController
     end
   end
 
+  def data_view
+    @group = Group.where(id: params[:id]).first
+    @sensors_all = @group.all_raw_sensors
+    @events_all = @group.sensors.asc(:source_field)
+
+    respond_to do |format|
+      format.html { render layout: "group_layout" }
+      format.json { render json: @platforms }
+    end
+  end
+
   def show
     @group = Group.where( id: params[:id] ).first
     @platform = @group.platforms.page params[:platform_page]
@@ -110,6 +121,21 @@ logger.info session[:return_to]
     respond_to do |format|
       format.html { redirect_to platforms_group_path(@group) }
       format.json { head :no_content }
+    end
+  end
+
+  def graph_update
+    starts_at = params["starts_at"] == "" ? nil : params["starts_at"]
+    ends_at = params["ends_at"] == "" ? nil : params["ends_at"]
+    @group = Group.where( id: params[:id] ).first
+#    @platform = Platform.where( slug: params[:id] ).first
+    @platform = @group.platforms.first
+    @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
+    @proc_data = @group.processed_data.captured_between(starts_at, ends_at).asc(:capture_date)
+    session["graphParams"] = params
+
+    respond_to do |format|
+      format.html { render :partial => "highchart", :locals => {:raw_data => @raw_data, :raw_sensor => params["raw_sensor"], :proc_data => @proc_data, :nodata => @platform.no_data_value, :proc_sensor => params["proc_sensor"]} }
     end
   end
 end

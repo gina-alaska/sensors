@@ -16,7 +16,8 @@
         Raw Sensor:
       .controls
         %select.input-large(name="raw_sensor")
-          = hc_sensors_select(@sensors_all, session["graphParams"]["raw_sensor"])
+          - logger.info "==== #{sensors_all}"
+          = hc_sensors_select(sensors_all, session["graphParams"]["raw_sensor"])
     .control-group
       %label.control-label(for="proc_sensor")
         Processed Sensor:
@@ -29,7 +30,7 @@
 
 :javascript
   $('#hc_control').submit(function() {
-    $('#rawchart').load("#{graph_update_group_platform_path(@group, @platform)}", $(this).serialize());
+    $('#rawchart').load("#{graph_update_group_path(@group)}", $(this).serialize());
     return false;
   });
 

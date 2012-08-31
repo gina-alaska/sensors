@@ -46,7 +46,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        @event.async_process_event # Queue the processing event
         format.html { redirect_to edit_group_event_path(@group, @event), notice: 'Event was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else

@@ -16,7 +16,7 @@ class Group
   has_many :events
   has_many :graphs
   has_many :alerts
-  has_many :processed_data
+#  has_many :processed_data
 
   def all_raw_sensors
     self.platforms.collect{ |platform| platform.sensors.collect(&:source_field)}.flatten.uniq

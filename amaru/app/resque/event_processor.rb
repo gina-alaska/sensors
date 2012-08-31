@@ -10,29 +10,32 @@ class EventProcessor
 	def self.perform(group_id, event_id)
 		group = Group.where(id: group_id).first
 #    events = group.events.find(event_id)
-    platform = group.platforms.first
+    platforms = group.platforms.all
 		if event_id.to_sym == :all
 			events = group.events
 		else
 			events = [group.events.find(event_id)]
 		end
-		processor = ProcessorCommands.new(group, platform)
 
-    # Read in configuration file if available
-		events.each do |event|							# Process all events for platform
-      # Add a status for event
-      status = group.status.build(system: "process", message: "Processing field #{event.name}: #{event.description}.", status: "Running", start_time: DateTime.now)
-      status.group = group
-      status.platform = platform
-      status.save
+    platforms.each do |platform|
+  		processor = ProcessorCommands.new(group, platform)
 
-			processes = event.commands 				# Get all commands from this event
-			processes.each do |process|       # Do all command processes
-				method = process.command
-  			processor.send(method.downcase.to_sym, event.name, event.from, process)
-			end
-      status.update_attributes(status: "Finished", end_time: DateTime.now)
-		end
+      # Read in configuration file if available
+  		events.each do |event|							# Process all events for platform
+        # Add a status for event
+        status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}: #{event.description}.", status: "Running", start_time: DateTime.now)
+        status.group = group
+        status.platform = platform
+        status.save
+
+  			processes = event.commands 				# Get all commands from this event
+  			processes.each do |process|       # Do all command processes
+  				method = process.command
+    			processor.send(method.downcase.to_sym, event.name, event.from, process)
+  			end
+        status.update_attributes(status: "Finished", end_time: DateTime.now)
+  		end
+    end
 	rescue => e
     #status.update_attributes(status: "Error", message: e.message, end_time: DateTime.now)
 		puts "Failure!"
@@ -54,7 +57,7 @@ class ProcessorCommands
 	statats
     raw = @platform.raw_data.captured_between(process.starts_at, process.ends_at).only(:capture_date, sensor.to_sym)
     raw.each do |raw_row|
-    	processed = @group.processed_data.find_or_create_by(
+    	processed = @platform.processed_data.find_or_create_by(
     		  capture_date: raw_row.capture_date)
     	processed.update_attribute(processed_field, raw_row[sensor])
     end
@@ -93,7 +96,7 @@ class ProcessorCommands
 			EOF
 
       # Push processed data to processed_data collection.
-			processed = @group.processed_data.find_or_create_by(
+			processed = @platform.processed_data.find_or_create_by(
 		    		  capture_date: row.capture_date)
 		  processed.update_attribute(processed_field, myr.mdata)
 		end

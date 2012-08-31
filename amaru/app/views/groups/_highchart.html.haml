@@ -19,13 +19,13 @@
       series: [{
         name: '#{raw_sensor}',
         data: #{ raw_data.collect do |row|
-          data = row[raw_sensor].to_f == nodata.to_f ? "null" : row[raw_sensor] 
+          data = row[raw_sensor].to_f == nodata.to_f ? nil : row[raw_sensor] 
             [ row.capture_date.strftime("%Q").to_i, data ]
           end.to_json } 
         }, {
         name: '#{proc_sensor}',
         data: #{ proc_data.collect do |row|
-            data = row[proc_sensor].to_f == nodata.to_f ? "null" : row[proc_sensor] 
+            data = row[proc_sensor].to_f == nodata.to_f ? nil : row[proc_sensor] 
             [ row.capture_date.strftime("%Q").to_i, data ]
           end.to_json }
         } 

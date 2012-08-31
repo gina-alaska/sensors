@@ -12,11 +12,16 @@
       .controls
         %input.input-large.datepicker(type="text" name="ends_at" value="#{session['graphParams']['ends_at']}")
     .control-group
+      %label.control-label(for="platforms")
+        Platform:
+      .controls
+        %select.input-large(name="platforms")
+          = hc_plat_select(@platforms, session["graphParams"]["platforms"])
+    .control-group
       %label.control-label(for="raw_sensor")
         Raw Sensor:
       .controls
         %select.input-large(name="raw_sensor")
-          - logger.info "==== #{sensors_all}"
           = hc_sensors_select(sensors_all, session["graphParams"]["raw_sensor"])
     .control-group
       %label.control-label(for="proc_sensor")

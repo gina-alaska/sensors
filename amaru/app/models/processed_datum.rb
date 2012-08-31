@@ -5,7 +5,6 @@
 
     validates_uniqueness_of :capture_date
 
-    belongs_to :group
     belongs_to :platform
     index({ capture_date: 1 }, { unique: true })
 

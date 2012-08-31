@@ -12,7 +12,7 @@ class PlatformsController < ApplicationController
   def show
     @platform = Platform.where( slug: params[:id] ).first
     @sensors = @platform.sensors.page params[:page]
-    @sensors_all = @platform.sensors
+    @sensors_all = @platform.sensors.collect(&:source_field)
     @group_sensors = @platform.all_group_sensors
     @groups = @platform.groups.collect(&:name)
 

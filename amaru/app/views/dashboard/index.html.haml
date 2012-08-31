@@ -1,5 +1,20 @@
 .row-fluid
   .row-fluid
+    %h3 Current System Totals
+    %table.table.table-striped.table-condenced
+      %tr
+        %th Groups
+        %th Platforms
+        %th Event Processors
+        %th Alert Processors
+        %th Graphs
+      %tr
+        %td=@num_groups
+        %td=@num_platforms
+        %td=@num_events
+        %td=@num_alerts
+        %td=@num_graphs
+  .row-fluid
     .span12
       %h3 System Messages
       #resque

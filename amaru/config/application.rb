@@ -62,9 +62,10 @@ module Amaru
 
     # Enable the asset pipeline
     config.assets.enabled = true
-
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
     config.assets.paths << Rails.root.join("vender", "assets", "jquery_ui")
+    # Enable pjax
+    config.middleware.use Rack::Pjax
   end
 end

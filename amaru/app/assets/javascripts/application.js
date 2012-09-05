@@ -19,6 +19,7 @@
 //= require highcharts
 //= require highcharts/themes/grid
 //= require highcharts/modules/exporting
+//= require jquery.pjax
 //= require_tree .
 
 $(document).ready(function(){
@@ -27,4 +28,19 @@ $(document).ready(function(){
 		var com = $(this).find("option:selected").val();
 		$(this).parents(".event-update").load(url, "command="+com);
 	});
+
+  $('a:not([data-remote]):not([data-behavior]):not([data-skip-pjax])').pjax('[data-pjax-container]', {timeout: 3000});
 });
+$.fn.poll = function(opts) {
+  this.each(function() {
+    var $this = $(this),
+        data = $this.data();
+
+    if (data.polling) {
+      clearTimeout(data.polling);
+    }
+    if (opts !== false) {
+      data.polling = setTimeout(opts.fn, opts.timeout);
+    }
+  });
+}

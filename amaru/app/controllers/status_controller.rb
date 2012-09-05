@@ -3,7 +3,7 @@ class StatusController < ApplicationController
     @status = Statu.latest(12)
 
     respond_to do |format|
-        format.html { render :partial => "system_status", :locals => {:status => @status}, :template => false }
+        format.html { render :partial => "system_status", :locals => {:status => @status}, :layout => false }
     end
   end
 
@@ -12,7 +12,7 @@ class StatusController < ApplicationController
     @status = @group.current_messages
 
     respond_to do |format|
-        format.html { render :partial => "system_status", :locals => {:status => @status}, :template => false }
+        format.html { render :partial => "system_status", :locals => {:status => @status}, :layout => false }
     end
   end
   

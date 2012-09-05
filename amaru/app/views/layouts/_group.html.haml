@@ -20,7 +20,7 @@
         %td= @group.graph_length
   .span6
     %h4 System Messages For Group <i>#{@group.name}</i>
-    #resque
+    %div.resque{id:"status_#{@group.id}"}
       =render "status/system_status", status: @group.current_messages
 %br/
 .row-fluid
@@ -42,9 +42,11 @@
             = link_to "Data View", data_view_group_path(@group)
 
 :javascript
-
-  (function poll(){
-  setTimeout(function(){
-    $('#resque').load("#{group_poll_group_status_path(@group)}", poll);
-    }, 5000 );
-    })();
+  (function pollStatus() {
+    $('#status_#{@group.id}').poll({
+      fn: function(){
+        $('#status_#{@group.id}').load("#{group_poll_group_status_path(@group)}", pollStatus);
+      },
+      timeout: 5000
+    });
+  })();  

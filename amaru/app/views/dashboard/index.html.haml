@@ -17,7 +17,7 @@
   .row-fluid
     .span12
       %h3 System Messages
-      #resque
+      %div.resque{id:"dashboard_resque"}
         =render "status/system_status", status: @status
   %hr/
   .row-fluid
@@ -41,8 +41,11 @@
               = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
 
 :javascript
-  (function poll(){
-  setTimeout(function(){
-    $('#resque').load("#{poll_path}", poll);
-    }, 5000 );
-    })();
+  (function pollStatus() {
+    $('#dashboard_resque').poll({
+      fn: function(){
+        $('#dashboard_resque').load("#{poll_path}", pollStatus);
+      },
+      timeout: 5000
+    });
+  })();  

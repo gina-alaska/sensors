@@ -1,13 +1,13 @@
 .row-fluid
   .span12
     .sensor-controls
-      = link_to 'New Event', new_group_event_path(@group), class: "btn btn-primary"
-    %h2 Listing Processing Events
+      = link_to 'New Process', new_group_event_path(@group), class: "btn btn-primary"
+    %h2 Process List
 .row-fluid
   .span12
     %table.table.table-stripped.table-condenced
       %tr
-        %th Processed Field
+        %th Processed Data Sensor
         %th Description
         %th Controls
       - @events.each do |event|

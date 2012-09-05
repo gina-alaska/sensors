@@ -3,7 +3,7 @@ class Sensor
 
   field :label,             type: String
   field :source_field,      type: String
-  field :sensor_metadata,   type: String
+  field :sensor_metadata,   type: String, default: 'No Metadata'
 
   validates_presence_of :label
   validates_presence_of :source_field

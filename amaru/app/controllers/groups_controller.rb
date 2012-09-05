@@ -24,7 +24,7 @@ class GroupsController < ApplicationController
   def data_view
     @group = Group.where(id: params[:id]).first
     @sensors_all = @group.all_raw_sensors
-    @events_all = @group.sensors.asc(:source_field)
+    @events_all = @group.all_processed_sensors
     @platforms = @group.platforms.asc(:name)
 
     respond_to do |format|
@@ -81,7 +81,6 @@ class GroupsController < ApplicationController
   def update
     @group = Group.where( id: params[:id] ).first
 
-logger.info session[:return_to]
     respond_to do |format|
       if @group.update_attributes(params[:group])
         format.html { redirect_to session.delete(:return_to), notice: 'Group was successfully updated.' }

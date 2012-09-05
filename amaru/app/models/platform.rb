@@ -10,6 +10,7 @@ class Platform
   field :agency,              type: String
   field :authority,           type: String
   field :no_data_value,       type: String
+  field :processed,           type: Boolean
 
   validates_presence_of :slug
   validates_uniqueness_of :slug
@@ -20,6 +21,9 @@ class Platform
   has_many :raw_data 
   has_many :processed_data 
   has_many :status 
+  has_many :children, class_name: "Platform", inverse_of: :parent
+  belongs_to :parent, class_name: "Platform", inverse_of: :children
+
   paginates_per 10
 
   def async_process_events

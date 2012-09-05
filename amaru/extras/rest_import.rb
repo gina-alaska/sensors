@@ -12,12 +12,11 @@ class RestImport < DataImport
     csv_data = CSV.parse(@data, options)
 
     sensors = @platform.sensors.all
-#    csv_data.shift
     headers = csv_data.headers
 
     headers.each do |source|
       unless source == "date"
-        sensor_data = {"label" => source, "source_field" => source, "sensor_metadata" => "no metadata"}
+        sensor_data = {"label" => source, "source_field" => source, "sensor_metadata" => "No Metadata"}
         sensor_save(sensor_data, source)
       end
     end

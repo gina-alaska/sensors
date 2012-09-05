@@ -53,7 +53,6 @@ EM.run do
     platforms.each do |platform|
       next unless platform.time_to_run
       EM.defer do
-        puts "top"
         file_data = platform.run_sim
         begin
           uri = URI.parse("http://localhost:3000/csv/#{platform.slug}")

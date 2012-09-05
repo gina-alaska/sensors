@@ -28,7 +28,7 @@
     - unless @event.new_record?
       .row-fluid
         .span2
-          = link_to 'Add Command', add_group_event_path(@group, @event), class: "btn btn-primary", :id => "add_command"
+          = link_to 'Add Command', add_group_event_path(@group, @event), class: "btn btn-primary", :id => "add_command", "data-skip-pjax" => true
       #commands
         = render :partial=>"command", :locals=>{:group => @group, :event => @event}
     %br/

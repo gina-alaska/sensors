@@ -25,19 +25,6 @@ module ApplicationHelper
 
   def hc_sensors_select(sensors, selected)
     options_for_select(sensors, selected)
-#    shash = Hash.new
-#    sensors.each do |sensor|
-#      shash[sensor["label"]] = sensor["source_field"]
-#    end
-#    options_for_select(shash, selected)
-  end
-
-  def hc_proc_select(fields, selected)
-    shash = Hash.new
-    fields.each do |proc|
-      shash[proc["label"]] = proc["source_field"]
-    end
-    options_for_select(shash, selected)
   end
 
   def hc_plat_select(platforms, selected)

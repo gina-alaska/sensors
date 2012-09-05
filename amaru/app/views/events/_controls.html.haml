@@ -1,8 +1,8 @@
 %table
   %tr
     %td
-      = link_to '<i class="icon-arrow-up icon-white"></i>'.html_safe, moveup_group_event_path(@group, @event, :command_id => command_id), class: "btn btn-primary event-button-adjust up"
+      = link_to '<i class="icon-arrow-up icon-white"></i>'.html_safe, moveup_group_event_path(@group, @event, :command_id => command_id), class: "btn btn-primary event-button-adjust up", "data-skip-pjax" => true
     %td
-      = link_to '<i class="icon-arrow-down icon-white"></i>'.html_safe, movedown_group_event_path(@group, @event, :command_id => command_id), class: "btn btn-primary event-button-adjust down"
+      = link_to '<i class="icon-arrow-down icon-white"></i>'.html_safe, movedown_group_event_path(@group, @event, :command_id => command_id), class: "btn btn-primary event-button-adjust down", "data-skip-pjax" => true
     %td
-      = link_to 'Delete', remove_group_event_path(@group, @event, :command_id => command_id), confirm: 'Are you sure?', class: "btn btn-danger delete event-button-adjust"
+      = link_to 'Delete', remove_group_event_path(@group, @event, :command_id => command_id), confirm: 'Are you sure?', class: "btn btn-danger delete event-button-adjust", "data-skip-pjax" => true

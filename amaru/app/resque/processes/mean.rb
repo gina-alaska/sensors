@@ -31,7 +31,7 @@ module Processes
       EOF
 
       # Push processed data to processed_data collection.
-      processed = @platform.processed_data.find_or_create_by(
+      processed = @group.processed_data.find_or_create_by(
               capture_date: row.capture_date)
       processed.update_attribute(processed_field, myr.mdata)
     end

@@ -78,7 +78,7 @@ class EventsController < ApplicationController
     @event.destroy
 
     respond_to do |format|
-      format.html { redirect_to @platform }
+      format.html { redirect_to group_events_path(@group) }
       format.json { head :no_content }
     end
   end
@@ -100,8 +100,8 @@ class EventsController < ApplicationController
   end
 
   def change
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @event = @group.events.find(params[:id])
     @command = @event.commands.find(params[:command_id])
     @command.command = params["command"]
 
@@ -109,8 +109,8 @@ class EventsController < ApplicationController
   end
 
   def remove
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @event = @group.events.find(params[:id])
     @command = @event.commands.find(params[:command_id])
     cindex = @command.index
 
@@ -126,8 +126,8 @@ class EventsController < ApplicationController
   end
 
   def moveup
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @event = @group.events.find(params[:id])
     @command = @event.commands.find(params[:command_id])
     cindex = @command.index
 
@@ -146,8 +146,8 @@ class EventsController < ApplicationController
   end
 
   def movedown
-    @platform = Platform.where( slug: params[:platform_id] ).first
-    @event = Event.find(params[:id])
+    @group = Group.where(id: params[:group_id]).first
+    @event = @group.events.find(params[:id])
     @command = @event.commands.find(params[:command_id])
     maxindex = @event.commands.desc(:index).first.index
     cindex = @command.index

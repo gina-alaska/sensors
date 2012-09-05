@@ -12,7 +12,6 @@ class EventProcessor
 
 	def self.perform(group_id, event_id)
 		group = Group.where(id: group_id).first
-#    events = group.events.find(event_id)
     platforms = group.platforms.all
 		if event_id.to_sym == :all
 			events = group.events
@@ -47,7 +46,7 @@ class EventProcessor
 end
 
 class ProcessorCommands
-  import Processes
+  include Processes
 
 	def initialize( group, platform )
     @group = group

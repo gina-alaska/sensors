@@ -1,7 +1,7 @@
 class GroupsController < ApplicationController
 
   def index
-    @groups = Group.all
+    @groups = Group.asc(:name).all
   end
 
   def platforms

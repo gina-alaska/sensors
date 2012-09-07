@@ -1,5 +1,6 @@
-
 class DashboardController < ApplicationController
+  skip_before_filter :require_login
+  
   def index
     @status = Statu.latest(12)
     @num_groups = Group.count

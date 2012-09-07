@@ -60,6 +60,10 @@ Amaru::Application.routes.draw do
   match "by_sensor" => "tools#by_sensor"
   match "poll" => "status#poll"
   match "csv/:slug" => "import#csv"
+  match "/auth/:provider/callback", to: "sessions#create"
+  match '/auth/failure' => 'sessions#failure'
+  match '/signin' => 'sessions#new', :as => :signin
+  match "/signout" => "sessions#destroy", :as => :signout
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

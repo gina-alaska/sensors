@@ -1,5 +1,4 @@
 class GroupsController < ApplicationController
-
   def index
     @groups = Group.asc(:name).all
   end
@@ -35,8 +34,8 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.where( id: params[:id] ).first
-    @platform = @group.platforms.page params[:platform_page]
-    @sensors = @group.sensors.page params[:sensors_page]
+    @platform = @group.platforms.asc(:slug).page params[:platform_page]
+    @sensors = @group.sensors.asc(:source_field).page params[:sensors_page]
     @sensors_all = @group.all_raw_sensors
     @events = @group.events.asc(:name).page params[:event_page]
     @events_all = @group.events

@@ -22,7 +22,6 @@ class EventProcessor
     platforms.each do |platform|
   		processor = ProcessorCommands.new(group, platform)
 
-      # Read in configuration file if available
   		events.each do |event|							# Process all events for platform
         # Add a status for event
         status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}: #{event.description}.", status: "Running", start_time: DateTime.now)
@@ -39,7 +38,6 @@ class EventProcessor
   		end
     end
 	rescue => e
-    #status.update_attributes(status: "Error", message: e.message, end_time: DateTime.now)
 		puts "Failure!"
 		raise
 	end

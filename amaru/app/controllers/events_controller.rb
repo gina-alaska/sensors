@@ -1,6 +1,5 @@
 
 class EventsController < ApplicationController
-
   def index
     @group = Group.where(id: params[:group_id]).first
     @events = @group.events.all

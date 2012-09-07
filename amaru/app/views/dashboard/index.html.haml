@@ -5,7 +5,7 @@
       %tr
         %th Groups
         %th Platforms
-        %th Event Processors
+        %th Sensor Processors
         %th Alert Processors
         %th Graphs
       %tr
@@ -14,31 +14,32 @@
         %td=@num_events
         %td=@num_alerts
         %td=@num_graphs
-  .row-fluid
-    .span12
-      %h3 System Messages
-      %div.resque{id:"dashboard_resque"}
-        =render "status/system_status", status: @status
-  %hr/
-  .row-fluid
-    .sensor-controls
-      = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
-    %h3 Processing Errors
-  .row-fluid
-    .span12
-      %table.table.table-striped.table-condensed
-        %tr
-          %th{:width => "300"} Error Message
-          %th{:width => "180"}
-          %th{:width => "180"}
-        - @failures.each_with_index do |f, index|
+  -if current_user
+    .row-fluid
+      .span12
+        %h3 System Messages
+        %div.resque{id:"dashboard_resque"}
+          =render "status/system_status", status: @status
+    %hr/
+    .row-fluid
+      .sensor-controls
+        = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
+      %h3 Processing Errors
+    .row-fluid
+      .span12
+        %table.table.table-striped.table-condensed
           %tr
-            %td
-              = f["error"]
-            %td
-              = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
-            %td
-              = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
+            %th{:width => "300"} Error Message
+            %th{:width => "180"}
+            %th{:width => "180"}
+          - @failures.each_with_index do |f, index|
+            %tr
+              %td
+                = f["error"]
+              %td
+                = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
+              %td
+                = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
 
 :javascript
   (function pollStatus() {

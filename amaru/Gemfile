@@ -7,7 +7,6 @@ gem 'rails', '3.2.6'
 
 gem 'sqlite3'
 
-
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -50,3 +49,5 @@ gem 'trollop'
 gem 'rvg_graph', :git => 'git://github.com/gina-alaska/rvg_graph.git'
 gem 'quiet_assets'
 gem 'rack-pjax'
+gem 'omniauth'
+gem 'omniauth-openid'

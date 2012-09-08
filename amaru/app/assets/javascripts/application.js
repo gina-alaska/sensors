@@ -31,7 +31,8 @@ $(document).ready(function(){
 
   $('a:not([data-remote]):not([data-behavior]):not([data-skip-pjax])').pjax('[data-pjax-container]', {timeout: 3000});
 });
-$.fn.poll = function(opts) {
+
+$.fn.poll = function(fn, timeout) {
   this.each(function() {
     var $this = $(this),
         data = $this.data();
@@ -39,8 +40,9 @@ $.fn.poll = function(opts) {
     if (data.polling) {
       clearTimeout(data.polling);
     }
-    if (opts !== false) {
-      data.polling = setTimeout(opts.fn, opts.timeout);
+    if (fn !== false) {
+      var callback = function() { $this.poll(fn, timeout) };
+      data.polling = setTimeout(function() { fn(callback); }, timeout || 5000);
     }
   });
 }

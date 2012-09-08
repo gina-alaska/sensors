@@ -42,11 +42,15 @@
             = link_to "Data View", data_view_group_path(@group)
 
 :javascript
-  (function pollStatus() {
-    $('#status_#{@group.id}').poll({
-      fn: function(){
-        $('#status_#{@group.id}').load("#{group_poll_group_status_path(@group)}", pollStatus);
-      },
-      timeout: 5000
-    });
-  })();  
+//  (function pollStatus() {
+//    $('#status_#{@group.id}').poll({
+//      fn: function(){
+//        $('#status_#{@group.id}').load("#{group_poll_group_status_path(@group)}", pollStatus);
+//      },
+//      timeout: 5000
+//    });
+//  })();  
+
+  $('#status_#{@group.id}').poll(function(callback){
+    $('#status_#{@group.id}').load('#{group_poll_group_status_path(@group)}', callback);
+  });

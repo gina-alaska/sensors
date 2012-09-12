@@ -20,7 +20,7 @@ group :assets do
   gem 'compass-rails'
 end
 
-gem 'bootstrap-sass', '~> 2.0.3'
+gem 'bootstrap-sass', '~> 2.1.0.0'
 gem 'haml'
 gem 'jquery-rails'
 

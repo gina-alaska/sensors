@@ -24,8 +24,8 @@
       =render "status/system_status", status: @group.current_messages
 %br/
 .row-fluid
-  .navbar
-    .navbar-inner.group-nav-background
+  .navbar.navbar-inverse
+    .navbar-inner
       .container
         %ul.nav
           %li{:class => (current_page?(platforms_group_path(@group)) ? "active" : "")}

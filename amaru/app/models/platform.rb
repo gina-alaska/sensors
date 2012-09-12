@@ -10,21 +10,24 @@ class Platform
   field :agency,              type: String
   field :authority,           type: String
   field :no_data_value,       type: String
-  field :access_token,        type: String
 
   validates_presence_of :slug
   validates_uniqueness_of :slug
 
-  index({ slug: 1 }, { unique: true })
+  belongs_to :organizations
   has_and_belongs_to_many :groups
   embeds_many :sensors, as: :sensor_parent
-  has_many :raw_data 
+  has_many :raw_data, :dependent => :destroy 
   has_many :processed_data 
   has_many :status 
   has_many :children, class_name: "Platform", inverse_of: :parent
   belongs_to :parent, class_name: "Platform", inverse_of: :children
+  has_many :users
 
+  index({ slug: 1 }, { unique: true })
   paginates_per 10
+
+  scope :user_platforms, ->(user){ where(users: user) }
 
   def async_process_events
     Resque.enqueue(EventProcessor, self.slug, :all)

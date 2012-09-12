@@ -1,0 +1,9 @@
+%tr
+  %td= organization.name
+  %td= organization.description
+  %td= organization.access_token
+  %td
+    %table
+      %tr
+        %td= link_to 'Edit', edit_organization_path(organization), class: "btn btn-primary"
+        %td= link_to 'Delete', organization_path(organization), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"

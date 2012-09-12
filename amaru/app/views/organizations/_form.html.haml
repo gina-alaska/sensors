@@ -1,0 +1,26 @@
+.group-form.row-fluid.form-horizontal
+  = form_for(@organization) do |f|
+    - if @organization.errors.any?
+      #error_explanation
+        %h3
+          = pluralize(@organization.errors.count, "error")
+          prohibited this group from being saved:
+        %ul
+          - @organization.errors.full_messages.each do |msg|
+            %li= msg
+    .row-fluid
+      .span12
+        .row-fluid
+          .span6
+            %br/
+            .control-group
+              = f.label :name, "Name:", :class=>"control-label"
+              .controls
+                = f.text_field :name
+            .control-group
+              = f.label :description, "Description:", :class=>"control-label"
+              .controls
+                = f.text_field :description
+    %br/
+    .actions.row-fluid
+      = f.submit (@organization.new_record? ? "Create Organization" : "Update Organization"), :class => "btn btn-primary"

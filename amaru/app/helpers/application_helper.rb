@@ -7,10 +7,10 @@ module ApplicationHelper
 	def show_flash_messages
 		output = ""
     if flash[:notice]
-      output << "<div class=\"alert alert-info\">#{flash[:notice]}</div>"
+      output << "<div class=\"alert alert-info\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">x</button>#{flash[:notice]}</div>"
     end
     if flash[:error]
-      output << "<div class=\"alert alert-error\">#{flash[:error]}</div>"
+      output << "<div class=\"alert alert-error\"><button type=\"button\" class=\"close\" data-dismiss=\"alert\">x</button>#{flash[:error]}</div>"
     end
     output
 	end

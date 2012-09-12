@@ -1,5 +1,7 @@
 Amaru::Application.routes.draw do
 
+  resources :organizations
+
   resources :groups do
     post 'add_platform', :on => :member
     get 'remove_platform', :on => :member
@@ -55,8 +57,10 @@ Amaru::Application.routes.draw do
     end
   end
 
+  match "set_current" => "organizations#set_current"
   match "dashboard" => "dashboard#index"
   match "tools" => "tools#index"
+  match "user" => "users#show"
   match "by_sensor" => "tools#by_sensor"
   match "poll" => "status#poll"
   match "csv/:slug" => "import#csv"

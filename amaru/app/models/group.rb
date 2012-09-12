@@ -11,13 +11,16 @@ class Group
   validates_uniqueness_of :name
 
   embeds_many :sensors, as: :sensor_parent
+  belongs_to :organization
   has_and_belongs_to_many :platforms
-  has_many :status
-  has_many :events
-  has_many :graphs
-  has_many :alerts
-  has_many :processed_data
-  has_many :users
+  has_and_belongs_to_many :users
+  has_many :status, :dependent => :destroy
+  has_many :events, :dependent => :destroy
+  has_many :graphs, :dependent => :destroy
+  has_many :alerts, :dependent => :destroy
+  has_many :processed_data, :dependent => :destroy
+
+  scope :user_groups, ->(user){ where(users: user) }
 
   def all_raw_sensors
     self.platforms.collect{ |platform| platform.sensors.collect(&:source_field)}.flatten.uniq

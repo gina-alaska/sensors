@@ -1,7 +1,7 @@
 class PlatformsController < ApplicationController
 
   def index
-    @platforms = Platform.asc(:name).page params[:page]
+    @platforms = Platform.user_platforms(@current_user.id).asc(:name).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb

@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   def index
-    @groups = Group.asc(:name).all
+    @groups = current_user.current_org.groups.asc(:name)
   end
 
   def platforms
@@ -26,6 +26,14 @@ class GroupsController < ApplicationController
     @events_all = @group.all_processed_sensors
     @platforms = @group.platforms.asc(:name)
 
+    if session["graphParams"].nil?
+      session["graphParams"] = {}
+      session["graphParams"]["platforms"] = nil
+      session["graphParams"]["raw_sensor"] = nil
+      session["graphParams"]["proc_sensor"] = nil
+      session["graphParams"]["starts_at"] = nil
+      session["graphParams"]["ends_at"] = nil
+    end
     respond_to do |format|
       format.html { render layout: "group_layout" }
       format.json { render json: @platforms }
@@ -64,11 +72,12 @@ class GroupsController < ApplicationController
   end
 
   def create
-    @group = Group.new(params[:group])
+    @group = current_user.current_org.groups.build(params[:group])
+    @group.users << current_user
 
     respond_to do |format|
       if @group.save
-        format.html { redirect_to dashboard_path, notice: 'Group was successfully created.' }
+        format.html { redirect_to groups_path, notice: 'Group was successfully created.' }
         format.json { render json: @group, status: :created, location: @group }
       else
         format.html { render action: "new" }

@@ -6,10 +6,10 @@ class SessionsController < ApplicationController
                       :uid => auth_hash['uid']).first || User.create_with_omniauth(auth_hash)
     session[:user_id] = user.id
     
-    unless user.authority or user.email.nil?
-      p = Authority.where(email: user.email).first
-      user.authority = p
-    end
+  #  unless user.authority or user.email.nil?
+  #    p = Authority.where(email: user.email).first
+  #    user.authority = p
+  #  end
     
     if user.save!
       redirect_to dashboard_path, notice: "#{user.name} Logged In!"

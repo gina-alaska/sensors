@@ -2,6 +2,9 @@ class DashboardController < ApplicationController
   skip_before_filter :require_login
   
   def index
+#    if current_user
+#      @current_organization = Organization.where(id: current_user.#current_org_id).first
+#    end
     @status = Statu.latest(12)
     @num_groups = Group.count
     @num_platforms = Platform.count

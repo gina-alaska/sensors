@@ -1,7 +1,7 @@
 class PlatformsController < ApplicationController
 
   def index
-    @platforms = Platform.user_platforms(@current_user.id).asc(:name).page params[:page]
+    @platforms = current_user.current_org.platforms.asc(:name).page params[:page]
 
     respond_to do |format|
       format.html # index.html.erb
@@ -15,6 +15,15 @@ class PlatformsController < ApplicationController
     @sensors_all = @platform.sensors.collect(&:source_field)
     @group_sensors = @platform.all_group_sensors
     @groups = @platform.groups.collect(&:name)
+    
+    if session["graphParams"].nil?
+      session["graphParams"] = {}
+      session["graphParams"]["platforms"] = nil
+      session["graphParams"]["raw_sensor"] = nil
+      session["graphParams"]["proc_sensor"] = nil
+      session["graphParams"]["starts_at"] = nil
+      session["graphParams"]["ends_at"] = nil
+    end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -46,7 +55,7 @@ class PlatformsController < ApplicationController
   end
 
   def create
-    @platform = Platform.new(params[:platform])
+    @platform = current_user.current_org.platforms.build(params[:platform])
     session["dashboardTabShow"] = '#platforms'
 
     respond_to do |format|

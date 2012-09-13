@@ -34,6 +34,7 @@ class GroupsController < ApplicationController
       session["graphParams"]["starts_at"] = nil
       session["graphParams"]["ends_at"] = nil
     end
+    
     respond_to do |format|
       format.html { render layout: "group_layout" }
       format.json { render json: @platforms }

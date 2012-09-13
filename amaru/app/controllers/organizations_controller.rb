@@ -21,6 +21,8 @@ class OrganizationsController < ApplicationController
   def create
     @organization = Organization.new(params[:organization])
     @organization.users << current_user
+    current_user.current_org = @organization
+    current_user.save!
 
     respond_to do |format|
       if @organization.save

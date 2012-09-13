@@ -14,7 +14,7 @@ class Platform
   validates_presence_of :slug
   validates_uniqueness_of :slug
 
-  belongs_to :organizations
+  belongs_to :organization
   has_and_belongs_to_many :groups
   embeds_many :sensors, as: :sensor_parent
   has_many :raw_data, :dependent => :destroy 
@@ -22,7 +22,6 @@ class Platform
   has_many :status 
   has_many :children, class_name: "Platform", inverse_of: :parent
   belongs_to :parent, class_name: "Platform", inverse_of: :children
-  has_many :users
 
   index({ slug: 1 }, { unique: true })
   paginates_per 10

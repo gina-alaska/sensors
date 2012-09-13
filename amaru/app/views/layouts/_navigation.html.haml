@@ -12,14 +12,14 @@
           %li{:class => (current_page?(platforms_path) ? "active" : "")}
             = link_to "Platforms", platforms_path
           %li{:class => (current_page?(tools_path) ? "active" : "")}
-            = link_to "Grouping Tools", tools_path
+            = link_to "Tools", tools_path
     - if current_user
       .pull-right=link_to "Log Out", signout_path, class: "btn btn-primary btn-small"
       %ul.nav.pull-right
         %li.navbar-text= "Welcome #{current_user.name}, current organization:"
         %li
           =form_tag(set_current_path, :remote => true, :method => :get, :class => 'navbar-form', :id => "org-form") do
-            =select_tag(:organization, options_from_collection_for_select(current_user.organizations, :id, :name, current_user.current_org.try(:id)))
+            =select_tag(:organization, options_from_collection_for_select(current_user.organizations, :id, :name, current_user.current_org.try(:id)), :include_blank => true)
     -else
       .pull-right=link_to "Log In", signin_path, class: "btn btn-primary"
 :javascript

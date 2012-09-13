@@ -1,51 +1,54 @@
-%h2= @platform.name unless @platform.new_record?
-= form_for(@platform) do |f|
-  - if @platform.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(@platform.errors.count, "error")
-        prohibited this platform from being saved:
-      %ul
-        - @platform.errors.full_messages.each do |msg|
-          %li= msg
-  %hr/
-  .row-fluid
-    .span12
-      .control-group
-        = f.label :slug
-        .controls
-          = f.text_field :slug
-      .control-group
-        = f.label :name
-        .controls
-          = f.text_field :name
-      .control-group
-        = f.label :platform_metadata
-        .controls
-          = f.text_field :platform_metadata
-      .control-group
-        = f.label :geo_location
-        .controls
-          = f.text_field :geo_location
-      .control-group
-        = f.label :license
-        .controls
-          = f.text_field :license
-      .control-group
-        = f.label :permissions
-        .controls
-          = f.text_field :permissions
-      .control-group
-        = f.label :agency
-        .controls
-          = f.text_field :agency
-      .control-group
-        = f.label :authority
-        .controls
-          = f.text_field :authority
-      .control-group
-        = f.label :no_data_value
-        .controls
-          = f.text_field :no_data_value
+.row-fluid.form-horizontal
+  %h3= @platform.name unless @platform.new_record?
+  = form_for(@platform) do |f|
+    - if @platform.errors.any?
+      #error_explanation
+        %h2
+          = pluralize(@platform.errors.count, "error")
+          prohibited this platform from being saved:
+        %ul
+          - @platform.errors.full_messages.each do |msg|
+            %li= msg
+    %hr/
+    .row-fluid
+      .span6
+        .control-group
+          = f.label :slug, :class=>"control-label"
+          .controls
+            = f.text_field :slug
+        .control-group
+          = f.label :name, :class=>"control-label"
+          .controls
+            = f.text_field :name
+        .control-group
+          = f.label :platform_metadata, :class=>"control-label"
+          .controls
+            = f.text_field :platform_metadata
+        .control-group
+          = f.label :geo_location, :class=>"control-label"
+          .controls
+            = f.text_field :geo_location
+        .control-group
+          = f.label :license, :class=>"control-label"
+          .controls
+            = f.text_field :license
+      .span6
+        .control-group
+          = f.label :permissions, :class=>"control-label"
+          .controls
+            = f.text_field :permissions
+        .control-group
+          = f.label :agency, :class=>"control-label"
+          .controls
+            = f.text_field :agency
+        .control-group
+          = f.label :authority, :class=>"control-label"
+          .controls
+            = f.text_field :authority
+        .control-group
+          = f.label :no_data_value, :class=>"control-label"
+          .controls
+            = f.text_field :no_data_value
+    .row-fluid
       .control-group
         = f.submit

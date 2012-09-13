@@ -1,12 +1,12 @@
 .row-fluid
-  %h3 Grouping Tools
+  %h4 Grouping Tools
   %br/
   %ul#platformTab.nav.nav-pills.nav-background
     %li.active
       %a{"data-toggle" => "pill", :href => "#sensors"} Group By Sensors
   .tab-content
     #sensors.tab-pane.active
-      %h3 Group By Sensors
+      %h4 Group By Sensors
       =form_tag(:controller => "tools", :action => "by_sensor", :method => "get") do
         %table.well.table
           %tr

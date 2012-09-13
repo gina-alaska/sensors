@@ -3,7 +3,7 @@
     .sensor-controls
       = link_to 'Edit', edit_platform_path(@platform, :group_id=>"show"), class: "btn btn-primary"
       = link_to 'Back', platforms_path, class: "btn btn-primary"
-    %h2
+    %h4
       Display For <i>#{@platform.name}</i> Platform
     %hr/
     %table
@@ -43,7 +43,7 @@
           %b Geographic Location:
         %td{:colspan => "3"}= @platform.geo_location
   .span6
-    %h3
+    %h4
       Groups this platform belongs to:
     %ul
       - @groups.each do |group|
@@ -59,7 +59,7 @@
     #sensors.tab-pane.active
       .sensor-controls
         = link_to 'New Sensor', new_platform_sensor_path(@platform), class: "btn btn-primary"
-      %h3 Associated Sensors List
+      %h4 Associated Sensors List
       = paginate @sensors
       %table.table.table-striped.table-condensed
         %tr
@@ -71,7 +71,7 @@
     #dataview.tab-pane
       .row-fluid
         .span2
-          %h3 View Raw Sensor Data
+          %h4 View Raw Sensor Data
           = render :partial => 'hc_controls'
         .span10
           #rawchart{:style => "width: 100%; height: 400px"}

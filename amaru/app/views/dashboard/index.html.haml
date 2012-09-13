@@ -1,6 +1,6 @@
 .row-fluid
   .row-fluid
-    %h3 Current System Totals
+    %h4 Current System Totals
     %table.table.table-striped.table-condenced
       %tr
         %th Groups
@@ -17,14 +17,14 @@
   -if current_user
     .row-fluid
       .span12
-        %h3 System Messages
+        %h4 System Messages
         %div.resque{id:"dashboard_resque"}
           =render "status/system_status", status: @status
     %hr/
     .row-fluid
       .sensor-controls
         = button_to 'Remove All Failed Jobs', resques_path, method: :delete, class: "btn btn-primary"
-      %h3 Processing Errors
+      %h4 Processing Errors
     .row-fluid
       .span12
         %table.table.table-striped.table-condensed

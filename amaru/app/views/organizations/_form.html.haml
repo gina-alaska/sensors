@@ -1,4 +1,5 @@
 .group-form.row-fluid.form-horizontal
+  %h3= @organization.name unless @organization.new_record?
   = form_for(@organization) do |f|
     - if @organization.errors.any?
       #error_explanation

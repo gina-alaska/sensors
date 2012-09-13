@@ -2,7 +2,7 @@
   = form_for([@group, @alert]) do |f|
     - if @alert.errors.any?
       #error_explanation
-        %h2
+        %h3
           = pluralize(@alert.errors.count, "error")
           prohibited this alert from being saved:
         %ul

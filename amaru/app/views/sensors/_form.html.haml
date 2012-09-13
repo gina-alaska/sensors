@@ -1,7 +1,7 @@
 = form_for([@parent, @sensor]) do |f|
   - if @sensor.errors.any?
     #error_explanation
-      %h2
+      %h3
         = pluralize(@sensor.errors.count, "error")
         prohibited this sensor from being saved:
       %ul

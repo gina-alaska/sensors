@@ -1,15 +1,20 @@
 class DataImport
   
-	def initialize( configfile, group, slug, path )
-    # Find or initialize the platform
-    @group = Group.where(name: group).first || Group.new unless group.nil?
-    @platform = Platform.where(slug: slug).first || Platform.new
+	def initialize( configfile, group, slug, path, token )
+    # check token for access
+    @organization = Organization.where(access_token: token).first
+    if @organization.nil?
+      raise "Access denied! No organization with the token #{token} exists!"
+    end
 
+    @platform = Platform.where(slug: slug).first || @organization.platforms.build
+    if !@platform.nil? and @platform.new_record?
+      @platform.update_attributes!( slug: slug, name: slug )
+    end
+
+    @group = Group.where(name: group).first || @organization.groups.build unless group.nil?
     if !group.nil? and @group.new_record?
       @group.update_attributes!( name: group )
-    end
-    if @platform.new_record?
-      @platform.update_attributes!( slug: slug, name: slug )
     end
 
     # Associate this platform with the group if needed

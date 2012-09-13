@@ -1,9 +1,9 @@
 require "csv"
 
 class BarrowImport < DataImport
-  def initialize(csvfile, configfile, group, slug, path)
+  def initialize(csvfile, configfile, group, slug, path, token)
     # Initialize system
-    super(configfile, group, slug, path)
+    super(configfile, group, slug, path, token)
 
     # Get sensor information if there is some
     unless configfile.nil?

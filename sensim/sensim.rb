@@ -15,6 +15,7 @@ include PlatformSim
 opts = Trollop::options do
   banner "Sensor Simulator"
   opt :config, "Simulation Configuration File", {:type => String, :required => true}
+  opt :token, "Import Access Token", {:type => String, :required => true}
 end
 
 if File.exists?(opts[:config])
@@ -55,7 +56,7 @@ EM.run do
       EM.defer do
         file_data = platform.run_sim
         begin
-          uri = URI.parse("http://localhost:3000/csv/#{platform.slug}")
+          uri = URI.parse("http://localhost:3000/csv/#{platform.slug}/#{opts[:token]}")
           Net::HTTP.post_form(uri, {"data" => file_data})
         rescue => e
           puts e.inspect

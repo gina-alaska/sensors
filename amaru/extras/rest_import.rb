@@ -1,9 +1,9 @@
 require "csv"
 
 class RestImport < DataImport
-  def initialize(slug, data)
+  def initialize(slug, token, data)
     # Initialize system
-    super(nil, nil, slug, nil)
+    super(nil, nil, slug, nil, token)
     @data = data
   end
 

@@ -28,6 +28,7 @@ cmd_opts = case cmd
   when "import"
     Trollop::options do
       banner "Import Options:"
+      opt :token, "Organization Access Token", {:type => String, :required => true}
       opt :slug, "Platform Slug", {:type => String, :required => true}
       opt :name, "Ingest data filename", {:type => String, :required => true}
       opt :type, "Ingest data import type (csv,json)", {:type => String, :required => true}
@@ -67,7 +68,7 @@ end
 case cmd
   when "import"
     puts "Running Import:"
-    AmaruRunner::data_import(cmd_opts[:group], cmd_opts[:slug], cmd_opts[:name], cmd_opts[:type], cmd_opts[:config], `pwd`)
+    AmaruRunner::data_import(cmd_opts[:token], cmd_opts[:group], cmd_opts[:slug], cmd_opts[:name], cmd_opts[:type], cmd_opts[:config], `pwd`)
     puts "Finished."
   when "process"
     data_process(cmd_opts[:name])

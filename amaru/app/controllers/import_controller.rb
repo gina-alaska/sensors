@@ -1,8 +1,9 @@
 class ImportController < ApplicationController
   skip_before_filter :verify_authenticity_token
+  skip_before_filter :require_login
 
   def csv
-    rest = RestImport.new(params["slug"], params["data"])
+    rest = RestImport.new(params["slug"], params["token"], params["data"])
 
     if rest.import
       render :text => "success", status: 200

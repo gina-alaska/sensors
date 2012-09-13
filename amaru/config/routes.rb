@@ -63,7 +63,7 @@ Amaru::Application.routes.draw do
   match "user" => "users#show"
   match "by_sensor" => "tools#by_sensor"
   match "poll" => "status#poll"
-  match "csv/:slug" => "import#csv"
+  match "csv/:slug/:token" => "import#csv"
   match "/auth/:provider/callback", to: "sessions#create"
   match '/auth/failure' => 'sessions#failure'
   match '/signin' => 'sessions#new', :as => :signin

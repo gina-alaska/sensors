@@ -7,4 +7,4 @@
       %tr
         %td= link_to 'Show', platform_path(platform), class: "btn btn-primary"
         %td= link_to 'Edit', edit_platform_path(platform, :group_id=>false), class: "btn btn-primary"
-        %td= link_to 'Delete', platform_path(platform), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"
+        %td= link_to 'Delete', platform_path(platform),:data => { :confirm => 'Are you sure?'}, method: :delete, class: "btn btn-danger delete"

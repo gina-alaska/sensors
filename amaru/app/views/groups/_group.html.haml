@@ -6,4 +6,4 @@
       %tr
         %td= link_to 'Operations', platforms_group_path(group), class: "btn btn-primary"
         %td= link_to 'Edit', edit_group_path(group, :single=>false), class: "btn btn-primary"
-        %td= link_to 'Delete', group_path(group), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"
+        %td= link_to 'Delete', group_path(group), :data => { :confirm => 'Are you sure?'}, method: :delete, class: "btn btn-danger delete"

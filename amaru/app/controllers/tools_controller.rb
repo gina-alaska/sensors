@@ -1,7 +1,7 @@
 class ToolsController < ApplicationController
   def index
     sensors = []
-    Platform.all.each do |platform|
+    current_user.current_org.platforms.all.each do |platform|
       sensors << platform.sensors.collect(&:source_field)
     end
     @all_sensors = sensors.flatten.uniq
@@ -14,11 +14,11 @@ class ToolsController < ApplicationController
 
   def by_sensor
     group = params["group"]
-    @group = Group.where(name: group).first || Group.new unless group.nil?
+    @group = current_user.current_org.groups.where(name: group).first || current_user.current_org.groups.build unless group.nil?
     @group.update_attributes!( name: group ) if @group.new_record?
 
     params["sensors"].each do |sensor|
-      platforms = Platform.where("sensors.source_field" => sensor)
+      platforms = current_user.current_org.platforms.where("sensors.source_field" => sensor)
       @group.platforms << platforms
     end
 

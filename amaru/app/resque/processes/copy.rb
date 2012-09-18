@@ -7,8 +7,9 @@ module Processes
   statats
     raw = @platform.raw_data.captured_between(process.starts_at, process.ends_at).only(:capture_date, sensor.to_sym)
     raw.each do |raw_row|
-      processed = @platform.processed_data.find_or_create_by(
+      processed = @group.processed_data.find_or_create_by(
           capture_date: raw_row.capture_date)
+      processed.platform = @platform
       processed.update_attribute(processed_field, raw_row[sensor])
     end
     puts "End Copy"

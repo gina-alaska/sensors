@@ -33,6 +33,7 @@ module Processes
       # Push processed data to processed_data collection.
       processed = @group.processed_data.find_or_create_by(
               capture_date: row.capture_date)
+      processed.platform = @platform
       processed.update_attribute(processed_field, myr.mdata)
     end
 

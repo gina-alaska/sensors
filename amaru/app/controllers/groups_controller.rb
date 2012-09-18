@@ -34,7 +34,7 @@ class GroupsController < ApplicationController
       session["graphParams"]["starts_at"] = nil
       session["graphParams"]["ends_at"] = nil
     end
-    
+
     respond_to do |format|
       format.html { render layout: "group_layout" }
       format.json { render json: @platforms }
@@ -137,10 +137,9 @@ class GroupsController < ApplicationController
     starts_at = params["starts_at"] == "" ? nil : params["starts_at"]
     ends_at = params["ends_at"] == "" ? nil : params["ends_at"]
     @group = Group.where( id: params[:id] ).first
-#    @platform = Platform.where( slug: params[:id] ).first
     @platform = @group.platforms.where(slug: params["platforms"]).first
     @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
-    @proc_data = @platform.processed_data.captured_between(starts_at, ends_at).asc(:capture_date)
+    @proc_data = @group.processed_data.where(:platform => @platform).captured_between(starts_at, ends_at).asc(:capture_date)
     session["graphParams"] = params
 
     respond_to do |format|

@@ -5,11 +5,6 @@ class EventProcessor
 	# include DataSave
 	@queue = :events
 
-	def self.authorized?(group_id, event_id, user)
-		events = get_events(slug, event_id)
-		events.inject(true) { |c,i| c = c && (i.platform.authority == user) }
-	end
-
 	def self.perform(group_id, event_id)
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all

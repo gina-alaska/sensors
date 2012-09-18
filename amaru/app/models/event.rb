@@ -4,6 +4,7 @@ class Event
   field :name,                type: String
   field :description,         type: String
   field :from,                type: Array
+  field :interval,            type: String
 
   validates_presence_of :name
   validates_uniqueness_of :name

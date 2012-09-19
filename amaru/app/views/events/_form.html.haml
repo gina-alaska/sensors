@@ -20,11 +20,16 @@
               = f.label :description, "Metadata Description:", :class=>"control-label"
               .controls
                 = f.text_area :description, :rows => 6, :class=>"span12"
-          .span4
+          .span3
             .control-group
               = f.label :from, "From Raw Fields:", :class=>"control-label"
               .controls
                 = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 10}
+          .span3
+            .control-group
+              = f.label :interval, "Time Interval:", :class=>"control-label"
+              .controls
+                = f.text_field :interval, :value => "at_import"
     - unless @event.new_record?
       .row-fluid
         .span2

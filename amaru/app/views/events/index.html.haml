@@ -9,14 +9,17 @@
       %tr
         %th Processed Data Sensor
         %th Description
+        %th Time Interval
         %th Controls
       - @events.each do |event|
         %tr
           %td= event.name
           %td= event.description
+          %td= event.interval
           %td
             %table
               %tr
                 %td= link_to 'Edit', edit_group_event_path(@group, event), class: "btn btn-primary"
-                %td= link_to 'Destroy', group_event_path(@group, event), confirm: 'Are you sure?', method: :delete, class: "btn btn-danger delete"
+                %td= link_to 'Run Process', run_event_group_event_path(@group, event), class: "btn btn-primary"
+                %td= link_to 'Destroy', group_event_path(@group, event), :data => {confirm: 'Are you sure?' }, method: :delete, class: "btn btn-danger delete"
 %br/

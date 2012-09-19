@@ -2,8 +2,9 @@
   %td= raw "<span class=\"label label-info\">#{event.name}</span>"
   %td= raw field_label(event.from)
   %td= event.description
+  %td= event.interval
   %td
     %table
       %tr
         %td= link_to 'Edit', edit_event_path(event), class: "btn btn-primary"
-        %td= button_to 'Delete', event, confirm: 'Are you sure?', method: :delete, class: "btn btn-danger"
+        %td= button_to 'Delete', event, :data => {confirm: 'Are you sure?'}, method: :delete, class: "btn btn-danger"

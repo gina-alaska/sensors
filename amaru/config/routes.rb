@@ -32,6 +32,7 @@ Amaru::Application.routes.draw do
       get 'remove', :on => :member
       get 'moveup', :on => :member
       get 'movedown', :on => :member
+      get 'run_event', :on => :member
     end
 
     resources :status do

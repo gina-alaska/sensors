@@ -45,7 +45,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        format.html { redirect_to edit_group_event_path(@group, @event), notice: 'Event was successfully created.' }
+        format.html { redirect_to edit_group_event_path(@group, @event), notice: 'Process was successfully created.' }
         format.json { render json: @event, status: :created, location: @event }
       else
         format.html { render action: "new" }
@@ -61,8 +61,22 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        @event.async_process_event # Queue the processing event
-        format.html { redirect_to group_events_path(@group), notice: 'Event was successfully updated.' }
+        format.html { redirect_to group_events_path(@group), notice: 'Process was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @event.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def run_event
+    @group = Group.where(id: params[:group_id]).first
+    @event = @group.events.find(params[:id])
+
+    respond_to do |format|
+      if @event.async_process_event # Queue the processing event
+        format.html { redirect_to group_events_path(@group), notice: 'Processing Data.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

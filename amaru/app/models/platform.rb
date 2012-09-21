@@ -10,6 +10,7 @@ class Platform
   field :agency,              type: String
   field :authority,           type: String
   field :no_data_value,       type: String
+  field :time_zone,           type: String
 
   validates_presence_of :slug
   validates_uniqueness_of :slug

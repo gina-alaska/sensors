@@ -25,7 +25,7 @@ module PlatformSim
     end
 
     def time_to_run
-      if DateTime.now >= @sensor_hash["date"].current_time
+      if Time.now >= @sensor_hash["date"].current_time
         return true
       else
         return false

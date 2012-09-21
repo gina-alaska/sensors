@@ -49,6 +49,10 @@
           = f.label :no_data_value, :class=>"control-label"
           .controls
             = f.text_field :no_data_value
+        .control-group
+          = f.label :time_zone, :class=>"control-label"
+          .controls
+            = f.select :time_zone, time_zone_options_for_select(@platform.time_zone)
     .row-fluid
       .control-group
         = f.submit

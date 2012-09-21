@@ -58,11 +58,11 @@ EM.run do
         begin
           uri = URI.parse("http://localhost:3000/csv/#{platform.slug}/#{opts[:token]}")
           Net::HTTP.post_form(uri, {"data" => file_data})
+          puts "Sending #{file_data} to platform #{platform.slug}"
         rescue => e
           puts e.inspect
           puts e.backtrace
         end
-        puts file_data
       end
     end
   end 

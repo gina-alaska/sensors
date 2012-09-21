@@ -1,7 +1,7 @@
 class Datum
   include Mongoid::Document
 
-  field :capture_date,         type: DateTime
+  field :capture_date,         type: Time
 
   belongs_to :platform
   index({ capture_date: 1 }, { unique: true })

@@ -101,6 +101,7 @@ class PlatformsController < ApplicationController
     @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
     session["platformTabShow"] = '#dataview'
     session["graphParams"] = params
+    Time.zone = @platform.time_zone
 
     respond_to do |format|
       format.html { render :partial => "highchart", :locals => {:raw_data => @raw_data, :raw_sensor => params["raw_sensor"], :nodata => @platform.no_data_value} }

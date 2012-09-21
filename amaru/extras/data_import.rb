@@ -23,7 +23,7 @@ class DataImport
     end
 
     # Initialize the status system
-    @status = @platform.status.build(system: "import", message: "Importing data for platform #{slug}.", status: "Running", start_time: DateTime.now)
+    @status = @platform.status.build(system: "import", message: "Importing data for platform #{slug}.", status: "Running", start_time: Time.now)
     @status.group = @group unless group.nil?
     @status.platform = @platform
     @status.save
@@ -33,7 +33,7 @@ class DataImport
       if File.exists?( File.join(path.chomp, configfile) )
         @config = YAML.load_file(File.join(path.chomp, configfile))
       else
-        @status.update_attributes(status: "Error", message: "I can't find the configuration file #{path+"/"+configfile}!", end_time: DateTime.now)
+        @status.update_attributes(status: "Error", message: "I can't find the configuration file #{path+"/"+configfile}!", end_time: Time.now)
         raise "I can't find the configuration file \e[31m#{path+"/"+configfile}\e[0m!"
       end
     end
@@ -41,7 +41,7 @@ class DataImport
 
   def [](section)
     if @config[section].nil?
-      @status.update_attributes(status: "Error", message: "There is no #{section} in the configuration file!", end_time: DateTime.now)
+      @status.update_attributes(status: "Error", message: "There is no #{section} in the configuration file!", end_time: Time.now)
       raise "There is no \e[31m#{section}\e[0m in the configuration file!"
     else
       @config[section]
@@ -68,11 +68,12 @@ class DataImport
   def date_convert( year, month, day, hour, min, sec, type )
   	case type
   	when "ordinal"
-  		return DateTime.ordinal( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
+  		return Time.new( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
+#      return DateTime.ordinal( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
   	when "julian"
-  		return DateTime.jd( day.to_i, hour.to_i, min.to_i ).iso8601
+  		return Time.jd( day.to_i, hour.to_i, min.to_i ).iso8601
   	else
-      @status.update_attributes(status: "Error", message: "date_convert: Unknown date type #{type}!", end_time: DateTime.now)
+      @status.update_attributes(status: "Error", message: "date_convert: Unknown date type #{type}!", end_time: Time.now)
   		raise "date_convert: Unknown date type \e[31m#{type}\e[0m!"
   	end
   end	
@@ -83,7 +84,7 @@ class DataImport
     if newdata.valid?
       @platform.raw_data << newdata
     else
-      @status.update_attributes(status: "Error", message: "Raw data insert failed MongoDB validation!", end_time: DateTime.now)
+      @status.update_attributes(status: "Error", message: "Raw data insert failed MongoDB validation!", end_time: Time.now)
       raise "raw data insert failed MongoDB validation:\n #{datahash}"
     end
   end
@@ -95,7 +96,7 @@ class DataImport
       @group.processed_data << newdata unless @group.nil?
       @platform.processed_data << newdata
     else
-      @status.update_attributes(status: "Error", message: "Processed data insert failed MongoDB validation!", end_time: DateTime.now)
+      @status.update_attributes(status: "Error", message: "Processed data insert failed MongoDB validation!", end_time: Time.now)
       raise "processed data insert failed MongoDB validation:\n #{datahash}"
     end
   end

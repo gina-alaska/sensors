@@ -5,12 +5,12 @@
         %label(for="starts_at")
           Start Date:
       .span12
-        %input.datepicker(type="text" name="starts_at" value="#{session['graphParams']['starts_at']}")
+        %input.datepicker(type="text" name="starts_at")
     .control-group
       %label.control-label(for="ends_at")
         End Date:
       .controls
-        %input.datepicker(type="text" name="ends_at" value="#{session['graphParams']['ends_at']}")
+        %input.datepicker(type="text" name="ends_at")
     .control-group
       %label.control-label(for="raw_sensor")
         Raw Sensor:
@@ -30,9 +30,10 @@
   $(function() {
     $( ".datepicker" ).datetimepicker({
         dateFormat: "yy-mm-dd",
+        yearRange: "-30:+01",
         changeYear: true,
         changeMonth: true,
         showSecond: true,
-        timeFormat: "hh:mm:ssz",
+        timeFormat: "hh:mm:ss",
         separator: " "});
   });

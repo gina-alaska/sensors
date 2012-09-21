@@ -20,10 +20,12 @@
     content: "The copy command copies a single field from the raw data collection to the processed data collection with out any changes or processing."
   });
   
-  $( ".datepicker" ).datetimepicker({
-      dateFormat: "yy-mm-dd",
-      changeYear: true,
-      changeMonth: true,
-      showSecond: true,
-      timeFormat: "hh:mm:ssz",
-      separator: " "});
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });     

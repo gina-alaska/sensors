@@ -23,7 +23,7 @@ class RestImport < DataImport
 
 
     csv_data.each do |sdata|
-      datahash = { :capture_date => DateTime.parse(sdata["date"]).iso8601 }
+      datahash = { :capture_date => Time.parse(sdata["date"]).iso8601 }
 
       sdata.each do |header, data|
         datahash[header] = data
@@ -34,7 +34,7 @@ class RestImport < DataImport
     end
 
     # Finish status reporting
-    @status.update_attributes(end_time: DateTime.now,  status: "Finished")
+    @status.update_attributes(end_time: Time.now,  status: "Finished")
 
     @platform.save
   end

@@ -29,10 +29,12 @@
     content: "Window allows you to set the time frame over which the calculation will run for each iteration. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
   });  
   
-  $( ".datepicker" ).datetimepicker({
-      dateFormat: "yy-mm-dd",
-      changeYear: true,
-      changeMonth: true,
-      showSecond: true,
-      timeFormat: "hh:mm:ssz",
-      separator: " "});
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

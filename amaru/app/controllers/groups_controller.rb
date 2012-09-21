@@ -141,6 +141,7 @@ class GroupsController < ApplicationController
     @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
     @proc_data = @group.processed_data.where(:platform => @platform).captured_between(starts_at, ends_at).asc(:capture_date)
     session["graphParams"] = params
+    Time.zone = @platform.time_zone
 
     respond_to do |format|
       format.html { render :partial => "highchart", :locals => {:raw_data => @raw_data, :raw_sensor => params["raw_sensor"], :proc_data => @proc_data, :nodata => @platform.no_data_value, :proc_sensor => params["proc_sensor"]} }

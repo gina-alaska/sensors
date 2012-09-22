@@ -62,7 +62,8 @@ Amaru::Application.routes.draw do
   match "dashboard" => "dashboard#index"
   match "tools" => "tools#index"
   match "user" => "users#show"
-  match "by_sensor" => "tools#by_sensor"
+  match "by_sensor" => "tools#by_sensor", as: :by_sensor
+  match "mass_platform_set" => "tools#mass_platform_set", as: :mass_platform_set
   match "poll" => "status#poll"
   match "csv/:slug/:token" => "import#csv"
   match "/auth/:provider/callback", to: "sessions#create"

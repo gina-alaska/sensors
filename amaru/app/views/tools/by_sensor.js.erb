@@ -1,0 +1,5 @@
+<% if @success %>
+top.location = '<%= tools_path %>';
+<% else %>
+  $("#flash-messages").append($('<%= raw show_flash_messages %>'))
+<% end %>

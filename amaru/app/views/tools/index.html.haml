@@ -1,29 +1,86 @@
 .row-fluid
   %h4 Tools
   %br/
-  %ul#platformTab.nav.nav-pills.nav-background
+  %ul#toolsTab.nav.nav-pills.nav-background
     %li.active
       %a{"data-toggle" => "pill", :href => "#sensors"} Group By Sensors
+    %li
+      %a{"data-toggle" => "pill", :href => "#mass-platforms"} Platforms Mass Assign
   .tab-content
     #sensors.tab-pane.active
       %h4 Group By Sensors
-      =form_tag(:controller => "tools", :action => "by_sensor", :method => "get") do
-        %table.well.table
-          %tr
-            %td{width: 300}
-              =label_tag(:sensors, "Platform Sensors to Group:")
-              =select_tag(:sensors, options_for_select(@all_sensors), {multiple: true, size: 10, edit: true})
-            %td{width: 100}
+      =form_tag(by_sensor_path, method: "get", remote: true) do
+        .well
+          .row-fluid
+            .span2
+              .control-group.control-label
+                =label_tag(:sensors, "Platform Sensors to Group:")
+                .controls
+                  =select_tag(:sensors, options_for_select(@all_sensors), {multiple: true, size: 10, edit: true})
+            .span1
               <i class="icon-arrow-right"></i>
-            %td
-              =label_tag(:group, "Group Name:")
-              =select_tag(:group, options_for_select(@all_groups), {class: "makeEditable"})
-          %tr
-            %td
-            %td
-            %td
-              =submit_tag("Group Sensors", {class: "btn btn-primary"})
+            .span2
+              .control-group.control-label
+                =label_tag(:group, "Group Name:")
+                .controls
+                  =select_tag(:group, options_for_select(@all_groups), {class: "makeEditable"})
+            .span1
+              <i class="icon-arrow-right"></i>
+            .span1
+              =submit_tag("Group By Sensors", {class: "btn btn-primary"})
+    #mass-platforms.tab-pane
+      %h4 Platforms Mass Assign Attributes
+      =form_tag(mass_platform_set_path, method: "get", remote: true) do
+        .well
+          .row-fluid
+            .span2
+              =label_tag(:platforms, "Select Platforms To Set:")
+              =select_tag(:platforms, options_for_select(current_user.current_org.platforms.asc(:name).collect(&:name)), {multiple: true, size: 10})
+            .span1
+              <i class="icon-arrow-right"></i>
+            .span2
+              .control-group.control-label
+                =label_tag :platform_metadata, "Platform Metadata:"
+                .controls
+                  =text_field_tag :platform_metadata
+              .control-group.control-label
+                =label_tag :license, "License:"
+                .controls
+                  =text_field_tag :license
+              .control-group.control-label
+                =label_tag :permissions, "Permissions:"
+                .controls
+                  =text_field_tag :permissions
+              .control-group.control-label
+                =label_tag :agency, "Agency:"
+                .controls
+                  =text_field_tag :agency
+            .span2
+              .control-group.control-label
+                =label_tag :authority, "Authority:"
+                .controls
+                  =text_field_tag :authority
+              .control-group.control-label
+                =label_tag :no_data_value, "No Data Value:"
+                .controls
+                  =text_field_tag :no_data_value
+              .control-group.control-label
+                =label_tag :time_zone, "Time Zone:"
+                .controls
+                  =select_tag :time_zone, time_zone_options_for_select, include_blank: true
+            .span1
+              <i class="icon-arrow-right"></i>
+            .span1
+              .control-group.control-label
+                .controls
+                  =submit_tag("Set Attributes", {class: "btn btn-primary"})
 :javascript
   $(function(){
     $('.makeEditable').editableSelect();
   });
+
+  $('#toolsTab a').click(function (e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  #{raw show_tab_for("toolsTab")}

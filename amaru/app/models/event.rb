@@ -17,5 +17,4 @@ class Event
   def async_process_event
     Resque.enqueue(EventProcessor, self.group.id, self.id)
   end
-
 end

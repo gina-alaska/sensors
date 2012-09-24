@@ -1,10 +1,14 @@
 module Processes
   # Using R, calculate the mean and put it into a new processed data field.
-  def mean(processed_field, sensors, process)
+  def mean(processed_field, sensors, process, start_time)
     sensor = sensors.first
     value, units = process.window.split(".")
     window = value.to_i.send(units.to_sym)
-    start_date = process.starts_at.nil? ? nil : process.starts_at - window
+    if start_time.nil?
+      start_date = process.starts_at.nil? ? nil : process.starts_at - window
+    else
+      start_date = Time.parse(start_time) - window
+    end
     end_date = process.ends_at.nil? ? nil : process.ends_at + window
 
     myr = RinRuby.new(false)

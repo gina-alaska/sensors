@@ -21,7 +21,7 @@ class RestImport < DataImport
       end
     end
 
-
+    start_time = Time.parse(csv_data[0]["date"]).iso8601
     csv_data.each do |sdata|
       datahash = { :capture_date => Time.parse(sdata["date"]).iso8601 }
 
@@ -33,9 +33,12 @@ class RestImport < DataImport
       raw_save(datahash)
     end
 
+    @platform.save
+
     # Finish status reporting
     @status.update_attributes(end_time: Time.now,  status: "Finished")
 
-    @platform.save
+    # Start import data processing
+    @platform.async_process_event_single(start_time)
   end
 end

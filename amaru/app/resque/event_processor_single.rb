@@ -2,9 +2,10 @@ require "processes/copy"
 require "processes/mean"
 
 class EventProcessorSingle
+  include Sidekiq::Worker
 	@queue = :events
 
-	def self.perform(slug, start_time)
+	def perform(slug, start_time)
     platform = Platform.where(slug: slug).first
     groups = platform.groups
 
@@ -15,7 +16,7 @@ class EventProcessorSingle
   		events.each do |event|							# Process all events for platform
         if event.interval = "import"
           # Add a status for event
-          status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}: #{event.description}.", status: "Running", start_time: DateTime.now)
+          status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}.", status: "Running", start_time: Time.zone.now)
           status.group = group
           status.platform = platform
           status.save
@@ -25,7 +26,7 @@ class EventProcessorSingle
     				method = process.command
       			processor.send(method.downcase.to_sym, event.name, event.from, process, start_time)
     			end
-          status.update_attributes(status: "Finished", end_time: DateTime.now)
+          status.update_attributes(status: "Finished", end_time: Time.zone.now)
         end
   		end
     end

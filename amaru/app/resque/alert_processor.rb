@@ -1,4 +1,5 @@
 class AlertProcessor
+  include Sidekiq::Worker
 	@queue = :alerts
 
 #	def self.authorized?(slug, event_id, user)
@@ -6,7 +7,7 @@ class AlertProcessor
 #		events.inject(true) { |c,i| c = c && (i.platform.authority == user) }
 #	end
 
-	def self.perform(group_id, slug, alert_id)
+	def perform(group_id, slug, alert_id)
     @group = Group.where(id: group_id).first
 		platform = @group.platforms.where( slug: slug ).first
     alert = @group.alerts.where(id: alert_id).first

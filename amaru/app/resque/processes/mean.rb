@@ -7,7 +7,7 @@ module Processes
     if start_time.nil?
       start_date = process.starts_at.nil? ? nil : process.starts_at - window
     else
-      start_date = Time.parse(start_time) - window
+      start_date = Time.parse(start_time) - window - window
     end
     end_date = process.ends_at.nil? ? nil : process.ends_at + window
 
@@ -15,7 +15,7 @@ module Processes
 
     puts "calculating Mean on raw data #{sensor} to processed data
         #{processed_field}."
-    puts "start - #{process.starts_at} end - #{process.ends_at}"
+    puts "start - #{start_date} end - #{process.ends_at}"
     raw = @platform.raw_data.captured_between(start_date, end_date).only(:capture_date, sensor.to_sym)
 
     raw.each do |row|

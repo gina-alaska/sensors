@@ -4,9 +4,10 @@
 class GraphImageProcessor
   include RvgGraph
   include Magick
+  include Sidekiq::Worker
   @queue = :graph_image
 
-  def self.perform(group_id, graph_id)
+  def perform(group_id, graph_id)
     @group = Group.where(id: group_id).first
     platform = @group.platforms.first
     graph = @group.graphs.find(graph_id)

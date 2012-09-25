@@ -14,10 +14,10 @@ class Graph
   index({ name: 1 })
 
   def async_graph_image_process
-    Resque.enqueue(GraphImageProcessor, self.group.id, self.id)
+    Sidekiq::Client.enqueue(GraphImageProcessor, self.group.id, self.id)
   end
 
   def async_graph_process(start_date, end_date, output_name)
-    Resque.enqueue(GraphProcessor, self.group.id, self.id, start_date, end_date, output_name)
+    Sidekiq::Client.enqueue(GraphProcessor, self.group.id, self.id, start_date, end_date, output_name)
   end
 end

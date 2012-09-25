@@ -2,10 +2,10 @@ require "processes/copy"
 require "processes/mean"
 
 class EventProcessor
-	# include DataSave
+  include Sidekiq::Worker
 	@queue = :events
 
-	def self.perform(group_id, event_id)
+	def perform(group_id, event_id)
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all
 		if event_id.to_sym == :all

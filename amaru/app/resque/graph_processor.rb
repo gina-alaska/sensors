@@ -4,9 +4,10 @@
 class GraphProcessor
   include RvgGraph
   include Magick
+  include Sidekiq::Worker
   @queue = :graph_processor
 
-  def self.perform(slug, graph_id, starts_at, ends_at, output_name)
+  def perform(slug, graph_id, starts_at, ends_at, output_name)
     platform = Platform.where(slug: slug).first
     graph = platform.graphs.find(graph_id)
     template = Psych.load(graph.config)

@@ -36,7 +36,7 @@ class RestImport < DataImport
     @platform.save
 
     # Finish status reporting
-    @status.update_attributes(end_time: Time.now,  status: "Finished")
+    @status.update_attributes(end_time: Time.zone.now,  status: "Finished")
 
     # Start import data processing
     @platform.async_process_event_single(start_time)

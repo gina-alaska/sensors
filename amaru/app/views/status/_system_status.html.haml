@@ -29,7 +29,7 @@
             =message["status"]
       %td
         - unless message["status"] == "Finished"
-          = "Started #{message["start_time"]}"
+          = "Started #{message["start_time"].localtime.strftime("%m/%d/%Y %H:%M")}"
         - else
-          = "Ended #{message["end_time"]}"
+          = "Ended #{message["end_time"].localtime.strftime("%m/%d/%Y %H:%M")}"
       %td= message["message"]

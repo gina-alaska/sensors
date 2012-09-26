@@ -4,7 +4,6 @@ module Processes
     sensor = sensors.first
     puts "Copying raw data #{sensor} to processed data #{processed_field}."
     puts "start - #{process.starts_at} end - #{process.ends_at}"
-  statats
     raw = @platform.raw_data.captured_between(process.starts_at, process.ends_at).only(:capture_date, sensor.to_sym)
     raw.each do |raw_row|
       processed = @group.processed_data.find_or_create_by(

@@ -5,18 +5,25 @@ class User
   field :uid,            type: String
   field :name,           type: String
   field :email,          type: String,  default: ''
-  field :admin,          type: Boolean, default: false
   field :active,         type: Boolean, default: true
   field :access_token,   type: String
   
-  attr_protected :provider, :uid, :name, :email, :admin
+  attr_protected :provider, :uid, :name, :email
   
-  has_and_belongs_to_many :organizations
   has_and_belongs_to_many :groups
+  has_many :memberships
   belongs_to :current_org, :class_name => 'Organization', :inverse_of => :current_users
   
   validates_uniqueness_of :name
   validates_uniqueness_of :email
+
+  def organizations
+    memberships.flat_map(&:organization)
+  end
+
+  def org_admin?
+    current_org.admins.include?(self)
+  end
 
   def self.create_with_omniauth(auth)
     create! do |user|

@@ -13,6 +13,9 @@
             = link_to "Platforms", platforms_path
           %li{:class => (current_page?(tools_path) ? "active" : "")}
             = link_to "Tools", tools_path
+          -if current_user.org_admin?
+            %li{:class => (current_page?(organization_path(current_user.current_org)) ? "active" : "")}
+              = link_to "Admin", organization_path(current_user.current_org)
     - if current_user
       .pull-right=link_to "Log Out", signout_path, class: "btn btn-primary btn-small"
       %ul.nav.pull-right

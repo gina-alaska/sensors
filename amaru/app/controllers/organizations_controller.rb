@@ -1,5 +1,7 @@
 class OrganizationsController < ApplicationController
   skip_before_filter :require_login
+
+  before_filter :fetch_organization, :only => [:edit, :update, :show, :destroy]
   
   def index
     @organizations = current_user.organizations
@@ -15,13 +17,19 @@ class OrganizationsController < ApplicationController
   end
 
   def edit
-    @organization = Organization.where( id: params[:id] ).first
+    #@organization = Organization.where( id: params[:id] ).first
+    # if @organization.admin? current_user
+    # if current_user.admin? this is very bad
   end
 
   def create
     @organization = Organization.new(params[:organization])
     @organization.users << current_user
     current_user.current_org = @organization
+
+    # Set admin on user that created the organization
+    @organization.memberships.where(user: current_user).update_attribute(:admin, true)
+
     current_user.save!
 
     respond_to do |format|
@@ -36,7 +44,9 @@ class OrganizationsController < ApplicationController
   end
 
   def update
-    @organization = Organization.where( id: params[:id] ).first
+    #@organization = current_user.current_org
+    #@organization = Organization.where( id: params[:id] ).first
+    return access_denied unless current_user.admin?
 
     respond_to do |format|
       if @organization.update_attributes(params[:organization])
@@ -68,5 +78,11 @@ class OrganizationsController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  protected
+
+  def fetch_organization
+    @organization = current_user.current_org
   end
 end

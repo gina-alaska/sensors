@@ -8,6 +8,7 @@ class AlertProcessor
 #	end
 
 	def perform(group_id, slug, alert_id)
+    Bundler.require :processing
     @group = Group.where(id: group_id).first
 		platform = @group.platforms.where( slug: slug ).first
     alert = @group.alerts.where(id: alert_id).first

@@ -12,9 +12,9 @@ class DashboardController < ApplicationController
     @num_graphs = Graph.count
     @num_alerts = Alert.count
 
-  	@failures = Resque::Failure.all(0, Resque::Failure.count)
-  	if @failures.is_a? Hash
-  		@failures = [@failures]
-  	end
+#  	@failures = Resque::Failure.all(0, Resque::Failure.count)
+#  	if @failures.is_a? Hash
+ # 		@failures = [@failures]
+  #	end
   end
 end

@@ -41,7 +41,9 @@ gem 'jquery-rails'
 gem 'mongoid', "~> 3.0.3"
 gem 'bson_ext'
 gem 'kaminari'
-gem 'rinruby'
+group :processing do
+  gem 'rinruby'
+end
 gem "highcharts-rails", "~> 2.2.1"
 gem 'rmagick', :require => 'RMagick'
 gem 'trollop'

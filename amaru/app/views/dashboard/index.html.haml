@@ -28,18 +28,18 @@
     .row-fluid
       .span12
         %table.table.table-striped.table-condensed
-          %tr
-            %th{:width => "300"} Error Message
-            %th{:width => "180"}
-            %th{:width => "180"}
-          - @failures.each_with_index do |f, index|
-            %tr
-              %td
-                = f["error"]
-              %td
-                = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
-              %td
-                = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
+-#          %tr
+-#            %th{:width => "300"} Error Message
+-#            %th{:width => "180"}
+-#            %th{:width => "180"}
+-#          - @failures.each_with_index do |f, index|
+-#            %tr
+-#              %td
+-#                = f["error"]
+-#              %td
+-#                = button_to 'Requeue', retry_resque_path(index), class: "btn btn-primary"
+-#              %td
+-#                = button_to 'Remove', resque_path(index), method: :delete, class: "btn btn-danger"
 
 :javascript
   $('#dashboard_resque').poll(function(callback){

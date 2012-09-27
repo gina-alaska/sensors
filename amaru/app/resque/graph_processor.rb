@@ -8,6 +8,7 @@ class GraphProcessor
   @queue = :graph_processor
 
   def perform(slug, graph_id, starts_at, ends_at, output_name)
+    Bundler.require :processing
     platform = Platform.where(slug: slug).first
     graph = platform.graphs.find(graph_id)
     template = Psych.load(graph.config)

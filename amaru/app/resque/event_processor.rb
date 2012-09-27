@@ -6,6 +6,7 @@ class EventProcessor
 	@queue = :events
 
 	def perform(group_id, event_id)
+    Bundler.require :processing
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all
 		if event_id.to_sym == :all

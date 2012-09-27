@@ -6,6 +6,7 @@ class EventProcessorSingle
 	@queue = :events
 
 	def perform(slug, start_time)
+    Bundler.require :processing
     platform = Platform.where(slug: slug).first
     groups = platform.groups
 

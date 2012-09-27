@@ -8,6 +8,7 @@ class Organization
   
   has_many :current_users, :class_name => 'User', :inverse_of => :current_org
   has_many :memberships
+  accepts_nested_attributes_for :memberships, :current_users
   has_many :groups
   has_many :platforms
 

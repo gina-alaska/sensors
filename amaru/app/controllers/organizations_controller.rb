@@ -21,7 +21,7 @@ class OrganizationsController < ApplicationController
 
   def create
     @organization = Organization.new(params[:organization])
-    @organization.memberships = Membership.new(admin: true, user: current_user)
+    @organization.memberships << Membership.new(admin: true, user: current_user)
     @organization.users << current_user
     current_user.current_org = @organization
 

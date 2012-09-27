@@ -17,18 +17,13 @@ class OrganizationsController < ApplicationController
   end
 
   def edit
-    #@organization = Organization.where( id: params[:id] ).first
-    # if @organization.admin? current_user
-    # if current_user.admin? this is very bad
   end
 
   def create
     @organization = Organization.new(params[:organization])
+    @organization.memberships = Membership.new(admin: true, user: current_user)
     @organization.users << current_user
     current_user.current_org = @organization
-
-    # Set admin on user that created the organization
-    @organization.memberships.where(user: current_user).update_attribute(:admin, true)
 
     current_user.save!
 
@@ -44,8 +39,6 @@ class OrganizationsController < ApplicationController
   end
 
   def update
-    #@organization = current_user.current_org
-    #@organization = Organization.where( id: params[:id] ).first
     return access_denied unless current_user.admin?
 
     respond_to do |format|

@@ -1,17 +1,27 @@
 class OrganizationsController < ApplicationController
   skip_before_filter :require_login
 
-  before_filter :fetch_organization, :only => [:edit, :update, :show, :destroy]
+  before_filter :fetch_organization, :only => [:edit, :update, :show, :destroy, :add_user]
   
   def index
     @organizations = current_user.organizations
+  end
+
+  def show
+    system_users = User.all
+    @unauth_users = system_users - @organization.users
+
+    respond_to do |format|
+      format.html 
+      format.json { render json: @organization }
+    end
   end
 
   def new
     @organization = Organization.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html
       format.json { render json: @organization }
     end
   end
@@ -70,6 +80,19 @@ class OrganizationsController < ApplicationController
 
     respond_to do |format|
       format.js
+    end
+  end
+
+  def add_user
+    user = User.find(params["user"])
+    @organization.add_user_to_org(user)
+    
+    system_users = User.all
+    @unauth_users = system_users - @organization.users
+
+    respond_to do |format|
+      format.html { redirect_to organization_path(current_user.current_org), notice: 'User was successfully add to #{@organization.name}.' }
+      format.json { head :no_content }
     end
   end
 

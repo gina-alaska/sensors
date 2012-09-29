@@ -19,7 +19,7 @@ class Organization
   end
 
   # org.create_user current_user
-  def add_user(user)
+  def add_user_to_org(user)
     unless users.include?(user)
       memberships.create!(user: user)
     end

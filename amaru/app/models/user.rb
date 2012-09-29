@@ -6,7 +6,6 @@ class User
   field :name,           type: String
   field :email,          type: String,  default: ''
   field :active,         type: Boolean, default: true
-  field :access_token,   type: String
   
   attr_protected :provider, :uid, :name, :email
   

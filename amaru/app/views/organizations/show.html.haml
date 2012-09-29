@@ -1,0 +1,32 @@
+.row-fluid
+  %h4
+    Administration for <i>#{@organization.name}</i> Organization
+.row-fluid
+  .span6
+    %h4
+      Authorized Users
+    %table.table.table-striped
+      %tr
+        %th User Name
+        %th Role
+        %th Controls
+      - @organization.users.each do |user|
+        %tr
+          %td= user.name
+          %td
+            - if @organization.admin?(user)
+              Admin
+            - else
+              User
+          %td
+            - unless @organization.admin?(user)
+              = link_to 'Revoke', "/revoke_user?user=#{user.id}", class: "btn btn-primary"
+  - if current_user.org_admin?
+    .span6
+      %h4
+        Add User to Authorized User List
+      =form_tag(add_user_organization_path, :method => :get) do
+        .controls
+          =select_tag(:user, options_from_collection_for_select(@unauth_users, :id, :name))
+        .controls
+          =submit_tag("Add User")

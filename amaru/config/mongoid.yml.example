@@ -5,13 +5,11 @@ development:
     default:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
-      database: gina_sensor_data
-      #database: amaru_sensor_data_prod
+      database: yourdatabase
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
-        - localhost:27017
-        #- good.x.gina.alaska.edu:27017
+        - yourhost:27017
       options:
         # Change whether the session persists in safe mode by default.
         # (default: false)

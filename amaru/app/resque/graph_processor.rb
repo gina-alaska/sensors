@@ -4,10 +4,9 @@
 class GraphProcessor
   include RvgGraph
   include Magick
-  include Sidekiq::Worker
   @queue = :graph_processor
 
-  def perform(slug, graph_id, starts_at, ends_at, output_name)
+  def self.perform(slug, graph_id, starts_at, ends_at, output_name)
     Bundler.require :processing
     platform = Platform.where(slug: slug).first
     graph = platform.graphs.find(graph_id)

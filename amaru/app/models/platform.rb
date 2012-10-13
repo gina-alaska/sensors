@@ -30,7 +30,7 @@ class Platform
   scope :user_platforms, ->(user){ where(users: user) }
 
   def async_process_event_single(start_time)
-    Sidekiq::Client.enqueue(EventProcessorSingle, self.slug, start_time)
+    Resque.enqueue(EventProcessorSingle, self.slug, start_time)
   end
 
   def to_param

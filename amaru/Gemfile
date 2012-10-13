@@ -53,4 +53,4 @@ gem 'rack-pjax'
 gem 'omniauth'
 gem 'omniauth-openid'
 gem 'whenever', :require => false
-gem 'sidekiq'
+gem 'resque'

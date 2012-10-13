@@ -2,10 +2,9 @@ require "processes/copy"
 require "processes/mean"
 
 class EventProcessor
-  include Sidekiq::Worker
 	@queue = :events
 
-	def perform(group_id, event_id)
+	def self.perform(group_id, event_id)
     Bundler.require :processing
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all

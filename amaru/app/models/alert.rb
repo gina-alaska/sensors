@@ -17,6 +17,6 @@ class Alert
   belongs_to :group
 
   def async_process_alert(slug)
-    Sidekiq::Client.enqueue(AlertProcessor, self.group.id, slug, self.id)
+    Resque.enqueue(AlertProcessor, self.group.id, slug, self.id)
   end
 end

@@ -19,7 +19,7 @@ class EventProcessor
 
   		events.each do |event|							# Process all events for platform
         # Add a status for event
-        status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}: #{event.description}.", status: "Running", start_time: DateTime.now)
+        status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}", status: "Running", start_time: DateTime.now)
         status.group = group
         status.platform = platform
         status.save
@@ -27,7 +27,7 @@ class EventProcessor
   			processes = event.commands 				# Get all commands from this event
   			processes.each do |process|       # Do all command processes
   				method = process.command
-    			processor.send(method.downcase.to_sym, event.name, event.from, process)
+    			processor.send(method.downcase.to_sym, event.name, event.from, process, nil)
   			end
         status.update_attributes(status: "Finished", end_time: DateTime.now)
   		end

@@ -76,7 +76,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.async_process_event # Queue the processing event
-        format.html { redirect_to group_events_path(@group), notice: 'Processing Data.' }
+        format.html { redirect_to group_events_path(@group), notice: 'Sensor Process Queued.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

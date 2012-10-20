@@ -5,6 +5,7 @@ class Event
   field :description,         type: String
   field :from,                type: Array
   field :interval,            type: String
+  field :enabled,             type: Boolean, default: true
 
   validates_presence_of :name
   validates_uniqueness_of :name

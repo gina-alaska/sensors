@@ -1,44 +1,47 @@
-.event-form.row-fluid.form-horizontal
-  = form_for([@group, @event]) do |f|
-    - if @event.errors.any?
-      %div{:id => "error_explanation row-fluid"}
-        %h2
-          = pluralize(@event.errors.count, "error")
-          prohibited this event from being saved:
-        %ul
-          - @event.errors.full_messages.each do |msg|
-            %li= msg
-    .row-fluid
-      .span10
-        .row-fluid
-          .span6
-            .control-group
-              = f.label :name, "Processed Field Name:", :class=>"control-label"
-              .controls
-                = f.text_field :name
-            .control-group
-              = f.label :description, "Metadata Description:", :class=>"control-label"
-              .controls
-                = f.text_area :description, :rows => 6, :class=>"span12"
-          .span3
-            .control-group
-              = f.label :from, "From Raw Fields:", :class=>"control-label"
-              .controls
-                = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 10}
-          .span3
-            .control-group
-              = f.label :interval, "Time Interval:", :class=>"control-label"
-              .controls
-                = f.text_field :interval, :value => "at_import"
-    - unless @event.new_record?
+.event-form.row-fluid
+  .span12
+    = form_for([@group, @event], :class => "form-horizontal") do |f|
+      - if @event.errors.any?
+        %div{:id => "error_explanation row-fluid"}
+          %h2
+            = pluralize(@event.errors.count, "error")
+            prohibited this event from being saved:
+          %ul
+            - @event.errors.full_messages.each do |msg|
+              %li= msg
       .row-fluid
+        .span6
+          .control-group
+            = f.label :name, "Processed Field Name:", :class=>"control-label"
+            .controls
+              = f.text_field :name
+          .control-group
+            = f.label :description, "Metadata Description:", :class=>"control-label"
+            .controls
+              = f.text_area :description, :rows => 6, :class=>"span12"
         .span2
-          = link_to 'Add Command', add_group_event_path(@group, @event), class: "btn btn-primary", :id => "add_command", "data-skip-pjax" => true
-      #commands
-        = render :partial=>"command", :locals=>{:group => @group, :event => @event}
-    %br/
-    .actions.row-fluid
-      = f.submit (@event.new_record? ? "Create Process" : "Update Process"), :class => "btn btn-primary"
+          .control-group
+            = f.label :from, "From Raw Fields:", :class=>"control-label"
+            .controls
+              = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 11}
+        .span2
+          .control-group
+            = f.label :interval, "Time Interval:", :class=>"control-label"
+            .controls
+              = f.text_field :interval, :default => "import"
+          .control-group
+            = f.label :enabled, "Enabled?:", :class=>"control-label"
+            .controls
+              = f.check_box :enabled
+      - unless @event.new_record?
+        .row-fluid
+          .span2
+            = link_to 'Add Command', add_group_event_path(@group, @event), class: "btn btn-primary", :id => "add_command", "data-skip-pjax" => true
+        #commands
+          = render :partial=>"command", :locals=>{:group => @group, :event => @event}
+      %br/
+      .actions.row-fluid
+        = f.submit (@event.new_record? ? "Create Process" : "Update Process"), :class => "btn btn-primary"
 :javascript
   $('#add_command').live('click', function() {
     $('#commands').load($(this).prop('href'));

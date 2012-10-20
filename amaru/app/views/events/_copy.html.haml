@@ -1,12 +1,12 @@
 = hidden_field_tag "commands[#{command.index}][id]", command.id
 .field.span2
-  = label_tag :starts_at
+  = label_tag :starts_at, "Starts At:"
   = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
 .field.span2
-  = label_tag :ends_at
+  = label_tag :ends_at, "Ends At:"
   = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
 .field.span1
-  = label_tag :command
+  = label_tag :command, "Command:"
   = select_tag "commands[#{command.index}][command]", options_for_select(event_commands(command.command))
 .field.span2
 .field.span1

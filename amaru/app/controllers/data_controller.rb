@@ -1,7 +1,7 @@
 class DataController < ApplicationController
   def raw
     platform = Platform.where(slug: params["slug"]).first
-    sensor = params["sensor"]
+    sensor ||= params["sensor"]
     date = params["date"].nil? ? nil : Time.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
 
@@ -55,12 +55,12 @@ class DataController < ApplicationController
     if sensor == "all" or sensor.nil?
       proc = group.processed_data.where(platform: platform).captured_between(starts, ends).asc(:capture_date)
     else
-      raw = group.processed_data.where(platform: platform).captured_between(starts, ends).only(:capture_date, sensor.to_sym).asc(:capture_date)
+      proc = group.processed_data.where(platform: platform).captured_between(starts, ends).only(:capture_date, sensor.to_sym).asc(:capture_date)
     end
 
     respond_to do |format|
       format.csv do
-        send_data generate_csv(raw),
+        send_data generate_csv(proc),
         :type => 'text/csv; charset=iso-8859-1; header=present',
         :disposition => "attachment; filename=#{group.name}-#{Time.now.strftime('%d-%m-%y--%H-%M')}.csv"
       end
@@ -80,7 +80,7 @@ protected
 
   def generate_csv data
 #    data = [data].flatten
-    headers = data.first.attributes.keys - ["_type","_id","parent_id","platform_id"]
+    headers = data.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
     ::CSV.generate({:headers => true}) do |csv|
       csv << headers
       data.each do |d|

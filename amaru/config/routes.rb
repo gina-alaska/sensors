@@ -62,17 +62,23 @@ Amaru::Application.routes.draw do
 
   match "set_current" => "organizations#set_current"
   match "dashboard" => "dashboard#index"
+  match "poll" => "status#poll"
+  
+  # import
+  match "csv/:slug/:token" => "import#csv"
+
+  # tools
   match "tools" => "tools#index"
-  match "user" => "users#show"
-  match "revoke_user/:user" => "organizations#revoke_user"
   match "by_sensor" => "tools#by_sensor", as: :by_sensor
   match "mass_platform_set" => "tools#mass_platform_set", as: :mass_platform_set
-  match "poll" => "status#poll"
-  match "csv/:slug/:token" => "import#csv"
+
+  # user auth
   match "/auth/:provider/callback", to: "sessions#create"
   match '/auth/failure' => 'sessions#failure'
   match '/signin' => 'sessions#new', :as => :signin
   match "/signout" => "sessions#destroy", :as => :signout
+  match "user" => "users#show"
+  match "revoke_user/:user" => "organizations#revoke_user"
 
   # data REST API's
   match "data/raw/:slug" => "data#raw"

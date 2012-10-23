@@ -74,6 +74,10 @@ Amaru::Application.routes.draw do
   match '/signin' => 'sessions#new', :as => :signin
   match "/signout" => "sessions#destroy", :as => :signout
 
+  # data REST API's
+  match "data/raw/:slug" => "data#raw"
+  match "data/processed/:group/:slug" => "data#processed"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -20,7 +20,7 @@
               User
           %td
             - unless @organization.admin?(user)
-              = link_to 'Revoke', "/revoke_user?user=#{user.id}", class: "btn btn-primary"
+              = link_to 'Revoke', revoke_user_organization_path(user, @organization), method: :post, class: "btn btn-primary"
   - if current_user.org_admin?
     .span6
       %h4

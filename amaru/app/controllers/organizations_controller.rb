@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   skip_before_filter :require_login
 
-  before_filter :fetch_organization, :only => [:edit, :update, :show, :destroy, :add_user]
+  before_filter :fetch_organization, :only => [:edit, :update, :show, :destroy, :add_user, :revoke]
   
   def index
     @organizations = current_user.organizations
@@ -91,7 +91,19 @@ class OrganizationsController < ApplicationController
     @unauth_users = system_users - @organization.users
 
     respond_to do |format|
-      format.html { redirect_to organization_path(current_user.current_org), notice: 'User was successfully add to #{@organization.name}.' }
+      format.html { redirect_to organization_path(current_user.current_org), notice: "User was successfully added to #{@organization.name}." }
+      format.json { head :no_content }
+    end
+  end
+
+  def revoke
+    user = User.find(params["user_id"])
+    @organization.memberships.where(user_id: user).destroy_all
+    @organization.current_users.where(id: user).clear
+    @organization.save
+
+    respond_to do |format|
+      format.html { redirect_to organization_path(current_user.current_org), notice: "User was successfully removed from #{@organization.name}." }
       format.json { head :no_content }
     end
   end
@@ -100,5 +112,6 @@ class OrganizationsController < ApplicationController
 
   def fetch_organization
     @organization = current_user.current_org
+    require_current_org
   end
 end

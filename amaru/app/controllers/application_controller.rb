@@ -14,4 +14,12 @@ class ApplicationController < ActionController::Base
       redirect_to dashboard_path, notice: 'Login First!' unless current_user
     end
   end
+
+  def require_current_org
+    if !current_user or current_user.current_org.nil?
+      flash[:notice]="Please select a valid organization from the current organization drop down menu."
+      redirect_to "/dashboard"
+      return false
+    end
+  end
 end

@@ -1,4 +1,6 @@
 class GroupsController < ApplicationController
+  before_filter :require_current_org
+
   def index
     @groups = current_user.current_org.groups.asc(:name)
   end

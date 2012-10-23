@@ -4,6 +4,12 @@ Amaru::Application.routes.draw do
     get 'add_user', :on => :member
   end
 
+  resources :users do
+    resources :organizations do
+      post "revoke", :on => :member
+    end
+  end
+
   resources :groups do
     post 'add_platform', :on => :member
     get 'remove_platform', :on => :member
@@ -63,7 +69,7 @@ Amaru::Application.routes.draw do
   match "set_current" => "organizations#set_current"
   match "dashboard" => "dashboard#index"
   match "poll" => "status#poll"
-  
+
   # import
   match "csv/:slug/:token" => "import#csv"
 
@@ -78,11 +84,11 @@ Amaru::Application.routes.draw do
   match '/signin' => 'sessions#new', :as => :signin
   match "/signout" => "sessions#destroy", :as => :signout
   match "user" => "users#show"
-  match "revoke_user/:user" => "organizations#revoke_user"
 
   # data REST API's
   match "data/raw/:slug" => "data#raw"
   match "data/processed/:group/:slug" => "data#processed"
+  match "data/graph/:group" => "data#graph"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

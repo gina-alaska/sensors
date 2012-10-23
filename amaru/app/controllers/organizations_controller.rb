@@ -99,7 +99,7 @@ class OrganizationsController < ApplicationController
   def revoke
     user = User.find(params["user_id"])
     @organization.memberships.where(user_id: user).destroy_all
-    @organization.current_users.where(id: user).clear
+    @organization.current_users.delete(user)
     @organization.save
 
     respond_to do |format|

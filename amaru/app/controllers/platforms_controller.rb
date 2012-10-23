@@ -1,4 +1,5 @@
 class PlatformsController < ApplicationController
+  before_filter :require_current_org
 
   def index
     @platforms = current_user.current_org.platforms.asc(:name).page params[:page]

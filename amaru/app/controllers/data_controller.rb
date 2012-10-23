@@ -10,6 +10,7 @@ class DataController < ApplicationController
     else
       ends = date
     end
+
     if range.nil?
       starts = ends - 24.hours
     else
@@ -28,8 +29,12 @@ class DataController < ApplicationController
         :type => 'text/csv; charset=iso-8859-1; header=present',
         :disposition => "attachment; filename=#{platform.name}-#{Time.now.strftime('%d-%m-%y--%H-%M')}.csv"
       end
+      format.json {render :json => raw}
 
-#      format.graph
+      format.jpg do
+
+      end
+
 #      format.zip
     end
   end
@@ -46,6 +51,7 @@ class DataController < ApplicationController
     else
       ends = date
     end
+    
     if range.nil?
       starts = ends - 24.hours
     else
@@ -64,6 +70,7 @@ class DataController < ApplicationController
         :type => 'text/csv; charset=iso-8859-1; header=present',
         :disposition => "attachment; filename=#{group.name}-#{Time.now.strftime('%d-%m-%y--%H-%M')}.csv"
       end
+      format.json {render :json => proc}
 
 #      format.graph
 #      format.zip

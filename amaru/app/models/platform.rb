@@ -3,7 +3,7 @@ class Platform
 
   field :slug,                type: String
   field :name,                type: String
-  field :platform_metadata,   type: String
+  field :metadata,            type: String
   field :geo_location,        type: String
   field :license,             type: String
   field :permissions,         type: String

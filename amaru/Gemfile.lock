@@ -142,6 +142,7 @@ GEM
     rinruby (2.0.3)
     rmagick (2.13.1)
     ruby-openid (2.2.1)
+    rubyzip (0.9.9)
     sass (3.2.1)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -195,6 +196,7 @@ DEPENDENCIES
   resque
   rinruby
   rmagick
+  rubyzip
   rvg_graph!
   sass-rails (~> 3.2.3)
   sqlite3

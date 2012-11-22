@@ -9,67 +9,69 @@ class GraphImageProcessor
   def self.perform(group_id, graph_id)
     Bundler.require :processing
     @group = Group.where(id: group_id).first
-    platform = @group.platforms.first
     graph = @group.graphs.find(graph_id)
 
-    status = @group.status.build(system: "graphs", message: "Building test images for graph #{graph.name}.", status: "Running", start_time: DateTime.now)
-    status.group = @group
-    status.platform = platform
-    status.save!
+    @group.all_platform_slugs.each do |slug|
+      platform = Platform.where(slug: slug).first
+      status = @group.status.build(system: "graphs", message: "Building graph #{graph.name} for platform #{platform.name}.", status: "Running", start_time: DateTime.now)
+      status.group = @group
+      status.platform = platform
+      status.save!
 
-    ends_at = platform.raw_data.last.capture_date
-    if @group.graph_length.nil?
-      starts_at = ends_at - eval(1.day)
-    else
-      starts_at = ends_at-eval(@group.graph_length)
-    end
-
-    template = Psych.load(graph.config)
-
-    path = File.join('graphs', platform.slug)
-    unless File.exists?(path)
-      Dir.mkdir(path)
-    end
-    file = File.join(path, "#{graph_id}.jpg")
-    puts "Creating Graph, output to #{file}"
-
-    # Build data hash for graph
-    data_hash = Hash.new
-    data_hash["date"] = Array.new
-
-    template["data"].each do |tdata|
-      case tdata["collection"]
-      when "raw"
-        data = platform.raw_data.captured_between(starts_at, ends_at).all
-      when "processed"
-        data = @group.processed_data.captured_between(starts_at, ends_at).all
+      ends_at = platform.raw_data.last.capture_date
+      if graph.length.nil?
+        starts_at = ends_at - 1.day
+      else
+        starts_at = ends_at-eval(graph.length)
       end
 
-      fields = tdata["name"].split(",")
+      template = Psych.load(graph.config)
 
-      data.each do |row|
-        fields.each do |field|
-          data_hash[field] ||= []
-          data_hash[field] << row[field.to_sym].to_f
+      path = File.join('graphs', platform.slug)
+      unless File.exists?(path)
+        Dir.mkdir(path)
+      end
+      file = File.join(path, "#{graph_id}.jpg")
+      puts "Creating Graph, output to #{file}"
+
+      # Build data hash for graph
+      data_hash = Hash.new
+      data_hash["date"] = Array.new
+
+      template["data"].each do |tdata|
+        case tdata["collection"]
+        when "raw"
+          data = platform.raw_data.captured_between(starts_at, ends_at).all
+        when "processed"
+          data = @group.processed_data.captured_between(starts_at, ends_at).all
         end
-        data_hash['date'] ||= []
-        data_hash['date'] << row[:capture_date]
+
+        fields = tdata["name"].split(",")
+
+        data.each do |row|
+          fields.each do |field|
+            data_hash[field] ||= []
+            data_hash[field] << row[field.to_sym].to_f
+          end
+          data_hash['date'] ||= []
+          data_hash['date'] << row[:capture_date]
+        end
       end
+
+      rvg_graph = Graph.new(graph.config, data_hash, platform.no_data_value)
+
+      rvg_graph.draw
+      rvg_graph.save(file)
+      thumbfile = File.join(path, "#{graph_id}_thumb.jpg")
+      img = Image.read(file).first
+      thumb = img.resize_to_fit(200)
+      thumb.write(thumbfile)
+
+      # update the database graph image paths
+      graph.update_attributes(image_path: file, thumb_path: thumbfile, processing: false)
+
+      status.update_attributes(status: "Finished", end_time: DateTime.now)
+      puts "Done!"
     end
-
-    rvg_graph = Graph.new(graph.config, data_hash, platform.no_data_value)
-
-    rvg_graph.draw
-    rvg_graph.save(file)
-    thumbfile = File.join(path, "#{graph_id}_thumb.jpg")
-    img = Image.read(file).first
-    thumb = img.resize_to_fit(200)
-    thumb.write(thumbfile)
-
-    # update the database graph image paths
-    graph.update_attributes(image_path: file, thumb_path: thumbfile)
-
-    status.update_attributes(status: "Finished", end_time: DateTime.now)
-    puts "Done!"
   end
 end

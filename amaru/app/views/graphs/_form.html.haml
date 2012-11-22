@@ -12,10 +12,16 @@
       .span2
         = f.label :name
         = f.text_field :name
+      .span2
+        = f.label :disabled
+        = f.check_box :disabled
     .row-fluid
       .span2
         = f.label :length
         = f.text_field :length
+      .span2
+        = f.label :run_when, "Build Graph Every:"
+        = f.select :run_when, options_for_select([["5 Minutes", "5 Min"],["15 Minutes","15 Min"],["30 Minutes","30 Min"],["Hour","1 hour"],["12 Hours","12 hour"],["Day","1 day"],["Week","1 week"],["Month","1 month"]], @graph.run_when)
     .row-fluid
       .span12
         = f.label :config

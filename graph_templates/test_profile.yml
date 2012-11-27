@@ -1,0 +1,122 @@
+---
+graph:
+  title: Temperature Profile
+  title_size: 24
+  title_offset: 84
+  title_position: center
+  title_anchor: middle
+  width: 640
+  height: 550
+  background_color: '242,242,255'
+  graph_bounds: '95,100,560,500'
+border:
+  style:
+    color: '0,0,0'
+    graph_bg_color: '255,255,255'
+    line_size: 1.5
+data:
+- collection: raw
+  name: h_ice (m)
+  type: depth
+  graph_top: positive
+  units: met
+  direction: yaxis
+  range: '100,500'
+  hard_min: -2.5
+  hard_max: 1.0
+  style:
+    color: '0,0,0'
+    fill_color: '218,218,255'
+    line_size: 1
+    line_type: '6,6'
+  text:
+  - position: '130,240'
+    text: ice
+    style:
+      color: '0,0,0'
+      text_size: 18
+      anchor: middle
+  - position: '330,40'
+    text: SIZONet, Barrow, AK, 2011
+    style:
+      color: '0,0,0'
+      text_size: 14
+      anchor: middle
+  axis:
+  - placement: left
+    major: 17
+    major_len: 10
+    offset: 10
+    label:
+      text: Position (m)
+      offset: 50
+      rotate: 270
+      size: 18
+      round: 1
+    style:
+      color: '0,0,0'
+      line_size: 1
+      text_size: 10
+  - placement: right
+    major: 10
+    major_len: 10
+    offset: 20
+    label:
+      units: feet
+      text: Position (ft)
+      offset: 40
+      rotate: 270
+      size: 18
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1
+      text_size: 10
+- collection: raw
+  name: T_+70 (C),T_+60 (C),T_+50 (C),T_+40 (C),T_+30 (C),T_+20 (C),T_+10 (C),T_+00
+    (C),T_-10 (C),T_-20 (C),T_-30 (C),T_-40 (C),T_-50 (C),T_-60 (C),T_-70 (C),T_-80
+    (C),T_-90 (C),T_-100 (C),T_-110 (C),T_-120 (C),T_-130 (C),T_-140 (C),T_-150 (C),T_-160
+    (C),T_-170 (C),T_-180 (C),T_-190 (C),T_-200 (C),T_-210 (C),T_-220 (C)
+  type: profile
+  graph_top: negative
+  hard_min: -10.0
+  hard_max: 5.0
+  profile_min: -2.5
+  profile_max: 1.0
+  units: cel
+  direction: xaxis
+  range: '95,560'
+  style:
+    color: '0,0,0'
+    fill_color: '230,212,204'
+    profile_color: '255,0,0'
+    line_size: 1
+    dot_size: 1.5
+  axis:
+  - placement: bottom
+    major: 10
+    major_len: 8
+    offset: 10
+    label:
+      text: Tempurature (°C)
+      size: 18
+      offset: 30
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1
+      text_size: 10
+  - placement: top
+    major: 10
+    major_len: 8
+    offset: 16
+    label:
+      units: fahr
+      text: Tempurature (°F)
+      size: 18
+      offset: 36
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1
+      text_size: 10

@@ -1,6 +1,6 @@
 module Processes
-  # Using R, calculate the mean and put it into a new processed data field.
-  def mean(processed_field, sensors, process, start_time)
+  # Using R, calculate the median filter on the data.
+  def median(processed_field, sensors, process, start_time)
     sensor = sensors.first
     value, units = process.window.split(".")
     window = value.to_i.send(units.to_sym)
@@ -13,8 +13,7 @@ module Processes
 
     myr = RinRuby.new(false)
 
-    puts "calculating Mean on raw data #{sensor} to processed data
-        #{processed_field}."
+    puts "calculating median filter on raw data #{sensor} to proc data #{processed_field}."
     puts "start - #{start_date} end - #{process.ends_at}"
     raw = @platform.raw_data.captured_between(start_date, end_date).only(:capture_date, sensor.to_sym)
 
@@ -31,7 +30,7 @@ module Processes
       # Do R mean processing
       myr.data = rdata.compact
       myr.eval <<-EOF
-        mdata <- mean(data)
+        mdata <- median(data)
       EOF
 
       # Push processed data to processed_data collection.
@@ -42,6 +41,6 @@ module Processes
     end
 
     myr.quit
-    puts "End Mean Filter"
+    puts "End Median Filter"
   end
 end

@@ -1,5 +1,6 @@
 require "processes/copy"
 require "processes/mean"
+require "processes/median"
 
 class EventProcessorSingle
 	@queue = :events

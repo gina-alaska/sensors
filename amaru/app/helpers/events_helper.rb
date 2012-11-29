@@ -4,7 +4,7 @@ module EventsHelper
 	end
 
 	def event_commands(selected)
-		options_for_select([["Copy","copy"],["Mean","mean"]], "#{selected}")
+		options_for_select([["Copy","copy"],["Mean","mean"], ["Median", "median"]], "#{selected}")
 	end
 
 	def sensors_select(sensors, selected)

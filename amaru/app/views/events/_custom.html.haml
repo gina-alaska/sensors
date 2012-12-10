@@ -1,0 +1,40 @@
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at, "Starts At:"
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at, "Ends At:"
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span1
+  = label_tag :command, "Command:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+.field.span4
+  = label_tag :command_text, "Custom Code:"
+  = text_area_tag :command_text
+.field.span1
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
+
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Custom Command",
+    content: "The custom command allow the user to define their own processing code in either R or Matlab that the system will use to process the selected raw sensor data.  The raw data is placed into an array variable with the name data.  The output data needs to be placed into an array named pdata so Amaru can place the processed data into the database."
+  });
+
+  $('#commands_#{command.index}_window').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Mean Window",
+    content: "Window allows you to set the time frame over which the calculation will run for each iteration. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
+  });  
+  
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

@@ -15,7 +15,12 @@ class BarrowImport < DataImport
     end
 
     if File.exists?(csvfile)              # Read in the CSV file
-      options = {:col_sep => "\t", :headers => true, :converters => :float }
+      case date_config["version"]
+      when "1"
+        options = {:col_sep => "\t", :headers => true, :converters => :float }
+      when "2"
+        options = {:col_sep => ",", :headers => true, :converters => :float }
+      end
       csv_file = CSV.open( csvfile, 'r', options )
     else
       @status.write_attributes(status: "Error", message: "I can't find the barrow mass balance CSV file \e[31m#{csvfile}\e[0m!", end_time: DateTime.now)

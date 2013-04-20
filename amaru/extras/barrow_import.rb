@@ -26,8 +26,8 @@ class BarrowImport < DataImport
     headers = csv_file.headers
     sensors = @platform.sensors         # Get current sensors in database
 
-    yearx = dayx = timex = nil					# Initialize date vars
-    headers.each_with_index do |source, index|   # Process headers
+    yearx = dayx = timex = hourx = minutex = nil	  	# Initialize date vars
+    headers.each_with_index do |source, index|        # Process headers
       match = @config["sensors"].nil? ? nil : find_sensor( sensor_config, source )
       if match.nil?                     # Build sensor data
         sensor_data = {"label" => source, "source_field" => source, "sensor_metadata" => "no metadata"}
@@ -41,14 +41,25 @@ class BarrowImport < DataImport
       yearx = index if date_config["year"] == source
       dayx = index if date_config["day"] == source
       timex = index if date_config["time"] == source
+      hourx = index if date_config["hourx"] == source
+      minutex = index if date_config["minutex"] == source
     end
 
     # Import CSV file rows to database
     rowindex = 1
     csv_file.each do |sdata|
-      time = sprintf("%04d", sdata[timex])
-      hour = time[0..1] #.slice(0,2)
-      min = time[2..3] #.slice(2,2)
+      case date_config["version"]
+      when "1"
+        time = sprintf("%04d", sdata[timex])
+        hour = time[0..1]
+        min = time[2..3]
+      when "2"
+        hour = sdata[hourx]
+        min = sdata[minutex]
+      else
+        raise "Unknown import file version!"
+      end
+
       datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
       datahash = { :capture_date => datadate }
 

@@ -59,8 +59,8 @@ class BarrowImport < DataImport
         hour = time[0..1]
         min = time[2..3]
       when "2"
-        hour = sdata[hourx]
-        min = sdata[minutex]
+        hour = sdata[hourx].to_i
+        min = sdata[minutex].to_i
       else
         raise "Unknown import file version!"
       end

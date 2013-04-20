@@ -38,7 +38,7 @@ class GraphsController < ApplicationController
     respond_to do |format|
       if @graph.save
         @graph.async_graph_image_process # Queue the graph processing
-        format.html { redirect_to @platform, notice: 'Graph was successfully updated.' }
+        format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully updated.' }
         format.json { render json: @graph, status: :created, location: @graph }
       else
         format.html { render action: "edit" }
@@ -60,6 +60,7 @@ class GraphsController < ApplicationController
   def create
     @group = Group.where(id: params[:group_id]).first
     @graph = @group.graphs.build(params[:graph])
+    @graph.last_run = Time.now
 
     respond_to do |format|
       if @graph.save

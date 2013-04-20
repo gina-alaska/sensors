@@ -68,8 +68,8 @@ class DataImport
   def date_convert( year, month, day, hour, min, sec, type )
   	case type
   	when "ordinal"
-  		return Time.new( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
-#      return DateTime.ordinal( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
+#  		return Time.new( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
+      return DateTime.ordinal( year.to_i, day.to_i, hour.to_i, min.to_i ).iso8601
   	when "julian"
   		return Time.jd( day.to_i, hour.to_i, min.to_i ).iso8601
   	else

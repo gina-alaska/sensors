@@ -1,0 +1,40 @@
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at, "Starts At:"
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at, "Ends At:"
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span2
+  = label_tag :command, "Command:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+.field.span2
+  = label_tag :window, "Window Length:"
+  = text_field_tag "commands[#{command.index}][window]", [command.window]
+.field.span1
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
+
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Median Filter Command",
+    content: "The median filter command calculates the median for a single field from the raw data collection and puts it into the processed data collection. You can apply a window width to the command to control how much of the data is used in the calculation."
+  });
+
+  $('#commands_#{command.index}_window').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Median Window",
+    content: "Median Window allows you to set the time frame over which the calculation will run for each iteration. For example: 2.days or 15.minutes.  The number is the amount of units, then period, then the type of units. This amount is doubled to get the full window width (-amount < capture_time < +amount)."
+  });  
+  
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

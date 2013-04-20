@@ -1,0 +1,233 @@
+---
+graph:
+  title: SIZONet Mass Balance Probe, Barrow, Alaska, 2011
+  title_size: 26
+  title_offset: 30
+  background: barrow_graph_background.png
+  width: 1200
+  height: 600
+  background_color: '255,255,255'
+  graph_bounds: '155,48,1120,552'
+  graph_gradients:
+  - color1: '227,227,254'
+    color2: '191,191,242'
+    height: 207
+    start: 0,0,965,0
+    position: '0,0'
+    opacity: 0.8
+  - color2: '152,188,216'
+    color1: '116,144,165'
+    height: 297
+    start: 0,207,965,207
+    position: '0,207'
+    opacity: 1.0
+border:
+  style:
+    line_size: 1.5
+    color: '0,0,0'
+    fill_color: '255,255,255'
+  break_line: '450,50,7,20'
+data:
+- collection: raw
+  name: T_air (C)
+  units: cel
+  type: line
+  range: '55,180'
+  graph_top: positive
+  hard_min: -40
+  hard_max: 10
+  direction: x-axis
+  style:
+    color: '204,128,26'
+    line_size: 4
+  axis:
+  - placement: left
+    major: 5
+    major_len: 8
+    offset: 10
+    label:
+      text: ! 'Air
+
+        Temperature
+
+        (°C)'
+      size: 16
+      offset: 80
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+  - placement: right
+    major: 5
+    major_len: 8
+    offset: 26
+    label:
+      units: fahr
+      text: (°F)
+      size: 16
+      offset: 50
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+- collection: raw
+  name: h_snow (m)
+  type: line
+  range: '210,255'
+  graph_top: positive
+  hard_min: 0
+  hard_max: 0.6
+  direction: x-axis
+  units: met
+  style:
+    color: '0,0,0'
+    line_size: 2
+    fill_color: '255,255,255'
+    fill_to: bottom
+  axis:
+  - placement: left
+    major: 6
+    major_len: 8
+    offset: 10
+    label:
+      text: ! 'Snow
+
+        Depth
+
+        (m)'
+      size: 16
+      offset: 80
+      round: 1
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+  - placement: right
+    major: 7
+    major_len: 8
+    offset: 26
+    label:
+      units: feet
+      text: (ft)
+      size: 16
+      offset: 50
+      round: 1
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+- collection: raw
+  name: h_ice (m)
+  type: line
+  range: '255,330'
+  graph_top: negative
+  hard_min: 0
+  hard_max: 2
+  direction: x-axis
+  units: met
+  style:
+    color: '0,0,0'
+    line_size: 5
+    fill_color: '222,222,255'
+    fill_to: top
+  axis:
+  - placement: left
+    major: 6
+    major_len: 8
+    offset: 10
+    label:
+      text: ! 'Sea Ice
+
+        Thickness
+
+        (m)'
+      size: 16
+      offset: 80
+      round: 1
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+  - placement: right
+    major: 7
+    major_len: 8
+    offset: 26
+    label:
+      units: feet
+      text: (ft)
+      size: 16
+      offset: 50
+      round: 1
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+- collection: raw
+  name: h_water (m)
+  type: line
+  range: '450,550'
+  graph_top: negative
+  hard_min: 5
+  hard_max: 8
+  direction: x-axis
+  units: met
+  style:
+    color: '76,76,26'
+    line_size: 2
+    fill_color: '153,153,51'
+    fill_to: bottom
+  axis:
+  - placement: left
+    major: 6
+    major_len: 8
+    offset: 10
+    label:
+      text: ! 'Water
+
+        Depth
+
+        (m)'
+      size: 16
+      offset: 80
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+  - placement: right
+    major: 7
+    major_len: 8
+    offset: 26
+    label:
+      units: feet
+      text: (ft)
+      size: 16
+      offset: 50
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 10.0
+  - placement: bottom
+    major: 7
+    major_len: 8
+    minor: 10
+    minor_len: 5
+    offset: 8
+    label:
+      units: date
+      text: Date
+      size: 16
+      offset: 25
+      round: 0
+    style:
+      color: '0,0,0'
+      line_size: 1.0
+      text_size: 12.0
+    dividers:
+      style:
+        color: '0,0,0'
+        line_size: 0.8
+        line_type: '2,6'

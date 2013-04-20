@@ -6,6 +6,10 @@ class Graph
   field :thumb_path,   type: String
   field :image_path,   type: String
   field :length,       type: String
+  field :run_when,     type: String
+  field :last_run,     type: Time
+  field :disabled,     type: Boolean
+  field :processing,   type: Boolean
 
   validates_presence_of :name
   validates_uniqueness_of :name

@@ -10,7 +10,7 @@
             - @event.errors.full_messages.each do |msg|
               %li= msg
       .row-fluid
-        .span6
+        .span5
           .control-group
             = f.label :name, "Processed Field Name:", :class=>"control-label"
             .controls
@@ -19,20 +19,18 @@
             = f.label :description, "Metadata Description:", :class=>"control-label"
             .controls
               = f.text_area :description, :rows => 6, :class=>"span12"
-        .span2
-          .control-group
-            = f.label :from, "From Raw Fields:", :class=>"control-label"
-            .controls
-              = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 11}
-        .span2
-          .control-group
-            = f.label :interval, "Time Interval:", :class=>"control-label"
-            .controls
-              = f.text_field :interval, :default => "import"
-          .control-group
-            = f.label :enabled, "Enabled?:", :class=>"control-label"
-            .controls
-              = f.check_box :enabled
+        .control-group.span2
+          = f.label :from, "From Raw Fields:", :class=>"control-label"
+          .control
+            = f.select :from, sensors_select(@sensors, @event.from), {}, {:multiple => true, :size => 11}
+        .control-group.span2
+          = f.label :interval, "Time Interval:", :class=>"control-label"
+          .controls
+            = f.text_field :interval, :default => "import"
+        .control-group.span1
+          = f.label :enabled, "Enabled?:", :class=>"control-label"
+          .controls
+            = f.check_box :enabled
       - unless @event.new_record?
         .row-fluid
           .span2

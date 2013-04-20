@@ -9,6 +9,7 @@
       %tr
         %th Name
         %th Image
+        %th Last Built
         %th Controls
       - @graphs.each do |graph|
         %tr
@@ -16,6 +17,8 @@
           %td
             = link_to image_group_graph_path(@group, graph), :class => "graph_link" do
               =image_tag thumb_group_graph_path(@group, graph)
+          %td
+            = graph.last_run.strftime("%c")
           %td
             %table
               %tr

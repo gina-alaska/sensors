@@ -54,3 +54,4 @@ gem 'omniauth'
 gem 'omniauth-openid'
 gem 'whenever', :require => false
 gem 'resque'
+gem 'rubyzip'

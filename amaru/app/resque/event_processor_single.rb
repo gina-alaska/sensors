@@ -1,5 +1,6 @@
 require "processes/copy"
 require "processes/mean"
+require "processes/median"
 
 class EventProcessorSingle
 	@queue = :events
@@ -19,7 +20,7 @@ class EventProcessorSingle
       		events.each do |event|		# Process all events for group
             if event.interval == "import" and event.enabled == true
               # add a status for event
-              status = group.status.build(system: "process", message: "processing platform #{platform.name} for field #{event.name}.", status: "running", start_time: time.zone.now)
+              status = group.status.build(system: "process", message: "processing platform #{platform.name} for field #{event.name}.", status: "Running", start_time: Time.zone.now)
               status.group = group
               status.platform = platform
               status.save
@@ -29,7 +30,7 @@ class EventProcessorSingle
                 method = process.command
                 processor.send(method.downcase.to_sym, event.name, event.from, process, start_time)
               end
-              status.update_attributes(status: "finished", end_time: time.zone.now)
+              status.update_attributes(status: "Finished", end_time: Time.zone.now)
             end
       		end
         end

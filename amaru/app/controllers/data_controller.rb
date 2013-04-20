@@ -1,4 +1,7 @@
 class DataController < ApplicationController
+  require 'zip/zip'
+  require 'zip/zipfilesystem'
+
   def raw
     platform = Platform.where(slug: params["slug"]).first
     sensor ||= params["sensor"]
@@ -27,15 +30,36 @@ class DataController < ApplicationController
       format.csv do
         send_data generate_csv(raw),
         :type => 'text/csv; charset=iso-8859-1; header=present',
-        :disposition => "attachment; filename=#{platform.name}-#{Time.now.strftime('%d-%m-%y--%H-%M')}.csv"
+        :disposition => "attachment; filename=#{platform.name}-#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
       end
       format.json {render :json => raw}
 
-      format.jpg do
+# do this later
+#      format.jpg do
+#      end
 
+      format.zip do
+        data_file = "/tmp/#{platform.name}_RAW_#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        unless platform.platform_metadata.nil? or platform.platform_metadata == "No Metadata"
+          meta_file = Rails.root.join("metadata/#{platform.platform_metadata}")
+        end
+        zip_file = "/tmp/#{platform.name}_#{Time.now.strftime('%d-%m-%y_%H-%M')}.zip"
+
+        #create the csv file
+        File.open(data_file, "w") {|f| f.write(generate_csv(raw))}
+
+        #create zip file
+        Zip::ZipFile::open(zip_file, "w") do |zip|
+          zip.add(File.basename(data_file), data_file)
+          unless meta_file.nil?
+            zip.add(File.basename(meta_file), meta_file)
+          end
+        end
+
+        # Send the zip file and clean up
+        send_file( zip_file, :type => "application/zip")
+        File.delete(data_file, zip_file)
       end
-
-#      format.zip
     end
   end
 
@@ -51,7 +75,7 @@ class DataController < ApplicationController
     else
       ends = date
     end
-    
+
     if range.nil?
       starts = ends - 24.hours
     else
@@ -68,12 +92,34 @@ class DataController < ApplicationController
       format.csv do
         send_data generate_csv(proc),
         :type => 'text/csv; charset=iso-8859-1; header=present',
-        :disposition => "attachment; filename=#{group.name}-#{Time.now.strftime('%d-%m-%y--%H-%M')}.csv"
+        :disposition => "attachment; filename=#{group.name}-#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
       end
       format.json {render :json => proc}
 
 #      format.graph
-#      format.zip
+
+      format.zip do
+        data_file = "/tmp/#{platform.name}_PROC_#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        unless platform.platform_metadata.nil? or platform.platform_metadata == "No Metadata"
+          meta_file = Rails.root.join("metadata/#{platform.platform_metadata}")
+        end
+        zip_file = "/tmp/#{platform.name}_#{Time.now.strftime('%d-%m-%y_%H-%M')}.zip"
+
+        #create the csv file
+        File.open(data_file, "w") {|f| f.write(generate_csv(proc))}
+
+        #create zip file
+        Zip::ZipFile::open(zip_file, "w") do |zip|
+          zip.add(File.basename(data_file), data_file)
+          unless meta_file.nil?
+            zip.add(File.basename(meta_file), meta_file)
+          end
+        end
+
+        # Send the zip file and clean up
+        send_file( zip_file, :type => "application/zip")
+        File.delete(data_file, zip_file)
+      end
     end
   end
 

@@ -19,7 +19,11 @@ class SessionsController < ApplicationController
   end
   
   def new
-    redirect_to '/auth/gina'
+#    if File.exist?("no_web")
+#      redirect_to '/auth/developer'
+#    else
+      redirect_to '/auth/gina'
+#    end
   end
   
   def failure

@@ -46,26 +46,26 @@ class BarrowImport < DataImport
       yearx = index if date_config["year"] == source
       dayx = index if date_config["day"] == source
       timex = index if date_config["time"] == source
-      hourx = index if date_config["hourx"] == source
-      minutex = index if date_config["minutex"] == source
     end
 
     # Import CSV file rows to database
     rowindex = 1
     csv_file.each do |sdata|
-      case date_config["version"]
-      when "1"
+      if date_config["version"] == "1"
         time = sprintf("%04d", sdata[timex])
         hour = time[0..1]
         min = time[2..3]
+      end
+
+      case date_config
+      when "1"
+        datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
       when "2"
-        hour = sdata[hourx].to_i
-        min = sdata[minutex].to_i
+        datadate = Date.parse(sdate[0])
       else
         raise "Unknown import file version!"
       end
-
-      datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
+      
       datahash = { :capture_date => datadate }
 
       sdata.each do |header, data|

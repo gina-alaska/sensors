@@ -31,7 +31,7 @@ class BarrowImport < DataImport
     headers = csv_file.headers
     sensors = @platform.sensors         # Get current sensors in database
 
-    yearx = dayx = timex = hourx = minutex = nil	  	# Initialize date vars
+    yearx = dayx = timex = nil	      	# Initialize date vars
     headers.each_with_index do |source, index|        # Process headers
       match = @config["sensors"].nil? ? nil : find_sensor( sensor_config, source )
       if match.nil?                     # Build sensor data
@@ -61,7 +61,7 @@ class BarrowImport < DataImport
       when "1"
         datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
       when "2"
-        datadate = Date.parse(sdata[0])
+        datadate = DateTime.strptime(sdata[0], "%Y-%m-%d %H:%M:%S").iso8601
       else
         raise "Unknown import file version!"
       end

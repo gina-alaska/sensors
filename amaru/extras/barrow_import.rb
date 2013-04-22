@@ -57,7 +57,7 @@ class BarrowImport < DataImport
         min = time[2..3]
       end
 
-      case date_config
+      case date_config["version"]
       when "1"
         datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
       when "2"
@@ -65,7 +65,7 @@ class BarrowImport < DataImport
       else
         raise "Unknown import file version!"
       end
-      
+
       datahash = { :capture_date => datadate }
 
       sdata.each do |header, data|

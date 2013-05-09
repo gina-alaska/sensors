@@ -18,9 +18,9 @@ class Platform
   belongs_to :organization
   has_and_belongs_to_many :groups
   embeds_many :sensors, as: :sensor_parent
-  has_many :raw_data, :dependent => :destroy 
-  has_many :processed_data 
-  has_many :status 
+  has_many :raw_data, class_name: "Datum", dependent: :destroy
+#  has_many :processed_data, class_name: "Datum"
+  has_many :status  
   has_many :children, class_name: "Platform", inverse_of: :parent
   belongs_to :parent, class_name: "Platform", inverse_of: :children
 

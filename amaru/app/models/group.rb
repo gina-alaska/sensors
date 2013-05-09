@@ -14,11 +14,11 @@ class Group
   belongs_to :organization
   has_and_belongs_to_many :platforms
   has_and_belongs_to_many :users
-  has_many :status, :dependent => :destroy
-  has_many :events, :dependent => :destroy
-  has_many :graphs, :dependent => :destroy
-  has_many :alerts, :dependent => :destroy
-  has_many :processed_data, :dependent => :destroy
+  has_many :status, dependent: :destroy
+  has_many :events, dependent: :destroy
+  has_many :graphs, dependent: :destroy
+  has_many :alerts, dependent: :destroy
+  has_many :processed_data, dependent: :destroy, class_name: "Datum"
 
   scope :user_groups, ->(user){ where(users: user) }
 

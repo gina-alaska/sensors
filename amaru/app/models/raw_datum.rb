@@ -1,2 +1,0 @@
-  class RawDatum < Datum
-  end

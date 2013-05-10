@@ -1,0 +1,40 @@
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at, "Starts At:"
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at, "Ends At:"
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span2
+  = label_tag :command, "Command:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+.field.span2
+  = label_tag :window, "Sensor Height:"
+  = text_field_tag "commands[#{command.index}][window]", [command.window]
+.field.span1
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
+
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Snow Depth",
+    content: "Converts the measured distance to snow depth: (sensor height) - ( measured distance)"
+  });
+
+  $('#commands_#{command.index}_window').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Sensor Height",
+    content: "The distance from the sensor to the top of the ice in meters."
+  });  
+  
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

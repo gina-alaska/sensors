@@ -19,7 +19,7 @@ class BarrowImport < DataImport
       when "1"
         options = {:col_sep => "\t", :headers => true, :converters => :float }
       when "2"
-        options = {:col_sep => ",", :headers => true, :converters => :float }
+        options = {:col_sep => ",", :headers => true}
       end
       csv_file = CSV.open( csvfile, 'r', options )
     else

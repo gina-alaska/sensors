@@ -79,7 +79,7 @@ class DataImport
   end	
 
   def raw_save( datahash )
-    newdata = RawDatum.create(datahash)
+    newdata = Datum.create(datahash)
 
     if newdata.valid?
       @platform.raw_data << newdata
@@ -90,7 +90,7 @@ class DataImport
   end
 
   def processed_save( datahash )
-    newdata = ProcessedDatum.create(datahash)
+    newdata = Datum.create(datahash)
 
     if newdata.valid?
       @group.processed_data << newdata unless @group.nil?

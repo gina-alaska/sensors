@@ -2,7 +2,7 @@ module Processes
   # Using R, calculate the mean and put it into a new processed data field.
   def mean(processed_field, sensors, process, start_time, source_data)
     sensor = sensors.first
-    value, units = process.window.split(".")
+    value, units = process.param_one.split(".")
     window = value.to_i.send(units.to_sym)
 
     if start_time.nil?

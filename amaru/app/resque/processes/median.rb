@@ -2,7 +2,7 @@ module Processes
   # Using R, calculate the median filter on the data.
   def median(processed_field, sensors, process, start_time, source_data)
     sensor = sensors.first
-    value, units = process.window.split(".")
+    value, units = process.param_one.split(".")
     window = value.to_i.send(units.to_sym)
 
     if start_time.nil?

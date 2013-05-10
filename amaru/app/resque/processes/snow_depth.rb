@@ -2,7 +2,7 @@ module Processes
   # Calculate snow depth and put it into a new processed data field.
   def snow_depth(processed_field, sensors, process, start_time, source_data)
     sensor = sensors.first
-    sensor_height = process.window.to_f
+    sensor_height = process.param_one.to_f
 
     if start_time.nil?
       start_date = process.starts_at

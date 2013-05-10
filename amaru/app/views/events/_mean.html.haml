@@ -9,8 +9,8 @@
   = label_tag :command, "Command:"
   = select_tag "commands[#{command.index}][command]", event_commands(command.command)
 .field.span2
-  = label_tag :window, "Window Length:"
-  = text_field_tag "commands[#{command.index}][window]", [command.window]
+  = label_tag :param_one, "Window Length:"
+  = text_field_tag "commands[#{command.index}][param_one]", [command.param_one]
 .field.span1
   = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
 
@@ -22,7 +22,7 @@
     content: "The mean command calculates the mean for a single field from the raw data collection and puts it into the processed data collection. You can apply a window width to the command to control how much of the data is used in the calculation."
   });
 
-  $('#commands_#{command.index}_window').popover({
+  $('#commands_#{command.index}_param_one').popover({
     animation: true,
     trigger: "hover",
     title: "Mean Window",

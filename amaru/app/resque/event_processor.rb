@@ -1,6 +1,6 @@
-require "processes/copy"
-require "processes/mean"
-require "processes/median"
+#require "processes/copy"
+#require "processes/mean"
+#require "processes/median"
 
 class EventProcessor
 	@queue = :events
@@ -25,16 +25,27 @@ class EventProcessor
         status.platform = platform
         status.save
 
-  			processes = event.commands 				# Get all commands from this event
-  			processes.each do |process|       # Do all command processes
+  			processes = event.commands 	  # Get all commands from this event
+        previous_command = nil
+        no_data = platform.no_data_value
+
+  			processes.each do |process|   # Do all command processes
   				method = process.command
-    			processor.send(method.downcase.to_sym, event.name, event.from, process, nil)
+          if previous_command.nil?
+            source_data = platform.raw_data
+          else
+            source_data = previous_command.output_data
+          end
+    			processor.send(method.downcase.to_sym, event.name, event.from, process, nil, source_data)
+          previous_command = process
   			end
+        
+        previous_command.output_data.update_all(group_id: group.id)
         status.update_attributes(status: "Finished", end_time: DateTime.now)
   		end
     end
 	rescue => e
-		puts "Failure!"
+		puts "Something has gone horribly wrong!"
 		raise
 	end
 end

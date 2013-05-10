@@ -1,6 +1,6 @@
-require "processes/copy"
-require "processes/mean"
-require "processes/median"
+#require "processes/copy"
+#require "processes/mean"
+#require "processes/median"
 
 class EventProcessorSingle
 	@queue = :events
@@ -26,9 +26,9 @@ class EventProcessorSingle
               status.save
 
               processes = event.commands     # get all commands
-              processes.each do |process|    # do all commands
+              processes.each_with_index do |process, index|    # do all commands
                 method = process.command
-                processor.send(method.downcase.to_sym, event.name, event.from, process, start_time)
+                processor.send(method.downcase.to_sym, event.name, event.from, process, start_time, index)
               end
               status.update_attributes(status: "Finished", end_time: Time.zone.now)
             end

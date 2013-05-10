@@ -19,7 +19,7 @@
       series: [{
         name: '#{raw_sensor}',
         data: #{ raw_data.collect do |row|
-          data = row[raw_sensor].to_f == nodata.to_f ? "null" : row[raw_sensor] 
+          data = row[raw_sensor] == nodata ? 'null' : row[raw_sensor].to_f
             [ row.capture_date.strftime("%s").to_i*1000, data ]
           end.to_json } 
         } 

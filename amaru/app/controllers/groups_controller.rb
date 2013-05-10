@@ -138,10 +138,13 @@ class GroupsController < ApplicationController
   def graph_update
     starts_at = params["starts_at"] == "" ? nil : params["starts_at"]
     ends_at = params["ends_at"] == "" ? nil : params["ends_at"]
+
     @group = Group.where( id: params[:id] ).first
     @platform = @group.platforms.where(slug: params["platforms"]).first
+
     @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
-    @proc_data = @group.processed_data.where(:platform => @platform).captured_between(starts_at, ends_at).asc(:capture_date)
+    @proc_data = @group.processed_data.where(:group => @group).captured_between(starts_at, ends_at).asc(:capture_date)
+
     session["graphParams"] = params
     Time.zone = @platform.time_zone
 

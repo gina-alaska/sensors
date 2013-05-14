@@ -4,7 +4,7 @@ module EventsHelper
 	end
 
 	def event_commands(selected)
-		options_for_select([["Custom","custom"],["Copy","copy"],["Mean","mean"], ["Median", "median"], ["Snow Depth", "snow_depth"]], "#{selected}")
+		options_for_select([["Custom","custom"],["Copy","copy"], ["Snow Depth", "snow_depth"], ["Water Depth", "water_depth"], ["Ice Thickness", "ice_thickness"]], "#{selected}")
 	end
 
 	def sensors_select(sensors, selected)

@@ -1,11 +1,14 @@
 class Event
   include Mongoid::Document
+  FILTERS = [["Mean", "mean"],["Median", "median"]]
 
   field :name,                type: String
   field :description,         type: String
   field :from,                type: Array
   field :interval,            type: String
   field :enabled,             type: Boolean, default: true
+  field :filter,              type: String
+  field :window,              type: String
 
   validates_presence_of :name
   validates_uniqueness_of :name

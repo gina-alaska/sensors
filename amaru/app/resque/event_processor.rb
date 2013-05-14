@@ -1,7 +1,3 @@
-#require "processes/copy"
-#require "processes/mean"
-#require "processes/median"
-
 class EventProcessor
 	@queue = :events
 
@@ -9,41 +5,38 @@ class EventProcessor
     Bundler.require :processing
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all
-		if event_id.to_sym == :all
-			events = group.events
-		else
-			events = [group.events.find(event_id)]
-		end
+  	event = group.events.where(id: event_id).first
 
     platforms.each do |platform|
-  		processor = ProcessorCommands.new(group, platform)
+      # add a status for event
+      status = group.status.create(system: "process", message: "processing platform #{platform.name} for field #{event.name}.", status: "Running", start_time: Time.zone.now, platform: platform)
+      # Gather all raw data from the platform
+      platform.raw_data.batch_size(1000).each do |data_row|
+        output = nil
 
-  		events.each do |event|							# Process all events for platform
-        # Add a status for event
-        status = group.status.build(system: "process", message: "Processing platform #{platform.name} for field #{event.name}", status: "Running", start_time: DateTime.now)
-        status.group = group
-        status.platform = platform
-        status.save
+        # Assemble needed raw data fields
+        data = []
+        event.from.each do |field|
+          data << data_row.send(field)
+        end
 
-  			processes = event.commands 	  # Get all commands from this event
-        previous_command = nil
-        no_data = platform.no_data_value
+        processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
+        if processed_data.nil?
+          processed_data = group.processed_data.build(capture_date: data_row.capture_date)
+        end
 
-  			processes.each do |process|   # Do all command processes
-  				method = process.command
-          if previous_command.nil?
-            source_data = platform.raw_data
-          else
-            source_data = previous_command.output_data
-          end
-    			processor.send(method.downcase.to_sym, event.name, event.from, process, nil, source_data)
-          previous_command = process
-  			end
-        
-        previous_command.output_data.update_all(group_id: group.id)
-        status.update_attributes(status: "Finished", end_time: DateTime.now)
-  		end
+        processor = ProcessorCommands.new(group, platform, event)
+        processes = event.commands    # Get all commands from this event
+        processes.each do |cmd|
+          data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
+        end
+
+        processed_data.update_attribute(event.name.to_sym, data.shift)
+      end
+      # Do filters if there are any
+      status.update_attributes(status: "Finished", end_time: Time.zone.now)
     end
+
 	rescue => e
 		puts "Something has gone horribly wrong!"
 		raise
@@ -53,8 +46,9 @@ end
 class ProcessorCommands
   include Processes
 
-	def initialize( group, platform )
+	def initialize( group, platform, event )
     @group = group
 		@platform = platform
+    @event = event
 	end
 end

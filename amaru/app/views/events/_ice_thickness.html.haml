@@ -1,0 +1,60 @@
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at, "Starts At:"
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at, "Ends At:"
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span2
+  = label_tag :command, "Command:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+.field.span1
+  = label_tag :param_one, "Sensor Position:"
+  = text_field_tag "commands[#{command.index}][param_one]", [command.param_one]
+.field.span1
+  = label_tag :param_two, "Raw Water Sensor:"
+  = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
+.field.span1
+  = label_tag :param_three, "Snow Sensor:"
+  = text_field_tag "commands[#{command.index}][param_three]", [command.param_three]
+.field.span1
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
+
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Water Depth",
+    content: "Converts the measured distance to water depth: (sensor position) + (water sound speed correction * measured distance)"
+  });
+
+  $('#commands_#{command.index}_param_one ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Sensor Position",
+    content: "The depth position of the sensor from the top of the ice in meters."
+  });  
+  
+  $('#commands_#{command.index}_param_two ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Raw Water Sensor",
+    content: "The field name for the raw water temperature sensor."
+  });  
+  
+  $('#commands_#{command.index}_param_three ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Snow Sensor",
+    content: "The field name for the processed snow depth sensor."
+  });  
+  
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

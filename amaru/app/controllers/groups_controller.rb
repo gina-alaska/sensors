@@ -143,7 +143,7 @@ class GroupsController < ApplicationController
     @platform = @group.platforms.where(slug: params["platforms"]).first
 
     @raw_data = @platform.raw_data.captured_between(starts_at, ends_at).asc(:capture_date)
-    @proc_data = @group.processed_data.where(:group => @group).captured_between(starts_at, ends_at).asc(:capture_date)
+    @proc_data = @group.processed_data.captured_between(starts_at, ends_at).asc(:capture_date)
 
     session["graphParams"] = params
     Time.zone = @platform.time_zone

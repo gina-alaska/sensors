@@ -10,6 +10,7 @@ class EventProcessor
     platforms.each do |platform|
       # add a status for event
       status = group.status.create(system: "process", message: "processing platform #{platform.name} for field #{event.name}.", status: "Running", start_time: Time.zone.now, platform: platform)
+      puts "Started process event #{event.name} for #{platform.name}"
       # Gather all raw data from the platform
       platform.raw_data.batch_size(1000).each do |data_row|
         output = nil
@@ -28,6 +29,9 @@ class EventProcessor
         processor = ProcessorCommands.new(group, platform, event)
         processes = event.commands    # Get all commands from this event
         processes.each do |cmd|
+          start_time = cmd.starts_at.nil? ? data_row.capture_date : cmd.starts_at
+          end_time = cmd.ends_at.nil? ? data_row.capture_date : cmd.ends_at
+          next if data_row.capture_date < start_time or data_row.capture_date > end_time
           data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
         end
 
@@ -35,6 +39,7 @@ class EventProcessor
       end
       # Do filters if there are any
       status.update_attributes(status: "Finished", end_time: Time.zone.now)
+      puts "Finished process event #{event.name} for #{platform.name}"
     end
 
 	rescue => e

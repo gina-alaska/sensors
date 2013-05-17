@@ -1,0 +1,51 @@
+- cull_operand = [["=", 1], ["<", 2], [">", 3], ["<=", 4], [">=", 5]]
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at, "Starts At:"
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at, "Ends At:"
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span2
+  = label_tag :command, "Command:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+.field.span1
+  = label_tag :param_one, "Cull Operand:"
+  = select_tag "commands[#{command.index}][param_one]", options_for_select(cull_operand, [command.param_one])
+.field.span2
+  = label_tag :param_two, "Cull Value:"
+  = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
+.field.span1
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
+
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Cull",
+    content: "Culls values from sensor data that matches the operand/value and replaces them with the platforms no data value."
+  });
+
+  $('#commands_#{command.index}_param_one ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Cull Operand",
+    content: "Sets how the cull value will be applied to the sensor data."
+  });  
+  
+  $('#commands_#{command.index}_param_two ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Cull Value",
+    content: "The value to use when culling the data.  For example: [= 100], cull the sensor data when it = 100."
+  });  
+  
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

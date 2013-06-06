@@ -4,25 +4,23 @@ module Processes
     command= opts[:cmd]
     input = opts[:input]
 
-    cull_value = command.param_one.to_f
-    cull_operand = command.param_two.to_i
+    cull_operand = command.param_one.to_i
+    cull_value = command.param_two.to_f
 
     data = input.shift
-    
-    else
-      result = data
-      case cull_operand
-      when 1
-        result = @platform.no_data_value if data.to_f == cull_value
-      when 2
-        result = @platform.no_data_value if data.to_f < cull_value
-      when 3
-        result = @platform.no_data_value if data.to_f > cull_value
-      when 4
-        result = @platform.no_data_value if data.to_f <= cull_value
-      when 5
-        result = @platform.no_data_value if data.to_f >= cull_value
-      end
+    result = data
+
+    case cull_operand
+    when 1
+      result = @platform.no_data_value if data.to_f == cull_value
+    when 2
+      result = @platform.no_data_value if data.to_f < cull_value
+    when 3
+      result = @platform.no_data_value if data.to_f > cull_value
+    when 4
+      result = @platform.no_data_value if data.to_f <= cull_value
+    when 5
+      result = @platform.no_data_value if data.to_f >= cull_value
     end
 
     Array.wrap(result)

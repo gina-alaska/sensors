@@ -20,9 +20,9 @@ module Processes
       ss_correction = sound_speed(opts[:data_row].send(water_sensor.to_sym))
 
       if snow_data.to_f < 0.0
-        result = sensor_height + (ss_correction * data.to_f) + snow_data.to_f
+        result = sensor_height - (ss_correction * data.to_f) + snow_data.to_f
       else
-        result = sensor_height + (ss_correction * data.to_f)
+        result = sensor_height - (ss_correction * data.to_f)
       end
     end
 

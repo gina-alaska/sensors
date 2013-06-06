@@ -1,7 +1,7 @@
 module Processes
   # Gather data and send it and the users custom code to stats package for 
   # processing.
-  def custom(processed_field, sensors, process, start_time)
+  def custom(processed_field, sensors, process, start_time, command_index)
     sensor = sensors.first
     value, units = process.window.split(".")
     start_date = process.starts_at
@@ -14,7 +14,11 @@ module Processes
         #{processed_field}."
     puts "start - #{start_date} end - #{process.ends_at}"
 
-    raw = @platform.raw_data.captured_between(start_date, end_date).only(:capture_date, sensor.to_sym)
+    if command_index == 0
+      raw = @platform.raw_data.captured_between(start_date, end_date).only(:capture_date, sensor.to_sym)
+    else
+      raw = @platform.processed_data.captured_between(start_date, end_date).only(:capture_date, processed_field.to_sym)
+    end
 
     # Build array to send to R, convert all no data values to nil.
     rdata = []

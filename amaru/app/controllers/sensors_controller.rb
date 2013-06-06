@@ -56,6 +56,16 @@ class SensorsController < ApplicationController
     end
   end
 
+  def destroy
+    @sensor = @parent.sensors.where(id: params[:id]).first 
+    @sensor.destroy
+
+    # need to add code to delete sensor data from processed data collection
+    respond_to do |format|
+      format.html { redirect_to @return_to, notice: 'Sensor was successfully deleted!' }
+    end
+  end
+
   protected
 
   def fetch_parent

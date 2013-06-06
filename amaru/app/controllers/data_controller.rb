@@ -117,13 +117,24 @@ class DataController < ApplicationController
         end
 
         # Send the zip file and clean up
-        send_file( zip_file, :type => "application/zip")
+        send_file( zip_file, :type => "application/zip", :disposition => "inline")
         File.delete(data_file, zip_file)
       end
     end
   end
 
   def graph
+    group = Group.where(name: params["group"]).first
+    graph = group.graphs.where(name: params["graph"]).first
+
+    path = File.join('graphs', params["slug"])
+    file = File.join(path, "#{graph.id}.jpg")
+
+    respond_to do |format|
+      format.jpg do
+        send_file(file, type: "image/jpeg", :disposition => "inline")
+      end
+    end
   end
 
   def alert

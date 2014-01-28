@@ -49,7 +49,7 @@ class OrganizationsController < ApplicationController
   end
 
   def update
-    return access_denied unless current_user.admin?
+    return access_denied unless current_user.org_admin?
 
     respond_to do |format|
       if @organization.update_attributes(params[:organization])

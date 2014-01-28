@@ -7,6 +7,7 @@ class Datum
   belongs_to :platform
   belongs_to :group
   belongs_to :command
+
   index({ capture_date: 1 }, { unique: true })
 
   scope :captured_between,  ->(starts_at, ends_at) {
@@ -35,5 +36,6 @@ class Datum
         group_cache.sensors.create({ source_field: f, label: f })
       end
     end
+    return true
   end
 end

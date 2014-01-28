@@ -8,7 +8,7 @@ class RestImport < DataImport
   end
 
   def import
-    options = {:col_sep => ",", :headers => true, :converters => :float}
+    options = {:col_sep => ",", :headers => true}
     csv_data = CSV.parse(@data, options)
 
     sensors = @platform.sensors.all

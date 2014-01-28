@@ -7,10 +7,10 @@ class Organization
   field :access_token,  type: String
   
   has_many :current_users, :class_name => 'User', :inverse_of => :current_org
-  has_many :memberships
+  has_many :memberships, dependent: :destroy
+  has_many :groups, dependent: :destroy
+  has_many :platforms, dependent: :destroy
   accepts_nested_attributes_for :memberships, :current_users
-  has_many :groups
-  has_many :platforms
 
   validates_uniqueness_of :name
 

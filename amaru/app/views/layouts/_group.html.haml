@@ -42,6 +42,7 @@
             = link_to "Data View", data_view_group_path(@group)
 
 :javascript
+  console.log($('#status_#{@group.id}').poll);
 
   $('#status_#{@group.id}').poll(function(callback){
     $('#status_#{@group.id}').load('#{group_poll_group_status_path(@group)}', callback);

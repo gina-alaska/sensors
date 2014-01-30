@@ -12,9 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui
-//= require js/jquery-ui-timepicker-addon
-//= require js/jquery.editableSelect
+//= require jquery-ui/ui/jquery-ui
+//= require jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon
+//= require editable_select/jquery.editableSelect
 //= require bootstrap
 //= require highcharts
 //= require highcharts/themes/grid

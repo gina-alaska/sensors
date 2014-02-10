@@ -189,6 +189,8 @@ GEM
     whenever (0.9.0)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
+    zip-zip (0.2)
+      rubyzip (>= 1.0.0)
 
 PLATFORMS
   ruby
@@ -207,7 +209,7 @@ DEPENDENCIES
   omniauth-openid
   quiet_assets
   rack-pjax (~> 0.7.0)
-  rails (= 3.2.16)
+  rails (~> 3.2.16)
   resque
   rinruby
   rmagick
@@ -220,3 +222,4 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   unicorn
   whenever
+  zip-zip

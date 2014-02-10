@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.16'
+gem 'rails', '~> 3.2.16'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -55,4 +55,6 @@ gem 'omniauth'
 gem 'omniauth-openid'
 gem 'whenever', :require => false
 gem 'resque'
+#gem 'rubyzip', :require => 'zip/zipfilesystem'
 gem 'rubyzip'
+gem 'zip-zip'

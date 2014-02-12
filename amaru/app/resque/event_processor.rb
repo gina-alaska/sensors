@@ -45,7 +45,7 @@ class EventProcessor
       end
 
       # Do filters if there are any
-      unless event.filter.blank?
+      unless event.filter.empty?
         puts "  Starting filter #{event.filter}"
         filter_data = group.processed_data.no_timeout.batch_size(1000)
 

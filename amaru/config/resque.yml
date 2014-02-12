@@ -2,4 +2,4 @@ development: localhost:6379
 test: localhost:6379
 staging: hermes.gina.alaska.edu:6379
 fi: localhost:6379
-production: hermes.gina.alaska.edu:6379
+production: localhost:6379

@@ -16,7 +16,10 @@ module Processes
 
     # Do R median filter processing
     myr.data = rdata.compact
-    puts myr.data.inspect
+    File.open("/tmp/median#{Time.now.to_s}", "w") do |f|
+      f<< myr.data
+    end
+    
     myr.eval <<-EOF
       mdata <- median(data)
     EOF

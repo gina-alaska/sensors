@@ -16,7 +16,10 @@ module Processes
 
     # Do R mean filter processing
     myr.data = rdata.compact
-    puts myr.data.inspect
+    File.open("/tmp/mean#{Time.now.to_s}", "w") do |f|
+      f<< myr.data
+    end
+
     myr.eval <<-EOF
       mdata <- mean(data)
     EOF

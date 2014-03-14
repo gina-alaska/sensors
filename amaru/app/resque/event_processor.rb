@@ -2,7 +2,7 @@ class EventProcessor
 	@queue = :events
 
 	def self.perform(group_id, event_id)
-    Bundler.require :processing
+    #Bundler.require :processing
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all
   	event = group.events.where(id: event_id).first

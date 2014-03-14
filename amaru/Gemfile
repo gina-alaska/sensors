@@ -42,9 +42,7 @@ gem 'unicorn'
 gem 'mongoid', "~> 3.0.3"
 #gem 'bson_ext'
 gem 'kaminari'
-group :processing do
-  gem 'rinruby'
-end
+gem 'rinruby'
 gem "highcharts-rails", "~> 2.2.1"
 gem 'rmagick', :require => 'RMagick'
 gem 'trollop'

@@ -7,7 +7,7 @@ class GraphImageProcessor
   @queue = :graph_image
 
   def self.perform(group_id, graph_id)
-    Bundler.require :processing
+    #Bundler.require :processing
     @group = Group.where(id: group_id).first
     graph = @group.graphs.find(graph_id)
 

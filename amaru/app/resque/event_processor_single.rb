@@ -76,6 +76,7 @@ class EventProcessorSingle
     end
 	rescue => e
 		puts "Something has gone horribly wrong!"
+    puts e.inspect
 		raise
 	end
 end

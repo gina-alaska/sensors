@@ -16,6 +16,7 @@ module Processes
 
     # Do R mean filter processing
     myr.data = rdata.compact
+    puts myr.data.inspect
     myr.eval <<-EOF
       mdata <- mean(data)
     EOF

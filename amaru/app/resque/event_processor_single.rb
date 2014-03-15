@@ -47,6 +47,7 @@ class EventProcessorSingle
             end
             # Do filters if there are any
             unless event.filter == ""
+              window = eval(event.window)
               puts "  Starting filter #{event.filter}"
               filter_data = group.processed_data.no_timeout.batch_size(1000)
 

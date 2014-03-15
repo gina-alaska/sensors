@@ -12,6 +12,7 @@ class EventProcessorSingle
 
         unless events.empty?
       		events.each do |event|		# Process all events for group
+            puts "Event - #{event.name}"
             if event.interval == "import" and event.enabled == true
               platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
                 output = nil

@@ -5,6 +5,7 @@ class EventProcessorSingle
     #Bundler.require :processing
     platform = Platform.where(slug: slug).first
     groups = platform.groups
+    status = nil
 
     unless groups.empty?
       groups.each do |group|

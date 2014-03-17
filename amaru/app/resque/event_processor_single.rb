@@ -9,6 +9,8 @@ class EventProcessorSingle
     unless groups.empty?
       groups.each do |group|
     		allevents = group.events
+        puts "allevents..."
+        puts allevents.inspect
 
         unless allevents.empty?
           puts "allevents length - #{allevents.length}"

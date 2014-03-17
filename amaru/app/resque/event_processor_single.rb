@@ -11,6 +11,7 @@ class EventProcessorSingle
     		allevents = group.events
 
         unless allevents.empty?
+          puts "allevents length - #{allevents.length}"
       		allevents.each do |event|		# Process all events for group
             puts "Event - #{event.name}"
             if event.interval == "import" and event.enabled == true
@@ -37,19 +38,20 @@ class EventProcessorSingle
                 processes = event.commands     # get all commands
 
                 processes.each do |cmd|        # do all commands
+                  puts "Command - #{cmd.command}"
                   start_time = cmd.starts_at.nil? ? data_row.capture_date : cmd.starts_at
                   end_time = cmd.ends_at.nil? ? data_row.capture_date : cmd.ends_at
                   next unless data_row.capture_date.between?(start_time, end_time)
 
                   data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
                 end
-                status.update_attributes(status: "Finished", end_time: Time.zone.now)
+                #status.update_attributes(status: "Finished", end_time: Time.zone.now)
               end
             end
             # Do filters if there are any
             unless event.filter == ""
               window = eval(event.window)
-              puts "  Starting filter #{event.filter}"
+              puts "  Starting #{event.filter} filter:"
               filter_data = group.processed_data.no_timeout.batch_size(1000)
 
               filter_data.each do |data_row|

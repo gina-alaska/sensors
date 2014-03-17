@@ -12,20 +12,20 @@ class EventProcessorSingle
 
         unless allevents.empty?
           puts "allevents length - #{allevents.length}"
-      		allevents.each do |event|		# Process all events for group
-            puts "Event - #{event.name}"
-            if event.interval == "import" and event.enabled == true
+      		allevents.each do |eventitem|		# Process all events for group
+            puts "Event - #{eventitem.name}"
+            if eventitem.interval == "import" and eventitem.enabled == true
               platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
                 output = nil
                 # add a status for event
-                status = group.status.build(system: "process", message: "processing platform #{platform.name} for field #{event.name}.", status: "Running", start_time: Time.zone.now)
+                status = group.status.build(system: "process", message: "processing platform #{platform.name} for field #{eventitem.name}.", status: "Running", start_time: Time.zone.now)
                 status.group = group
                 status.platform = platform
                 status.save
 
                 # Assemble needed raw data fields
                 data = []
-                event.from.each do |field|
+                eventitem.from.each do |field|
                   data << data_row.send(field)
                 end
 
@@ -34,11 +34,10 @@ class EventProcessorSingle
                   processed_data = group.processed_data.build(capture_date: data_row.capture_date)
                 end
 
-                processor = ProcessorCommands.new(group, platform, event)
-                processes = event.commands     # get all commands
+                processor = ProcessorCommands.new(group, platform, eventitem)
+                processes = eventitem.commands     # get all commands
 
                 processes.each do |cmd|        # do all commands
-                  puts "Command - #{cmd.command}"
                   start_time = cmd.starts_at.nil? ? data_row.capture_date : cmd.starts_at
                   end_time = cmd.ends_at.nil? ? data_row.capture_date : cmd.ends_at
                   next unless data_row.capture_date.between?(start_time, end_time)
@@ -49,31 +48,31 @@ class EventProcessorSingle
               end
             end
             # Do filters if there are any
-            unless event.filter == ""
-              window = eval(event.window)
-              puts "  Starting #{event.filter} filter:"
+            unless eventitem.filter == ""
+              window = eval(eventitem.window)
+              puts "  Starting #{eventitem.filter} filter:"
               filter_data = group.processed_data.no_timeout.batch_size(1000)
 
               filter_data.each do |data_row|
                 start_time = data_row.capture_date - window
                 end_time = data_row.capture_date + window
 
-                input_data = filter_data.captured_between(start_time, end_time).only(:capture_date, event.name.to_sym)
+                input_data = filter_data.captured_between(start_time, end_time).only(:capture_date, eventitem.name.to_sym)
                 
-                if data_row.send(event.name.to_sym) == platform.no_data_value
-                  data = data_row.send(event.name.to_sym)
+                if data_row.send(eventitem.name.to_sym) == platform.no_data_value
+                  data = data_row.send(eventitem.name.to_sym)
                 else
-                  processor = ProcessorCommands.new(group, platform, event)
-                  data = processor.send(event.filter.downcase.to_sym, { input: input_data, data_field: event.name })
+                  processor = ProcessorCommands.new(group, platform, eventitem)
+                  data = processor.send(eventitem.filter.downcase.to_sym, { input: input_data, data_field: eventitem.name })
                 end
 
-                data_row.update_attribute("#{event.name}_#{event.filter.downcase}".to_sym, data)
+                data_row.update_attribute("#{eventitem.name}_#{eventitem.filter.downcase}".to_sym, data)
               end
               puts "  End of filter"
             end
 
             status.update_attributes(status: "Finished", end_time: Time.zone.now)
-            puts "Finished process event #{event.name} for #{platform.name}"
+            puts "Finished process event #{eventitem.name} for #{platform.name}"
       		end
         end
       end

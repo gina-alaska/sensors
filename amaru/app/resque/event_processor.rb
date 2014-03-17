@@ -23,7 +23,7 @@ class EventProcessor
         # Assemble needed raw data fields
         data = []
         event.from.each do |field|
-          data << data_row.send(field)
+          data << data_row.send(field) unless field.nil?
         end
 
         processed_data = group.processed_data.no_timeout.where(capture_date: data_row.capture_date).first

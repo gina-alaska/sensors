@@ -12,6 +12,7 @@ class Event
 
   validates_presence_of :name
   validates_uniqueness_of :name
+  validates_presence_of :from
   paginates_per 12
 
   belongs_to :group

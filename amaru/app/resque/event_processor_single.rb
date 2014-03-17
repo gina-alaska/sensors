@@ -15,7 +15,7 @@ class EventProcessorSingle
         unless allevents.empty?
           puts "allevents length - #{allevents.length}"
       		allevents.each_with_index do |eventitem, index|		# Process all events for group
-            puts "Event - #{eventitem.name} Index - #{index}"
+            puts "Event - #{eventitem.inspect} Index - #{index}"
             if eventitem.interval == "import" and eventitem.enabled == true
               platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
                 output = nil

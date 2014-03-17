@@ -21,7 +21,8 @@ class EventProcessorSingle
               status.platform = platform
               status.save
 
-              platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
+              #platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
+              Datum.where(platform: platform).batch_size(1000).captured_between(start_time, nil).each do |data_row|
                 output = nil
 
                 # Assemble needed raw data fields

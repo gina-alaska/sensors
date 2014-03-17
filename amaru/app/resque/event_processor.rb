@@ -17,7 +17,7 @@ class EventProcessor
 
       puts "Started process event #{event.name} for #{platform.name}"
 
-      platform.raw_data.batch_size(1000).each do |data_row|
+      platform.raw_data.no_timeout.batch_size(1000).each do |data_row|
         output = nil
 
         # Assemble needed raw data fields
@@ -26,7 +26,7 @@ class EventProcessor
           data << data_row.send(field) unless field.nil?
         end
 
-        processed_data = group.processed_data.no_timeout.where(capture_date: data_row.capture_date).first
+        processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
         if processed_data.nil?
           processed_data = group.processed_data.build(capture_date: data_row.capture_date)
         end

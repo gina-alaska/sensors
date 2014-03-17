@@ -52,10 +52,10 @@ class EventProcessorSingle
               filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, nil)
 
               filter_data.each do |data_row|
-                start_time = data_row.capture_date - window
-                end_time = data_row.capture_date + window
+                filter_start_time = data_row.capture_date - window
+                filter_end_time = data_row.capture_date + window
 
-                input_data = filter_data.captured_between(start_time, end_time).only(:capture_date, eventitem.name.to_sym)
+                input_data = filter_data.captured_between(filter_start_time, filter_end_time).only(:capture_date, eventitem.name.to_sym)
                 
                 if data_row.send(eventitem.name.to_sym) == platform.no_data_value
                   data = data_row.send(eventitem.name.to_sym)

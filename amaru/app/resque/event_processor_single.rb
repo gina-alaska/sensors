@@ -8,10 +8,10 @@ class EventProcessorSingle
 
     unless groups.empty?
       groups.each do |group|
-    		events = group.events
+    		allevents = group.events
 
-        unless events.empty?
-      		events.each do |event|		# Process all events for group
+        unless allevents.empty?
+      		allevents.each do |event|		# Process all events for group
             puts "Event - #{event.name}"
             if event.interval == "import" and event.enabled == true
               platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|

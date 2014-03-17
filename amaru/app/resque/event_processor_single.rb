@@ -9,13 +9,10 @@ class EventProcessorSingle
     unless groups.empty?
       groups.each do |group|
     		allevents = group.events
-        puts "allevents..."
-        puts allevents.inspect
 
         unless allevents.empty?
-          puts "allevents length - #{allevents.length}"
       		allevents.each_with_index do |eventitem, index|		# Process all events for group
-            puts "Event - #{eventitem.inspect} Index - #{index}"
+            puts "Event - #{eventitem.inspect} Index - #{index}\nStart Time: #{start_time}"
             if eventitem.interval == "import" and eventitem.enabled == true
               platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
                 output = nil
@@ -46,7 +43,6 @@ class EventProcessorSingle
 
                   data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
                 end
-                #status.update_attributes(status: "Finished", end_time: Time.zone.now)
               end
             end
             # Do filters if there are any

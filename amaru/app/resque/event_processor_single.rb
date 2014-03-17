@@ -49,7 +49,7 @@ class EventProcessorSingle
             unless eventitem.filter == ""
               window = eval(eventitem.window)
               puts "  Starting #{eventitem.filter} filter:"
-              filter_data = group.processed_data.no_timeout.batch_size(1000)
+              filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, nil)
 
               filter_data.each do |data_row|
                 start_time = data_row.capture_date - window

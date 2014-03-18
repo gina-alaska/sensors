@@ -30,6 +30,7 @@ class EventProcessor
         if processed_data.nil?
           processed_data = group.processed_data.build(capture_date: data_row.capture_date)
         end
+        puts "processed data - #{processed_data.inspect}"
 
         processor = ProcessorCommands.new(group, platform, event)
         processes = event.commands    # Get all commands from this event

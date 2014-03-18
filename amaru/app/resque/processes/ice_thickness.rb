@@ -8,7 +8,7 @@ module Processes
     snow_depth = command.param_three
     capture_date = opts[:data_row].capture_date
 
-    if opts[:processed_data].send(snow_depth.to_sym).nil? or snow_data == @platform.no_data_value
+    if opts[:processed_data].send(snow_depth.to_sym).nil? or opts[:processed_data].send(snow_depth.to_sym) == @platform.no_data_value
       snow_data = 0.0
     else
       snow_data = opts[:processed_data].send(snow_depth.to_sym)

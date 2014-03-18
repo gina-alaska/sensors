@@ -46,7 +46,7 @@ class EventProcessor
 
       # Do filters if there are any
       unless event.filter == ""
-        puts "  Starting filter #{event.filter}"
+        puts "  Starting #{event.filter} filter"
         filter_data = group.processed_data.no_timeout.batch_size(1000)
 
         filter_data.each do |data_row|

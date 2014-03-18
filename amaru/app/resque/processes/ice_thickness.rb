@@ -7,9 +7,10 @@ module Processes
     water_sensor = command.param_two
     snow_depth = command.param_three
     capture_date = opts[:data_row].capture_date
+    puts "processed data - #{opts[:processed_data]}"
 
     snow_data = opts[:processed_data].send(snow_depth.to_sym)
-    if snow_data == @platform.no_data_value or snow_data.nil?
+    if snow_data.nil? or snow_data == @platform.no_data_value
       snow_data = 0.0
     end
 

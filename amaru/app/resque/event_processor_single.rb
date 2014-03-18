@@ -12,8 +12,8 @@ class EventProcessorSingle
     		allevents = group.events
 
         unless allevents.empty?
-      		allevents.each_with_index do |eventitem, index|		# Process all events for group
-            puts "Event - #{eventitem.inspect} Index - #{index}\nStart Time: #{start_time}"
+      		allevents.each do |eventitem|		# Process all events for group
+            puts "Event - #{eventitem.inspect}\nStart Time: #{start_time}"
             if eventitem.interval == "import" and eventitem.enabled == true
               # add a status for event
               status = group.status.build(system: "process", message: "processing platform #{platform.name} for field #{eventitem.name}.", status: "Running", start_time: Time.zone.now)
@@ -52,7 +52,7 @@ class EventProcessorSingle
             unless eventitem.filter == ""
               window = eval(eventitem.window)
               puts "  Starting #{eventitem.filter} filter:"
-              filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, nil)
+              filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, Time.zone.now)
 
               filter_data.each do |data_row|
                 filter_start_time = data_row.capture_date - window

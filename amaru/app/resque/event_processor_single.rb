@@ -21,7 +21,7 @@ class EventProcessorSingle
               status.platform = platform
               status.save
 
-              platform.raw_data.batch_size(1000).captured_between(start_time, nil).each do |data_row|
+              platform.raw_data.batch_size(1000).captured_between(start_time, Time.zone.now).each do |data_row|
                 output = nil
 
                 # Assemble needed raw data fields
@@ -30,6 +30,7 @@ class EventProcessorSingle
                   data << data_row.send(field) unless field.nil?
                 end
 
+                # pull in processed data so that it is available to commands
                 processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
                 if processed_data.nil?
                   processed_data = group.processed_data.build(capture_date: data_row.capture_date)

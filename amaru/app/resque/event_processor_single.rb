@@ -30,7 +30,7 @@ class EventProcessorSingle
                   data << data_row.send(field) unless field.nil?
                 end
 
-                # pull in processed data so that it is available to commands
+                # pull or create processed data so that it is available to commands
                 processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
                 if processed_data.nil?
                   processed_data = group.processed_data.build(capture_date: data_row.capture_date)
@@ -46,32 +46,33 @@ class EventProcessorSingle
 
                   data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
                 end
+                processed_data.update_attribute(eventitem.name.to_sym, data.shift)
               end
-            end
-            # Do filters if there are any
-            unless eventitem.filter == ""
-              window = eval(eventitem.window)
-              puts "  Starting #{eventitem.filter} filter:"
-              filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, Time.zone.now)
 
-              filter_data.each do |data_row|
-                filter_start_time = data_row.capture_date - window
-                filter_end_time = data_row.capture_date + window
+              # Do filters if there are any
+              unless eventitem.filter == ""
+                window = eval(eventitem.window)
+                puts "  Starting #{eventitem.filter} filter:"
+                filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, Time.zone.now)
 
-                input_data = filter_data.captured_between(filter_start_time, filter_end_time).only(:capture_date, eventitem.name.to_sym)
-                
-                if data_row.send(eventitem.name.to_sym) == platform.no_data_value
-                  data = data_row.send(eventitem.name.to_sym)
-                else
-                  processor = ProcessorCommands.new(group, platform, eventitem)
-                  data = processor.send(eventitem.filter.downcase.to_sym, { input: input_data, data_field: eventitem.name })
+                filter_data.each do |data_row|
+                  filter_start_time = data_row.capture_date - window
+                  filter_end_time = data_row.capture_date + window
+
+                  input_data = filter_data.captured_between(filter_start_time, filter_end_time).only(:capture_date, eventitem.name.to_sym)
+                  
+                  if data_row.send(eventitem.name.to_sym) == platform.no_data_value
+                    data = data_row.send(eventitem.name.to_sym)
+                  else
+                    processor = ProcessorCommands.new(group, platform, eventitem)
+                    data = processor.send(eventitem.filter.downcase.to_sym, { input: input_data, data_field: eventitem.name })
+                  end
+
+                  data_row.update_attribute("#{eventitem.name}_#{eventitem.filter.downcase}".to_sym, data)
                 end
-
-                data_row.update_attribute("#{eventitem.name}_#{eventitem.filter.downcase}".to_sym, data)
+                puts "  End of filter"
               end
-              puts "  End of filter"
             end
-
             status.update_attributes(status: "Finished", end_time: Time.zone.now)
             puts "Finished process event #{eventitem.name} for #{platform.name}"
       		end

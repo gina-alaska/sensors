@@ -30,7 +30,7 @@ class EventProcessorSingle
                   data << data_row.send(field) unless field.nil?
                 end
 
-                processed_data = group.processed_data.no_timeout.where(capture_date: data_row.capture_date).first
+                processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
                 if processed_data.nil?
                   processed_data = group.processed_data.build(capture_date: data_row.capture_date)
                 end

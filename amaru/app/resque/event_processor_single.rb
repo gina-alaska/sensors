@@ -80,6 +80,7 @@ class EventProcessorSingle
     end
 	rescue => e
 		puts "Something has gone horribly wrong!"
+    status.update_attributes(status: "Error", end_time: Time.zone.now)
     puts e.inspect
 		raise
 	end

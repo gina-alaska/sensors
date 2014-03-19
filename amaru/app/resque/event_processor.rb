@@ -48,7 +48,7 @@ class EventProcessor
 
       # Do filters if there are any
       unless event.filter == ""
-        puts "  Starting #{event.filter} filter"
+        puts "  Starting #{event.filter} filter for #{event.name}"
         filter_data = group.processed_data.no_timeout.batch_size(1000)
 
         filter_data.each do |data_row|
@@ -74,9 +74,9 @@ class EventProcessor
     end
 
 	rescue => e
-		puts "Something has gone horribly wrong!"
+		puts "Something has gone horribly wrong!\n\n"
     status.update_attributes(status: "Error", end_time: Time.zone.now)
-    puts e.inspect
+    puts "#{e.inspect}\n\n"
 		raise
 	end
 end

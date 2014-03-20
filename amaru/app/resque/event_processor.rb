@@ -55,7 +55,6 @@ class EventProcessor
           end_time = data_row.capture_date + window
 
           input_data = group.processed_data.captured_between(start_time, end_time).only(:capture_date, event.name.to_sym)
-          puts "start filter - #{input_data.inspect}"
           
           if data_row.send(event.name.to_sym) == platform.no_data_value
             data = data_row.send(event.name.to_sym)

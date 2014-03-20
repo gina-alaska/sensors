@@ -17,7 +17,6 @@ class EventProcessor
 
       puts "Started process event #{event.name} for #{platform.name}"
 
-      puts "event commands - #{event.commands}"
       processes = event.commands    # Get all commands from this event
       unless processes.empty?
         platform.raw_data.no_timeout.batch_size(1000).each do |data_row|
@@ -46,7 +45,6 @@ class EventProcessor
           processed_data.update_attribute(event.name.to_sym, data.shift)
         end
       end
-      puts "end processing"
 
       # Do filters if there are any
       unless event.filter == ""
@@ -56,6 +54,7 @@ class EventProcessor
           start_time = data_row.capture_date - window
           end_time = data_row.capture_date + window
 
+          puts "start filter - #{data_row.inspect}"
           input_data = filter_data.captured_between(start_time, end_time).only(:capture_date, event.name.to_sym)
           
           if data_row.send(event.name.to_sym) == platform.no_data_value

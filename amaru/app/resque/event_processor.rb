@@ -17,7 +17,8 @@ class EventProcessor
 
       puts "Started process event #{event.name} for #{platform.name}"
 
-      unless processes = event.commands    # Get all commands from this event
+      puts "event commands - #{event.commands}"
+      if processes = event.commands    # Get all commands from this event
         platform.raw_data.no_timeout.batch_size(1000).each do |data_row|
           output = nil
 

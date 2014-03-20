@@ -49,9 +49,8 @@ class EventProcessor
       # Do filters if there are any
       unless event.filter == ""
         puts "  Starting #{event.filter} filter for #{event.name}"
-        filter_data = group.processed_data.no_timeout.batch_size(1000)
 
-        filter_data.each do |data_row|
+        group.processed_data.batch_size(1000).no_timeout.each do |data_row|
           start_time = data_row.capture_date - window
           end_time = data_row.capture_date + window
 
@@ -66,6 +65,7 @@ class EventProcessor
 
           data_row.update_attribute("#{event.name}_#{event.filter.downcase}".to_sym, data)
         end
+
         puts "  End of filter"
       end
 

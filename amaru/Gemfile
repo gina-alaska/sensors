@@ -43,7 +43,7 @@ gem 'mongoid', "~> 3.0.3"
 #gem 'bson_ext'
 gem 'kaminari'
 gem 'rinruby'
-gem "highcharts-rails", "~> 2.2.1"
+gem "highcharts-rails", "~> 3.0.10"
 gem 'rmagick', :require => 'RMagick'
 gem 'trollop'
 gem 'rvg_graph', :git => 'git://github.com/gina-alaska/rvg_graph.git'

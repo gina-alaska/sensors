@@ -44,7 +44,9 @@ class EventProcessorSingle
                   proc_end_time = cmd.ends_at.nil? ? data_row.capture_date : cmd.ends_at
                   next unless data_row.capture_date.between?(proc_start_time, proc_end_time)
 
-                  data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
+                  unless cmd.command == "copy"
+                    data = processor.send(cmd.command.downcase.to_sym, { cmd: cmd, input: data, data_row: data_row, processed_data: processed_data })
+                  end
                 end
                 processed_data.update_attribute(eventitem.name.to_sym, data.shift)
               end

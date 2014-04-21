@@ -75,7 +75,6 @@ class EventProcessor
 
 	rescue => e
 		puts "Something has gone horribly wrong!\n\n"
-    status.update_attributes(status: "Error", end_time: Time.zone.now)
     puts "#{e.inspect}\n\n"
 		raise
 	end

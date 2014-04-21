@@ -4,13 +4,15 @@ class BarrowImport < DataImport
   def initialize(csvfile, configfile, group, slug, path, token)
     # Initialize system
     super(configfile, group, slug, path, token)
+    save_zone = Time.zone
+    Time.zone = "UTC"
 
     # Get sensor information if there is some
     unless configfile.nil?
       sensor_config ||= @config["sensors"] # Read sensors options from config file
       date_config ||= @config["date"]      # Read date information
     else
-      @status.update_attributes(status: "Error", message: "I can't find the configuration file", end_time: DateTime.now)
+      @status.update_attributes(status: "Error", message: "I can't find the configuration file", end_time: Time.zone.now)
       raise "Configuration file missing! Date information is nessessary!"
     end
 
@@ -23,7 +25,7 @@ class BarrowImport < DataImport
       end
       csv_file = CSV.open( csvfile, 'r', options )
     else
-      @status.write_attributes(status: "Error", message: "I can't find the barrow mass balance CSV file \e[31m#{csvfile}\e[0m!", end_time: DateTime.now)
+      @status.write_attributes(status: "Error", message: "I can't find the barrow mass balance CSV file \e[31m#{csvfile}\e[0m!", end_time: Time.zone.now)
       raise "I can't find the barrow mass balance CSV file \e[31m#{csvfile}\e[0m!"
     end
 
@@ -61,7 +63,7 @@ class BarrowImport < DataImport
       when "1"
         datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
       when "2"
-        datadate = DateTime.strptime(sdata[0], "%Y-%m-%d %H:%M:%S").iso8601
+        datadate = Time.zone.strptime(sdata[0], "%Y-%m-%d %H:%M:%S")
       else
         raise "Unknown import file version!"
       end
@@ -77,8 +79,9 @@ class BarrowImport < DataImport
     end
 
     # Finish status reporting
-    @status.update_attributes(end_time: DateTime.now,  status: "Finished")
+    @status.update_attributes(end_time: Time.zone.now,  status: "Finished")
 
     @platform.save!
   end
+  Time.zone = save_zone
 end

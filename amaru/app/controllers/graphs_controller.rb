@@ -60,7 +60,7 @@ class GraphsController < ApplicationController
   def create
     @group = Group.where(id: params[:group_id]).first
     @graph = @group.graphs.build(params[:graph])
-    @graph.last_run = Time.now
+    @graph.last_run = Time.zone.now
 
     respond_to do |format|
       if @graph.save

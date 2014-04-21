@@ -8,6 +8,8 @@ class RestImport < DataImport
   end
 
   def import
+    save_zone = Time.zone
+    Time.zone = "UTC"
     options = {:col_sep => ",", :headers => true}
     csv_data = CSV.parse(@data, options)
 
@@ -21,9 +23,9 @@ class RestImport < DataImport
       end
     end
 
-    start_time = Time.parse(csv_data[0]["date"]).iso8601
+    start_time = Time.zone.parse(csv_data[0]["date"])
     csv_data.each do |sdata|
-      datahash = { :capture_date => Time.parse(sdata["date"]).iso8601 }
+      datahash = { :capture_date => Time.zone.parse(sdata["date"])
 
       sdata.each do |header, data|
         datahash[header] = data
@@ -41,4 +43,5 @@ class RestImport < DataImport
     # Start import data processing
     @platform.async_process_event_single(start_time) unless @platform.groups.size == 0
   end
+  Time.zone = save_zone
 end

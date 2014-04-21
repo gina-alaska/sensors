@@ -5,11 +5,11 @@ class DataController < ApplicationController
   def raw
     platform = Platform.where(slug: params["slug"]).first
     sensor ||= params["sensor"]
-    date = params["date"].nil? ? nil : Time.parse(params["date"])
+    date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
 
     if date.nil?
-      ends = Time.now
+      ends = Time.zone.now
     else
       ends = date
     end
@@ -30,7 +30,7 @@ class DataController < ApplicationController
       format.csv do
         send_data generate_csv(raw),
         :type => 'text/csv; charset=iso-8859-1; header=present',
-        :disposition => "attachment; filename=#{platform.name}-#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        :disposition => "attachment; filename=#{platform.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
       end
       format.json {render :json => raw}
 
@@ -39,11 +39,11 @@ class DataController < ApplicationController
 #      end
 
       format.zip do
-        data_file = "/tmp/#{platform.name}_RAW_#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        data_file = "/tmp/#{platform.name}_RAW_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
         unless platform.platform_metadata.nil? or platform.platform_metadata == "No Metadata"
           meta_file = Rails.root.join("metadata/#{platform.platform_metadata}")
         end
-        zip_file = "/tmp/#{platform.name}_#{Time.now.strftime('%d-%m-%y_%H-%M')}.zip"
+        zip_file = "/tmp/#{platform.name}_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.zip"
 
         #create the csv file
         File.open(data_file, "w") {|f| f.write(generate_csv(raw))}
@@ -67,7 +67,7 @@ class DataController < ApplicationController
     group = Group.where(name: params["group"]).first
     platform = Platform.where(slug: params["slug"]).first
     sensor = params["sensor"]
-    date = params["date"].nil? ? nil : Time.parse(params["date"])
+    date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
 
     if date.nil?
@@ -92,18 +92,18 @@ class DataController < ApplicationController
       format.csv do
         send_data generate_csv(proc),
         :type => 'text/csv; charset=iso-8859-1; header=present',
-        :disposition => "attachment; filename=#{group.name}-#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        :disposition => "attachment; filename=#{group.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
       end
       format.json {render :json => proc}
 
 #      format.graph
 
       format.zip do
-        data_file = "/tmp/#{platform.name}_PROC_#{Time.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        data_file = "/tmp/#{platform.name}_PROC_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
         unless platform.platform_metadata.nil? or platform.platform_metadata == "No Metadata"
           meta_file = Rails.root.join("metadata/#{platform.platform_metadata}")
         end
-        zip_file = "/tmp/#{platform.name}_#{Time.now.strftime('%d-%m-%y_%H-%M')}.zip"
+        zip_file = "/tmp/#{platform.name}_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.zip"
 
         #create the csv file
         File.open(data_file, "w") {|f| f.write(generate_csv(proc))}

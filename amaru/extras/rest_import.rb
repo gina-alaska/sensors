@@ -25,7 +25,7 @@ class RestImport < DataImport
 
     start_time = Time.zone.parse(csv_data[0]["date"])
     csv_data.each do |sdata|
-      datahash = { :capture_date => Time.zone.parse(sdata["date"])
+      datahash = { :capture_date => Time.zone.parse(sdata["date"]) }
 
       sdata.each do |header, data|
         datahash[header] = data

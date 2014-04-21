@@ -82,6 +82,6 @@ class BarrowImport < DataImport
     @status.update_attributes(end_time: Time.zone.now,  status: "Finished")
 
     @platform.save!
+    Time.zone = save_zone
   end
-  Time.zone = save_zone
 end

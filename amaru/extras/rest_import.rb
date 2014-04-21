@@ -42,6 +42,6 @@ class RestImport < DataImport
 
     # Start import data processing
     @platform.async_process_event_single(start_time) unless @platform.groups.size == 0
+    Time.zone = save_zone
   end
-  Time.zone = save_zone
 end

@@ -37,7 +37,7 @@ class GraphsController < ApplicationController
 
     respond_to do |format|
       if @graph.save
-        @graph.async_graph_image_process # Queue the graph processing
+        @graph.async_graph_image_process unless @graph.disabled # Queue the graph processing
         format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully updated.' }
         format.json { render json: @graph, status: :created, location: @graph }
       else
@@ -64,7 +64,7 @@ class GraphsController < ApplicationController
 
     respond_to do |format|
       if @graph.save
-        @graph.async_graph_image_process # Queue the processing event
+        @graph.async_graph_image_process unless @graph.disabled # Queue the processing event
         format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully created.' }
         format.json { render json: @graph, status: :created, location: @graph }
       else
@@ -100,10 +100,14 @@ class GraphsController < ApplicationController
   def build
     @group = Group.where(id: params[:group_id]).first
     @graph = @group.graphs.find(params[:id])
-    @graph.async_graph_image_process # Queue the graph processing
+    @graph.async_graph_image_process unless @graph.disabled # Queue the graph processing
 
     respond_to do |format|
-      format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully re-built.' }
+      if @graph.disabled
+        format.html { redirect_to group_graphs_path(@group), notice: 'Graph is disabled, not re-built.' }
+      else
+        format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully re-built.' }
+      end
       format.json { render json: @graph, status: :created, location: @graph }
     end
   end

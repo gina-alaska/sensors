@@ -81,6 +81,7 @@ class DataImport
   def raw_save( datahash )
     newdata = @platform.raw_data.where(captured_date: datahash["captured_date"]).first_or_initialize
     newdata.update_attributes(datahash)
+    newdata.save
 
     #if newdata.valid?
     #  @platform.raw_data << newdata
@@ -93,7 +94,8 @@ class DataImport
   def processed_save( datahash )
     newdata = @group.processed_data.where(captured_date: datahash["captured_date"]).first_or_initialize
     newdata.update_attributes(datahash)
-    
+    newdata.save
+
     #if newdata.valid?
     #  @group.processed_data << newdata unless @group.nil?
     #  @platform.processed_data << newdata

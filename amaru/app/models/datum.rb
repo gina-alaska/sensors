@@ -3,6 +3,7 @@ class Datum
   after_save :update_group_fields
 
   field :capture_date,         type: Time
+  field :_id, type Time, default: ->{ capture_date }
 
   belongs_to :platform
   belongs_to :group

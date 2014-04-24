@@ -1,4 +1,6 @@
 class DataController < ApplicationController
+  skip_before_filter :require_login
+  
   require 'zip/zip'
   require 'zip/zipfilesystem'
 

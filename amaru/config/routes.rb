@@ -88,7 +88,7 @@ Amaru::Application.routes.draw do
   # data REST API's
   match "data/raw/:slug" => "data#raw"
   match "data/processed/:group/:slug" => "data#processed"
-  match "data/graph/:group/:slug" => "data#graph"
+  match "data/graph/:group/:slug" => "data#graph", defaults: { format: "jpg" }
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

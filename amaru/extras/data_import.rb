@@ -81,10 +81,9 @@ class DataImport
   def raw_save( datahash )
     newdata = @platform.raw_data.where(captured_date: datahash["captured_date"]).first_or_initialize
     newdata.update_attributes(datahash)
-    newdata.save
+    @platform.raw_data << newdata
 
     #if newdata.valid?
-    #  @platform.raw_data << newdata
     #else
     #  @status.update_attributes(status: "Error", message: "Raw data insert failed MongoDB validation!", end_time: Time.now)
     #  raise "raw data insert failed MongoDB validation:\n #{datahash}"
@@ -94,7 +93,6 @@ class DataImport
   def processed_save( datahash )
     newdata = @group.processed_data.where(captured_date: datahash["captured_date"]).first_or_initialize
     newdata.update_attributes(datahash)
-    newdata.save
 
     #if newdata.valid?
     #  @group.processed_data << newdata unless @group.nil?

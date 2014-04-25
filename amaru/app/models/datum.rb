@@ -8,9 +8,9 @@ class Datum
   belongs_to :group
   belongs_to :command
 
-  validates_uniqueness_of :capture_date
+  validates_uniqueness_of :capture_date, scope: :platform_id
 
-  index({ capture_date: 1 }, { unique: true })
+  index({ capture_date: 1, platform_id: 1 }, { unique: true })
 
   scope :captured_between,  ->(starts_at, ends_at) {
     unless starts_at.nil? and ends_at.nil?

@@ -28,10 +28,11 @@ class EventProcessor
             data << data_row.send(field) unless field.nil?
           end
 
-          processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
-          if processed_data.nil?
-            processed_data = group.processed_data.build(capture_date: data_row.capture_date)
-          end
+          processed_data = group.processed_data.where(capture_date: data_row.capture_date).first_or_initialize
+          #processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
+          #if processed_data.nil?
+          #  processed_data = group.processed_data.build(capture_date: data_row.capture_date)
+          #end
 
           processor = ProcessorCommands.new(group, platform, event)
           processes.each do |cmd|

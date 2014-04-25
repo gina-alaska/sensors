@@ -63,8 +63,8 @@ class BarrowImport < DataImport
       when "1"
         datadate = date_convert( sdata[yearx], 0, sdata[dayx], hour, min, 0, "ordinal" )
       when "2"
-        datadate = Time.strptime(sdata[0], "%Y-%m-%d %H:%M:%S")
-        #datadate = Time.zone.parse(sdata[0])
+        #datadate = Time.strptime(sdata[0], "%Y-%m-%d %H:%M:%S")
+        datadate = Time.zone.parse(sdata[0])
       else
         raise "Unknown import file version!"
       end

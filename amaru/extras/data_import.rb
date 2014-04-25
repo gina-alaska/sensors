@@ -79,27 +79,13 @@ class DataImport
   end	
 
   def raw_save( datahash )
-    newdata = @platform.raw_data.where(capture_date: datahash["capture_date"]).first_or_initialize
+    newdata = @platform.raw_data.where(capture_date: datahash[:capture_date]).first_or_initialize
     newdata.update_attributes(datahash)
     @platform.raw_data << newdata
-
-    #if newdata.valid?
-    #else
-    #  @status.update_attributes(status: "Error", message: "Raw data insert failed MongoDB validation!", end_time: Time.now)
-    #  raise "raw data insert failed MongoDB validation:\n #{datahash}"
-    #end
   end
 
   def processed_save( datahash )
-    newdata = @group.processed_data.where(capture_date: datahash["capture_date"]).first_or_initialize
+    newdata = @group.processed_data.where(capture_date: datahash[:capture_date]).first_or_initialize
     newdata.update_attributes(datahash)
-
-    #if newdata.valid?
-    #  @group.processed_data << newdata unless @group.nil?
-    #  @platform.processed_data << newdata
-    #else
-    #  @status.update_attributes(status: "Error", message: "Processed data insert failed MongoDB validation!", end_time: Time.now)
-    #  raise "processed data insert failed MongoDB validation:\n #{datahash}"
-    #end
   end
 end

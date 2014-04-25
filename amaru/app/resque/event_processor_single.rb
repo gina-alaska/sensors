@@ -31,10 +31,7 @@ class EventProcessorSingle
                 end
 
                 # pull or create processed data so that it is available to commands
-                processed_data = group.processed_data.where(capture_date: data_row.capture_date).first
-                if processed_data.nil?
-                  processed_data = group.processed_data.build(capture_date: data_row.capture_date)
-                end
+                processed_data = group.processed_data.where(capture_date: data_row.capture_date).first_or_initialize
 
                 processor = ProcessorCommands.new(group, platform, eventitem)
                 processes = eventitem.commands     # get all commands

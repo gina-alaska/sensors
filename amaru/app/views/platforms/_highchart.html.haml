@@ -18,6 +18,7 @@
       },
       series: [{
         name: '#{raw_sensor}',
+        turboThreshold: 1000, 
         data: #{ raw_data.collect do |row|
           data = row[raw_sensor] == nodata ? nil : row[raw_sensor].to_f
             [ row.capture_date.strftime("%s").to_i*1000, data ]

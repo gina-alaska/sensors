@@ -41,9 +41,9 @@ class GraphImageProcessor
       template["data"].each do |tdata|
         case tdata["collection"]
         when "raw"
-          data = platform.raw_data.captured_between(starts_at, ends_at)
+          data = platform.raw_data.captured_between(starts_at, ends_at).order_by(:capture_date)
         when "processed"
-          data = @group.processed_data.captured_between(starts_at, ends_at)
+          data = @group.processed_data.captured_between(starts_at, ends_at).order_by(:capture_date)
         end
 
         fields = tdata["name"].split(",")

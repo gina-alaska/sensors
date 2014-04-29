@@ -68,7 +68,7 @@ class GraphImageProcessor
       thumb.write(thumbfile)
 
       # update the database graph image paths and last_ran time
-      graph.update_attributes(image_path: file, thumb_path: thumbfile, processing: false, last_ran: Time.zone.now)
+      graph.update_attributes(image_path: file, thumb_path: thumbfile, processing: false, last_run: Time.zone.now)
 
       status.update_attributes(status: "Finished", end_time: DateTime.now)
       puts "Done!"

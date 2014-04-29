@@ -1,4 +1,4 @@
-development: amaru.x.gina.alaska.edu:6379
+development: localhost:6379
 test: amaru.x.gina.alaska.edu:6379
 staging: amaru.x.gina.alaska.edu:6379
 fi: amaru.x.gina.alaska.edu:6379

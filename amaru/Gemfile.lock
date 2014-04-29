@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/gina-alaska/rvg_graph.git
-  revision: e9c83214ffc0f4d056fd668d95eea04e95b92ce7
+  revision: 38463260c679ba7d32d7ae8b2be923ad87132aa5
   specs:
-    rvg_graph (1.0.3)
+    rvg_graph (1.0.11)
       rmagick
 
 GEM

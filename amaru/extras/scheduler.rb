@@ -19,31 +19,31 @@ class Scheduler
         graph.async_graph_image_process
         graph.update_attributes(last_run: run_time, processing: true)
       when "15 Min"
-        if time >= last_run + 15.min
+        if run_time >= last_run + 15.min
           async_graph(graph, run_time)
         end
       when "30 Min"
-        if time >= last_run + 30.min
+        if run_time >= last_run + 30.min
           async_graph(graph, run_time)
         end
       when "1 hour"
-        if time >= last_run + 1.hour
+        if run_time >= last_run + 1.hour
           async_graph(graph, run_time)
         end
       when "12 hour"
-        if time >= last_run + 12.hours
+        if run_time >= last_run + 12.hours
           async_graph(graph, run_time)
         end
       when "1 day"
-        if time >= last_run + 1.day
+        if run_time >= last_run + 1.day
           async_graph(graph, run_time)
         end
       when "1 week"
-        if time >= last_run + 1.week
+        if run_time >= last_run + 1.week
           async_graph(graph, run_time)
         end
       when "1 month"
-        if time >= last_run + 1.month
+        if run_time >= last_run + 1.month
           async_graph(graph, run_time)
         end
       end

@@ -19,7 +19,7 @@
 
 # Learn more: http://github.com/javan/whenever
 
-job_type :runner,  "cd :path && script/rails runner -e development ':task' :output"
+job_type :runner,  "cd :path && script/rails runner -e production ':task' :output"
 
 # Run the scheduler every 5 minutes to see if any processes need to run.
 every 5.minutes do

@@ -16,8 +16,7 @@ class Scheduler
 
       case run_when
       when "5 Min"
-        graph.async_graph_image_process
-        graph.update_attributes(last_run: run_time, processing: true)
+        async_graph(graph, run_time)
       when "15 Min"
         if run_time >= last_run + 15.min
           async_graph(graph, run_time)
@@ -51,10 +50,9 @@ class Scheduler
   end
 
   # queue graph to process and set last run time
-  def async_graph(graph, run_time)
+  def self.async_graph(graph, run_time)
     unless graph.processing == true
       graph.async_graph_image_process
-      graph.update_attributes(last_run: run_time, processing: true)
     end
   end
 end

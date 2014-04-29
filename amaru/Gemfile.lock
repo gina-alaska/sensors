@@ -6,9 +6,9 @@ GIT
 
 GIT
   remote: git://github.com/gina-alaska/rvg_graph.git
-  revision: 721fb2c905c749604cbaea59bc52579070f1d5e5
+  revision: a61fd10fb31666c7a402e28f0f3a99a4eefe6e96
   specs:
-    rvg_graph (1.0.0)
+    rvg_graph (1.0.1)
       rmagick
 
 GEM
@@ -45,7 +45,7 @@ GEM
     bootstrap-sass (2.1.0.1)
     builder (3.0.4)
     chronic (0.10.2)
-    chunky_png (1.3.0)
+    chunky_png (1.3.1)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -53,18 +53,19 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
-    compass (0.12.3)
+    compass (0.12.6)
       chunky_png (~> 1.2)
       fssm (>= 0.2.7)
-      sass (= 3.2.14)
-    compass-rails (1.1.6)
+      sass (~> 3.2.19)
+    compass-rails (1.1.7)
       compass (>= 0.12.2)
+      sprockets (<= 2.11.0)
     erubis (2.7.0)
     execjs (2.0.2)
     fssm (0.2.10)
     haml (4.0.5)
       tilt
-    hashie (2.0.5)
+    hashie (2.1.1)
     highcharts-rails (3.0.10)
       railties (>= 3.1)
     hike (1.2.3)
@@ -83,7 +84,7 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
-    mini_portile (0.5.2)
+    mini_portile (0.5.3)
     mongoid (3.1.6)
       activemodel (~> 3.2)
       moped (~> 1.4)
@@ -91,7 +92,7 @@ GEM
       tzinfo (~> 0.3.29)
     mono_logger (1.1.0)
     moped (1.5.2)
-    multi_json (1.9.2)
+    multi_json (1.9.3)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     omniauth (1.2.1)
@@ -113,7 +114,7 @@ GEM
     rack-pjax (0.7.0)
       nokogiri (~> 1.5)
       rack (~> 1.3)
-    rack-protection (1.5.2)
+    rack-protection (1.5.3)
       rack
     rack-ssl (1.3.4)
       rack
@@ -135,7 +136,7 @@ GEM
       rdoc (~> 3.4)
       thor (>= 0.14.6, < 2.0)
     raindrops (0.13.0)
-    rake (10.2.2)
+    rake (10.3.1)
     rdoc (3.12.2)
       json (~> 1.4)
     redis (3.0.7)
@@ -151,13 +152,13 @@ GEM
     rinruby (2.0.3)
     rmagick (2.13.2)
     ruby-openid (2.5.0)
-    rubyzip (1.1.0)
-    sass (3.2.14)
+    rubyzip (1.1.3)
+    sass (3.2.19)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    sinatra (1.4.4)
+    sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
@@ -177,7 +178,7 @@ GEM
       polyglot (>= 0.3.1)
     trollop (2.0)
     tzinfo (0.3.39)
-    uglifier (2.4.0)
+    uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     unicorn (4.8.2)
@@ -189,7 +190,7 @@ GEM
     whenever (0.9.2)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
-    zip-zip (0.2)
+    zip-zip (0.3)
       rubyzip (>= 1.0.0)
 
 PLATFORMS

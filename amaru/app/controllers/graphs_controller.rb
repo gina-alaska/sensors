@@ -106,7 +106,7 @@ class GraphsController < ApplicationController
       if @graph.disabled
         format.html { redirect_to group_graphs_path(@group), notice: 'Graph is disabled, not re-built.' }
       else
-        format.html { redirect_to group_graphs_path(@group), notice: 'Graph was successfully re-built.' }
+        format.html { redirect_to group_graphs_path(@group), notice: 'Graph has been queued to be re-built.' }
       end
       format.json { render json: @graph, status: :created, location: @graph }
     end

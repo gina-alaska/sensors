@@ -79,9 +79,10 @@ class DataImport
   end	
 
   def raw_save( datahash )
+    Rails.logger.info datahash.inspect
     newdata = @platform.raw_data.where(capture_date: datahash[:capture_date]).first_or_initialize
-    newdata.update_attributes(datahash)
     @platform.raw_data << newdata
+    newdata.update_attributes(datahash)
   end
 
   def processed_save( datahash )

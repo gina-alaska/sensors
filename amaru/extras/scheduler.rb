@@ -8,7 +8,7 @@ class Scheduler
   # Check for graphs that need to run:
   def self.graphs
     graphs = Graph.all
-    Time.zone = "Alaska"
+    Time.zone = "UTC"
     graphs.each do |graph|
       next if graph.disabled
       run_time = Time.zone.now
@@ -48,7 +48,7 @@ class Scheduler
         end
       end
     end
-    Time.zone = "UTC"
+    #Time.zone = "UTC"
   end
 
   # queue graph to process and set last run time

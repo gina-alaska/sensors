@@ -10,7 +10,7 @@ class Scheduler
     graphs = Graph.all
     graphs.each do |graph|
       next if graph.disabled
-      run_time = Time.now
+      run_time = Time.zone.now
       run_when = graph.run_when
       last_run = graph.last_run
 

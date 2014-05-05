@@ -13,7 +13,8 @@ class GraphImageProcessor
 
     @group.all_platform_slugs.each do |slug|
       platform = Platform.where(slug: slug).first
-      status = @group.status.build(system: "graphs", message: "Building graph #{graph.name} for platform #{platform.name}.", status: "Running", start_time: DateTime.now)
+      run_time = DateTime.now
+      status = @group.status.build(system: "graphs", message: "Building graph #{graph.name} for platform #{platform.name}.", status: "Running", start_time: run_time)
       status.group = @group
       status.platform = platform
       status.save!
@@ -68,7 +69,7 @@ class GraphImageProcessor
       thumb.write(thumbfile)
 
       # update the database graph image paths and last_run time
-      graph.update_attributes(image_path: file, thumb_path: thumbfile, processing: false, last_run: ends_at)
+      graph.update_attributes(image_path: file, thumb_path: thumbfile, processing: false, last_run: run_time)
 
       status.update_attributes(status: "Finished", end_time: DateTime.now)
       puts "Done!"

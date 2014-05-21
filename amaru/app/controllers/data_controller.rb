@@ -73,7 +73,7 @@ class DataController < ApplicationController
     range = params["range"].nil? ? nil : eval(params["range"])
 
     if date.nil?
-      ends = Time.now
+      ends = Time.zone.now
     else
       ends = date
     end
@@ -84,10 +84,9 @@ class DataController < ApplicationController
       starts = ends - range
     end
 
-    if sensor == "all" or sensor.nil?
-      proc = group.processed_data.where(platform: platform).captured_between(starts, ends).asc(:capture_date)
-    else
-      proc = group.processed_data.where(platform: platform).captured_between(starts, ends).only(:capture_date, sensor.to_sym).asc(:capture_date)
+    proc = platform.groups.where(name: params["group"]).first.processed_data.captured_between(starts, ends).asc(:capture_date)
+    if !(sensor == "all" or sensor.nil?)
+      proc = proc.only(:capture_date, sensor.to_sym)
     end
 
     respond_to do |format|
@@ -144,7 +143,7 @@ class DataController < ApplicationController
 
 protected
 
-  def generate_csv data
+  def generate_csv( data )
 #    data = [data].flatten
     headers = data.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
     ::CSV.generate({:headers => true}) do |csv|

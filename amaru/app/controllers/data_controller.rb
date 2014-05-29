@@ -6,9 +6,9 @@ class DataController < ApplicationController
 
   def raw
     platform = Platform.where(slug: params["slug"]).first
-    sensor ||= params["sensor"]
     date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
+    sensor ||= params["sensor"].split(" ")
 
     if date.nil?
       ends = Time.zone.now
@@ -22,10 +22,9 @@ class DataController < ApplicationController
       starts = ends - range
     end
 
-    if sensor == "all" or sensor.nil?
-      raw = platform.raw_data.captured_between(starts, ends)
-    else
-      raw = platform.raw_data.captured_between(starts, ends).only(:capture_date, sensor.to_sym)
+    raw = platform.raw_data.captured_between(starts, ends)
+    if !(sensor == "all" or sensor.nil?)
+      raw = raw.only(:capture_date, sensor.to_sym)
     end
 
     respond_to do |format|
@@ -35,10 +34,6 @@ class DataController < ApplicationController
         :disposition => "attachment; filename=#{platform.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
       end
       format.json {render :json => raw}
-
-# do this later
-#      format.jpg do
-#      end
 
       format.zip do
         data_file = "/tmp/#{platform.name}_RAW_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"

@@ -1,11 +1,12 @@
 class EventProcessorSingle
 	@queue = :events
 
-	def self.perform(slug, start_time)
+	def self.perform(slug, start_time, end_time)
     #Bundler.require :processing
     platform = Platform.where(slug: slug).first
     groups = platform.groups
     status = nil
+    end_time ||= Time.zone.now
 
     unless groups.empty?
       groups.each do |group|
@@ -21,7 +22,7 @@ class EventProcessorSingle
               status.platform = platform
               status.save
 
-              platform.raw_data.batch_size(1000).captured_between(start_time, Time.zone.now).each do |data_row|
+              platform.raw_data.batch_size(1000).captured_between(start_time, end_time).each do |data_row|
                 output = nil
 
                 # Assemble needed raw data fields
@@ -52,7 +53,7 @@ class EventProcessorSingle
               unless eventitem.filter == ""
                 window = eval(eventitem.window)
                 puts "  Starting #{eventitem.filter} filter:"
-                filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, Time.zone.now)
+                filter_data = group.processed_data.no_timeout.batch_size(1000).captured_between(start_time, end_time)
 
                 filter_data.each do |data_row|
                   filter_start_time = data_row.capture_date - window

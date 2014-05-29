@@ -20,6 +20,7 @@
             %table
               %tr
                 %td= link_to 'Edit', edit_group_event_path(@group, event), class: "btn btn-primary"
-                %td= link_to 'Run Process', run_event_group_event_path(@group, event), data: {confirm: 'Are you sure?'}, class: "btn btn-primary"
+                %td= link_to 'Process All', run_event_group_event_path(@group, event), data: {confirm: 'Are you sure?'}, class: "btn btn-primary"
+                %td= link_to 'Process by Date', run_by_date_group_event_path(@group, event), remote: true, class: "btn btn-primary"
                 %td= link_to 'Destroy', group_event_path(@group, event), :data => {confirm: 'Are you sure?' }, method: :delete, class: "btn btn-danger delete"
-%br/
+                

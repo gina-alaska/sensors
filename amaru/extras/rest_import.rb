@@ -41,7 +41,7 @@ class RestImport < DataImport
     @status.update_attributes(end_time: Time.zone.now,  status: "Finished")
 
     # Start import data processing
-    @platform.async_process_event_single(start_time) unless @platform.groups.size == 0
+    @platform.async_process_event_single(start_time, nil) unless @platform.groups.size == 0
     Time.zone = save_zone
   end
 end

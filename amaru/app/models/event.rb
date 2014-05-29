@@ -20,6 +20,10 @@ class Event
   accepts_nested_attributes_for :commands
 
   def async_process_event
-    Resque.enqueue(EventProcessor, self.group.id, self.id)
+    Resque.enqueue(EventProcessor, self.group.id, self.id, nil, nil)
+  end
+
+  def async_process_by_date(start_date, end_date)
+    Resque.enqueue(EventProcessor, self.group.id, self.id, start_date, end_date)
   end
 end

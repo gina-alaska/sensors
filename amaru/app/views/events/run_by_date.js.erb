@@ -1,0 +1,4 @@
+var modal_el = $('body').append('<%= escape_javascript(render('modal')) %>');
+$('#process_date').modal().on('submit', function() {
+  $(this).remove();
+});  

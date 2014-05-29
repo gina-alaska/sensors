@@ -1,12 +1,14 @@
 class EventProcessor
 	@queue = :events
 
-	def self.perform(group_id, event_id)
+	def self.perform(group_id, event_id, start_date, end_date)
     #Bundler.require :processing
 		group = Group.where(id: group_id).first
     platforms = group.platforms.all
   	event = group.events.where(id: event_id).first
     window = eval(event.window)
+    start_date ||= Time.zone.now - 50.years.ago
+    end_date ||= Time.zone.now
 
     platforms.each do |platform|
       # add a status for event
@@ -19,7 +21,7 @@ class EventProcessor
 
       processes = event.commands    # Get all commands from this event
       unless processes.empty?
-        platform.raw_data.no_timeout.batch_size(1000).each do |data_row|
+        platform.raw_data.captured_between(start_date, end_date).no_timeout.batch_size(1000).each do |data_row|
           output = nil
 
           # Assemble needed raw data fields
@@ -49,7 +51,7 @@ class EventProcessor
       unless event.filter == ""
         puts "  Starting #{event.filter} filter for #{event.name}"
 
-        group.processed_data.batch_size(1000).no_timeout.each do |data_row|
+        group.processed_data.captured_between(start_date, end_date).batch_size(1000).no_timeout.each do |data_row|
           start_time = data_row.capture_date - window
           end_time = data_row.capture_date + window
 

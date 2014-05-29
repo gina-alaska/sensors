@@ -1,0 +1,33 @@
+#process_date.modal.hide.fade
+  = form_tag run_event_group_event_path(@group, @event), method: :get, class: "form-horizontal" do
+    .modal-header
+      %button.close{ type: 'button', data: { dismiss: 'modal' } } &times;
+      %h3 Enter Date Range for Process #{@event.name}
+
+    .modal-body{ style: 'position: relative; padding: 0; height:100px;' }
+      .control-group
+        %label.control-label(for="starts_at")
+          Start Date:
+        .controls
+          %input.datepicker(type="text" name="starts_at")
+      .control-group
+        %label.control-label(for="ends_at")
+          End Date:
+        .controls
+          %input.datepicker(type="text" name="ends_at")
+
+    .modal-footer
+      = link_to '#', class: 'btn', data: { dismiss: 'modal' } do
+        Cancel
+      = submit_tag 'Start Process', class: 'btn btn-primary'
+
+:javascript
+  $(function() {
+    $( "#process_date .datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

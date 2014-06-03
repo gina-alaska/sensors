@@ -8,7 +8,9 @@ class DataController < ApplicationController
     platform = Platform.where(slug: params["slug"]).first
     date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
-    sensor ||= params["sensor"].split(" ")
+    sensors ||= params["sensors"]
+
+    sensors = sensors.split(" ") unless sensors.nil?
 
     if date.nil?
       ends = Time.zone.now
@@ -23,15 +25,24 @@ class DataController < ApplicationController
     end
 
     raw = platform.raw_data.captured_between(starts, ends)
-    if !(sensor == "all" or sensor.nil?)
-      raw = raw.only(:capture_date, sensor.to_sym)
+
+    if (sensors.nil? or sensors.first == "all") and !raw.first.nil?
+      sensors = raw.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
+    else
+      sensors.insert(0,"capture_date") unless sensors.nil?
     end
 
     respond_to do |format|
       format.csv do
-        send_data generate_csv(raw),
-        :type => 'text/csv; charset=iso-8859-1; header=present',
-        :disposition => "attachment; filename=#{platform.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        if raw.first.nil?
+          send_data "No data found between #{starts} and #{ends}",
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{platform.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        else
+          send_data generate_csv(raw, sensors),
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{platform.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        end
       end
       format.json {render :json => raw}
 
@@ -43,7 +54,7 @@ class DataController < ApplicationController
         zip_file = "/tmp/#{platform.name}_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.zip"
 
         #create the csv file
-        File.open(data_file, "w") {|f| f.write(generate_csv(raw))}
+        File.open(data_file, "w") {|f| f.write(generate_csv(raw, sensors))}
 
         #create zip file
         Zip::ZipFile::open(zip_file, "w") do |zip|
@@ -63,9 +74,10 @@ class DataController < ApplicationController
   def processed
     group = Group.where(name: params["group"]).first
     platform = Platform.where(slug: params["slug"]).first
-    sensor = params["sensor"]
     date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
+    sensors ||= params["sensors"]
+    sensors = sensors.split(" ") unless sensors.nil?
 
     if date.nil?
       ends = Time.zone.now
@@ -80,19 +92,26 @@ class DataController < ApplicationController
     end
 
     proc = platform.groups.where(name: params["group"]).first.processed_data.captured_between(starts, ends).asc(:capture_date)
-    if !(sensor == "all" or sensor.nil?)
-      proc = proc.only(:capture_date, sensor.to_sym)
+
+    if (sensors.nil? or sensors.first == "all") and !proc.first.nil?
+      sensors = proc.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
+    else
+      sensors.insert(0,"capture_date") unless sensors.nil?
     end
 
     respond_to do |format|
       format.csv do
-        send_data generate_csv(proc),
-        :type => 'text/csv; charset=iso-8859-1; header=present',
-        :disposition => "attachment; filename=#{group.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        if proc.first.nil?
+          send_data "No data found between #{starts} and #{ends}",
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{group.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        else
+          send_data generate_csv(proc, sensors),
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{group.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        end
       end
       format.json {render :json => proc}
-
-#      format.graph
 
       format.zip do
         data_file = "/tmp/#{platform.name}_PROC_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
@@ -102,7 +121,7 @@ class DataController < ApplicationController
         zip_file = "/tmp/#{platform.name}_#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.zip"
 
         #create the csv file
-        File.open(data_file, "w") {|f| f.write(generate_csv(proc))}
+        File.open(data_file, "w") {|f| f.write(generate_csv(proc, sensors))}
 
         #create zip file
         Zip::ZipFile::open(zip_file, "w") do |zip|
@@ -138,9 +157,10 @@ class DataController < ApplicationController
 
 protected
 
-  def generate_csv( data )
+  def generate_csv( data, sensors )
 #    data = [data].flatten
     headers = data.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
+    headers = headers.reject{|v| !sensors.include?(v)} unless sensors.nil? or sensors.empty?
     ::CSV.generate({:headers => true}) do |csv|
       csv << headers
       data.each do |d|

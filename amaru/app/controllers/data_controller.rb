@@ -8,9 +8,7 @@ class DataController < ApplicationController
     platform = Platform.where(slug: params["slug"]).first
     date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
-    sensors ||= params["sensors"]
-
-    sensors = sensors.split(" ") unless sensors.nil?
+    sensors = data_params[:sensors]
 
     if date.nil?
       ends = Time.zone.now
@@ -76,8 +74,7 @@ class DataController < ApplicationController
     platform = Platform.where(slug: params["slug"]).first
     date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
     range = params["range"].nil? ? nil : eval(params["range"])
-    sensors ||= params["sensors"]
-    sensors = sensors.split(" ") unless sensors.nil?
+    sensors = data_params[:sensors]
 
     if date.nil?
       ends = Time.zone.now
@@ -156,6 +153,16 @@ class DataController < ApplicationController
   end
 
 protected
+
+  def data_params
+    dparms = {
+      sensors: params['sensors']
+    }
+
+    dparms[:sensors] = dparms[:sensors].split(' ') if dparms[:sensors].is_a? String
+
+    dparms
+  end
 
   def generate_csv( data, sensors )
 #    data = [data].flatten

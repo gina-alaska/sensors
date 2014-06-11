@@ -4,8 +4,9 @@ GIT
   specs:
     bower-tools (0.1.0)
 
-PATH
-  remote: ../../rvg_graph
+GIT
+  remote: git://github.com/gina-alaska/rvg_graph.git
+  revision: f772b83ae8942f8513c0aab2ca4da298feac3380
   specs:
     rvg_graph (1.1.2)
       rmagick

@@ -19,7 +19,7 @@ class GraphImageProcessor
       status.platform = platform
       status.save!
 
-      ends_at = platform.raw_data.last.capture_date
+      ends_at = platform.raw_data.order_by(:capture_date.asc).last.capture_date
       if graph.length.nil?
         starts_at = ends_at - 1.day
       else
@@ -42,9 +42,9 @@ class GraphImageProcessor
       template["data"].each do |tdata|
         case tdata["collection"]
         when "raw"
-          data = platform.raw_data.captured_between(starts_at, ends_at).order_by(:capture_date.asc)
+          data = platform.raw_data.captured_between(starts_at, ends_at)
         when "processed"
-          data = @group.processed_data.captured_between(starts_at, ends_at).order_by(:capture_date.asc)
+          data = @group.processed_data.captured_between(starts_at, ends_at)
         end
 
         fields = tdata["name"].split(",")

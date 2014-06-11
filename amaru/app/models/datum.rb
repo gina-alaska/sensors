@@ -22,9 +22,9 @@ class Datum
         data = data.where(:capture_date.lte => ends_at)
       end
 
-      data
+      data.order_by(:capture_date.asc)
     else 
-      where(:capture_date.lte => Time.zone.now)
+      where(:capture_date.lte => Time.zone.now).order_by(:capture_date.asc)
     end
   }
 

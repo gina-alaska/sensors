@@ -47,6 +47,7 @@ gem "highcharts-rails", "~> 3.0.10"
 gem 'rmagick', :require => 'RMagick'
 gem 'trollop'
 gem 'rvg_graph', :git => 'git://github.com/gina-alaska/rvg_graph.git'
+#gem 'rvg_graph', path: '../../rvg_graph'
 gem 'quiet_assets'
 gem 'rack-pjax', "~> 0.7.0"
 gem 'omniauth'

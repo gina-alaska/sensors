@@ -108,4 +108,16 @@ class PlatformsController < ApplicationController
       format.html { render :partial => "highchart", :locals => {:raw_data => @raw_data, :raw_sensor => params["raw_sensor"], :nodata => @platform.no_data_value} }
     end
   end
+
+  def upload
+    platform = Platform.where( slug: params[:id] ).first
+    upload_file = params[:ingest]
+    import_object = RestImport.new(platform.slug, platform.group.token, upload_file)
+
+    respond_to do |format|
+      if import_object.import
+        format.html { redirect_to platforms_path, notice: 'Data uploaded' }
+      end
+    end
+  end
 end

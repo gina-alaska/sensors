@@ -77,7 +77,7 @@ class EventsController < ApplicationController
     if params["starts_at"] or params["ends_at"]
       @status = @event.async_process_by_date(params["starts_at"], params["ends_at"])
     else
-      @status = @event.async_process_event(nil, nil)
+      @status = @event.async_process_event
     end
 
     respond_to do |format|

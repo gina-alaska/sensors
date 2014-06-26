@@ -55,6 +55,8 @@
     %li.active
       %a{"data-toggle" => "pill", :href => "#sensors"} Sensor List
     %li
+      %a{"data-toggle" => "pill", :href => "#ingest"} Ingest Data
+    %li
       %a{"data-toggle" => "pill", :href => "#dataview"} View Sensor Data
   .tab-content
     #sensors.tab-pane.active
@@ -69,6 +71,11 @@
           %th Sensor Metadata
           %th
         = render @sensors
+    #ingest.tab-pane
+      %h4 Ingest Sensor Data for this platform
+      = form_for @platform, class: "form-inline" do |f|
+        = f.file_field :ingest
+        = f.submit "Upload"
     #dataview.tab-pane
       .row-fluid
         .span2

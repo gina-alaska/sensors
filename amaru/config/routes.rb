@@ -53,6 +53,7 @@ Amaru::Application.routes.draw do
 
   resources :platforms do
     get 'graph_update', :on => :member
+    get 'upload', :on => :member
     resources :raw_data
     resources :sensors
   end
@@ -90,6 +91,7 @@ Amaru::Application.routes.draw do
   match "data/raw/:slug" => "data#raw"
   match "data/processed/:group/:slug" => "data#processed"
   match "data/graph/:group/:slug" => "data#graph", defaults: { format: "jpg" }
+  match "data/combined/:group/:slug" => "data#combined"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

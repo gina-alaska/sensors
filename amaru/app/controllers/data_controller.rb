@@ -135,6 +135,52 @@ class DataController < ApplicationController
     end
   end
 
+  def combined
+    @group = Group.where(name: params["group"]).first
+    platform = Platform.where(slug: params["slug"]).first
+    date = params["date"].nil? ? nil : Time.zone.parse(params["date"])
+    range = params["range"].nil? ? nil : eval(params["range"])
+    sensors = data_params[:sensors]
+
+    if date.nil?
+      ends = Time.zone.now
+    else
+      ends = date
+    end
+
+    if range.nil?
+      starts = ends - 24.hours
+    else
+      starts = ends - range
+    end
+
+    raw = platform.raw_data.captured_between(starts, ends).asc(:capture_date)
+    proc = platform.groups.where(name: params["group"]).first.processed_data.captured_between(starts, ends).asc(:capture_date)
+
+    if (sensors.nil? or sensors.first == "all") and !raw.first.nil? and !proc.first.nil?
+      raw_sensors = raw.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
+      proc_sensors = proc.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id", "capture_date"]
+      sensors = raw_sensors + proc_sensors
+    else
+      sensors.insert(0,"capture_date") unless sensors.nil?
+    end
+
+    respond_to do |format|
+      format.csv do
+        if proc.first.nil? and raw.first.nil?
+          send_data "No data found between #{starts} and #{ends}",
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{@group.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        else
+          send_data generate_combined_csv(raw, proc, sensors),
+          :type => 'text/csv; charset=iso-8859-1; header=present',
+          :disposition => "attachment; filename=#{@group.name}-#{Time.zone.now.strftime('%d-%m-%y_%H-%M')}.csv"
+        end
+      end
+      format.json {render :json => proc}
+    end
+  end
+
   def graph
     group = Group.where(name: params["group"]).first
     graph = group.graphs.where(name: params["graph"]).first
@@ -165,9 +211,7 @@ protected
   end
 
   def generate_csv( data, sensors )
-#    data = [data].flatten
-    headers = data.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
-    headers = headers.reject{|v| !sensors.include?(v)} unless sensors.nil? or sensors.empty?
+    headers = do_headers(data, sensors)
     ::CSV.generate({:headers => true}) do |csv|
       csv << headers
       data.each do |d|
@@ -179,4 +223,31 @@ protected
       end
     end
   end    
+
+  def generate_combined_csv( raw, proc, sensors )
+    raw_headers = do_headers(raw, sensors)
+    proc_headers = do_headers(proc, sensors) - ["capture_date"]
+    headers = raw_headers + proc_headers
+    ::CSV.generate({:headers => true}) do |csv|
+      csv << headers
+      raw.each do |d|
+        row = []
+        date = d[:capture_date]
+        raw_headers.each do |header|
+          row.push("#{d[header.to_sym]}")
+        end
+        proc_row = @group.processed_data.where(capture_date: date).first
+        proc_headers.each do |header|
+          row.push("#{proc_row[header.to_sym]}")
+        end
+        csv << row
+      end
+    end
+  end    
+
+  def do_headers(data, sensors)
+    headers = data.first.attributes.keys - ["_type","_id","parent_id","platform_id", "group_id"]
+    headers = headers.reject{|v| !sensors.include?(v)} unless sensors.nil? or sensors.empty?
+    headers = headers.sort {|h| h.scan(/d+/)[0].to_i  }
+  end
 end

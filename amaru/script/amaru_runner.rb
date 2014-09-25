@@ -1,4 +1,4 @@
-#!/bin/env ruby
+#!/usr/bin/env ruby
 # Run amaru's internal functions
 
 current_dir = File.expand_path(File.dirname(__FILE__))

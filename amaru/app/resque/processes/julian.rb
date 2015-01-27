@@ -7,9 +7,9 @@ module Processes
     hour_sensor   = command.param_one
     minute_sensor = command.param_two
 
-    data = input.shift
+    data = input.shift.to_i
 
-    result = data + (((opts[:data_row].send(hour_sensor.to_sym) * 60) + opts[:data_row].send(minute_sensor.to_sym))/ 1440)
+    result = data + (((opts[:data_row].send(hour_sensor.to_sym).to_i * 60) + opts[:data_row].send(minute_sensor.to_sym).to_i)/ 1440)
 
     Array.wrap(result)
   end

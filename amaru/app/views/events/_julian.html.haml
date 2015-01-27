@@ -1,0 +1,50 @@
+= hidden_field_tag "commands[#{command.index}][id]", command.id
+.field.span2
+  = label_tag :starts_at, "Starts At:"
+  = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
+.field.span2
+  = label_tag :ends_at, "Ends At:"
+  = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
+.field.span2
+  = label_tag :command, "Julian Day Sensor:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+.field.span1
+  = label_tag :param_one, "Hour Sensor:"
+  = text_field_tag "commands[#{command.index}][param_one]", [command.param_one]
+.field.span1
+  = label_tag :param_two, "Minute Sensor:"
+  = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
+.field.span1
+  = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
+
+:javascript
+  $('#commands_#{command.index}_command').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Julian Day Sensor",
+    content: "Field name for the Julian day."
+  });
+
+  $('#commands_#{command.index}_param_one ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Hour Sensor",
+    content: "Field name for the hours."
+  });  
+  
+  $('#commands_#{command.index}_param_two ').popover({
+    animation: true,
+    trigger: "hover",
+    title: "Minutes Sensor",
+    content: "Field name for the minutes."
+  });  
+  
+  $(function() {
+    $( ".datepicker" ).datetimepicker({
+        dateFormat: "yy-mm-dd",
+        changeYear: true,
+        changeMonth: true,
+        showSecond: true,
+        timeFormat: "hh:mm:ss",
+        separator: " "});
+  });

@@ -6,8 +6,8 @@
   = label_tag :ends_at, "Ends At:"
   = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
 .field.span2
-  = label_tag :command, "Julian Day Sensor:"
-  = select_tag "commands[#{command.index}][command]", event_commands(command.command)
+  = label_tag :command, "Command:"
+  = select_tag "commands[#{command.index}][command]", event_commands(command.command), class: "span12"
 .field.span1
   = label_tag :param_one, "Hour Sensor:"
   = text_field_tag "commands[#{command.index}][param_one]", [command.param_one]

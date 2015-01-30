@@ -12,7 +12,7 @@ class GraphProcessor
     graph = group.graphs.find(graph_id)
     template = Psych.load(graph.config)
 
-    status = platform.status.build(system: "graphs", message: "Building graph image for #{graph.name}.", status: "Running", start_time: DateTime.now)
+    status = group.status.build(system: "graphs", message: "Building graph image for #{graph.name}.", status: "Running", start_time: DateTime.now)
     puts "Creating Graph, output to #{output_name}"
 
     # Build data hash for graph
@@ -24,7 +24,7 @@ class GraphProcessor
       when "raw"
         data = platform.raw_data.captured_between(starts_at, ends_at).all
       when "processed"
-        data = platform.processed_data.captured_between(starts_at, ends_at).all
+        data = group.processed_data.captured_between(starts_at, ends_at).all
       end
 
       fields = tdata["name"].split(",")

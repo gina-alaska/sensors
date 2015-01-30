@@ -6,10 +6,10 @@ class GraphProcessor
   include Magick
   @queue = :graph_processor
 
-  def self.perform(slug, graph_id, starts_at, ends_at, output_name)
+  def self.perform(group_id, graph_id, starts_at, ends_at, output_name)
     #Bundler.require :processing
-    platform = Platform.where(slug: slug).first
-    graph = platform.graphs.find(graph_id)
+    group = Group.find(group_id)
+    graph = group.graphs.find(graph_id)
     template = Psych.load(graph.config)
 
     status = platform.status.build(system: "graphs", message: "Building graph image for #{graph.name}.", status: "Running", start_time: DateTime.now)

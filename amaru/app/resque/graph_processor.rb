@@ -9,6 +9,7 @@ class GraphProcessor
   def self.perform(group_id, graph_id, starts_at, ends_at, output_name)
     #Bundler.require :processing
     group = Group.find(group_id)
+    platform = group.platforms.first
     graph = group.graphs.find(graph_id)
     template = Psych.load(graph.config)
 

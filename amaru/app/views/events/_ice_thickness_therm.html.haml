@@ -8,11 +8,12 @@
 .span2
   = label_tag :command, "Command:"
   = select_tag "commands[#{command.index}][command]", event_commands(command.command)
-.span2
-  = label_tag :param_one, "Sensor Position:"
+.span1
+  = label_tag :param_one, "Position:"
   = text_field_tag "commands[#{command.index}][param_one]", [command.param_one], class: "span12"
 .span2
-  &nbsp;
+  = label_tag :param_two, "Thermistors:"
+  = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
 .span1
   = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
 

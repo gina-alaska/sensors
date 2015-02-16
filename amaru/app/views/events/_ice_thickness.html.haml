@@ -9,10 +9,10 @@
   = label_tag :command, "Command:"
   = select_tag "commands[#{command.index}][command]", event_commands(command.command)
 .span1
-  = label_tag :param_one, "Sensor Position:"
+  = label_tag :param_one, "Position:"
   = text_field_tag "commands[#{command.index}][param_one]", [command.param_one]
 .span1
-  = label_tag :param_two, "Raw Water Sensor:"
+  = label_tag :param_two, "Water Sensor:"
   = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
 .span1
   = label_tag :param_three, "Snow Sensor:"

@@ -1,21 +1,21 @@
 - cull_operand = [["=", 1], ["<", 2], [">", 3], ["<=", 4], [">=", 5]]
 = hidden_field_tag "commands[#{command.index}][id]", command.id
-.field.span2
+.span2
   = label_tag :starts_at, "Starts At:"
   = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
-.field.span2
+.span2
   = label_tag :ends_at, "Ends At:"
   = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
-.field.span2
+.span2
   = label_tag :command, "Command:"
   = select_tag "commands[#{command.index}][command]", event_commands(command.command)
-.field.span1
+.span1
   = label_tag :param_one, "Cull Operand:"
   = select_tag "commands[#{command.index}][param_one]", options_for_select(cull_operand, [command.param_one])
-.field.span2
+.span2
   = label_tag :param_two, "Cull Value:"
   = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
-.field.span1
+.span1
   = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
 
 :javascript

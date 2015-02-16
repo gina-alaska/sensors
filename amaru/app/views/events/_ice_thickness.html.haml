@@ -1,23 +1,23 @@
 = hidden_field_tag "commands[#{command.index}][id]", command.id
-.field.span2
+.span2
   = label_tag :starts_at, "Starts At:"
   = text_field_tag "commands[#{command.index}][starts_at]", datepicker_format(command.starts_at), :class=>"datepicker"
-.field.span2
+.span2
   = label_tag :ends_at, "Ends At:"
   = text_field_tag "commands[#{command.index}][ends_at]", datepicker_format(command.ends_at), :class=>"datepicker"
-.field.span2
+.span2
   = label_tag :command, "Command:"
   = select_tag "commands[#{command.index}][command]", event_commands(command.command)
-.field.span1
+.span1
   = label_tag :param_one, "Sensor Position:"
   = text_field_tag "commands[#{command.index}][param_one]", [command.param_one]
-.field.span1
+.span1
   = label_tag :param_two, "Raw Water Sensor:"
   = text_field_tag "commands[#{command.index}][param_two]", [command.param_two]
-.field.span1
+.span1
   = label_tag :param_three, "Snow Sensor:"
   = text_field_tag "commands[#{command.index}][param_three]", [command.param_three]
-.field.span1
+.span1
   = render :partial => "controls", :locals => {:group => @group, :event => @event, :command_id => command.id}
 
 :javascript

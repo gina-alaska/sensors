@@ -19,7 +19,7 @@ module Processes
 
     if found_therm != ""
       sensor_depth = found_therm.split("(")[1].chop.to_f
-      result = (sensor_depth * 10) - sensor_height + 0.05
+      result = (sensor_depth / 10.0) - sensor_height + 0.05
     else
       result = @platform.no_data_value
     end

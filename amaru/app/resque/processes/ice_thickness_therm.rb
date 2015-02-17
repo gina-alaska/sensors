@@ -4,25 +4,24 @@ module Processes
     command = opts[:cmd]
     input = opts[:input]
     sensor_height = command.param_one.to_f
-    capture_date = opts[:data_row].capture_date
+    thermistors = command.param_two.split(",")
 
-    if opts[:processed_data].send(snow_depth.to_sym).nil? or opts[:processed_data].send(snow_depth.to_sym) == @platform.no_data_value
-      snow_data = 0.0
-    else
-      snow_data = opts[:processed_data].send(snow_depth.to_sym)
+    capture_date = opts[:data_row].capture_date
+    found_therm = ""
+    result = 0.0
+
+    thermistors.reverse_each do |thermistor|
+      if opts[:raw_data].send(thermistor.to_sym).to_f <= -2.5
+        found_therm = thermistor
+        break
+      end
     end
 
-    data = input.shift
-    if data == @platform.no_data_value
-      result = data
+    if found_therm != ""
+      sensor_depth = found_therm.split("(")[1].chop.to_f
+      result = (sensor_depth * 10) - sensor_height + 0.05
     else
-      ss_correction = sound_speed(opts[:data_row].send(water_sensor.to_sym))
-
-      if snow_data.to_f < 0.0
-        result = sensor_height - (ss_correction * data.to_f) + snow_data.to_f
-      else
-        result = sensor_height - (ss_correction * data.to_f)
-      end
+      result = @platform.no_data_value
     end
 
     Array.wrap(result)

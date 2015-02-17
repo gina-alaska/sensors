@@ -11,7 +11,7 @@ module Processes
     result = 0.0
 
     thermistors.reverse_each do |thermistor|
-      if opts[:raw_data].send(thermistor.to_sym).to_f <= -2.5
+      if opts[:data_row].send(thermistor.to_sym).to_f <= -2.5
         found_therm = thermistor
         break
       end
